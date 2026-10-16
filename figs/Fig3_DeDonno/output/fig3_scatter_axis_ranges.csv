@@ -1,0 +1,17 @@
+pair,ct,xlo,xhi,ylo,yhi
+Glucocorticoid-index x Seizure-index,DG Glut,-2.52,3.76,-1.36,1.66
+Glucocorticoid-index x Seizure-index,CA1 Glut,-2.71,3.57,-1.12,1.9
+Glucocorticoid-index x Seizure-index,CA3 Glut,-2.51,3.76,-1.28,1.75
+Glucocorticoid-index x Seizure-index,GABA,-3.97,2.31,-1.25,1.77
+Glucocorticoid-index x Seizure-index,Astro,-2.22,4.06,-1.42,1.6
+Glucocorticoid-index x Seizure-index,Microglia,-0.97,5.31,-1.94,1.08
+Glucocorticoid-index x Seizure-index,Oligodendrocytes,-1.7,5.77,-1.37,1.65
+Glucocorticoid-index x Seizure-index,Endothelial,-2.73,3.55,-1.09,1.93
+NF-κB-index x UPR-index,DG Glut,-4.04,3.96,-2.54,1.63
+NF-κB-index x UPR-index,CA1 Glut,-3.93,4.07,-2.39,1.78
+NF-κB-index x UPR-index,CA3 Glut,-3.98,4.02,-2.38,1.8
+NF-κB-index x UPR-index,GABA,-4.41,3.59,-2.48,1.7
+NF-κB-index x UPR-index,Astro,-6.11,1.89,-2.74,1.44
+NF-κB-index x UPR-index,Microglia,-13.71,-2.32,-3.49,0.68
+NF-κB-index x UPR-index,Oligodendrocytes,-5.52,2.48,-2.24,1.94
+NF-κB-index x UPR-index,Endothelial,-7.43,0.57,-2.53,1.64

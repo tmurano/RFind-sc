@@ -1,0 +1,19 @@
+Task,Method,Cells or profiles,Reference genes (up / down),Cores,Time (s),Peak memory (GB),Exit code
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),1000,458 / 481,1,1.9,1.28,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),1000,458 / 481,1,0.6,0.84,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),10000,458 / 481,1,17.4,1.66,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),10000,458 / 481,1,6.6,0.84,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),75572,458 / 481,1,142.1,2.06,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),75572,458 / 481,1,50.6,2.32,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),75572,458 / 481,6,143.9,,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),75572,458 / 481,6,14.1,,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),10000,1794 / 3815,1,18.6,2.56,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),10000,1794 / 3815,1,6.7,1.26,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (R package RFindsc),75572,1794 / 3815,6,188.6,,0
+Scoring cells against the DAM reference (data of Hammond et al.),RFind-sc (Python package rfindsc),75572,1794 / 3815,6,17.7,,0
+Scoring cells against the DAM reference (data of Hammond et al.),ULM (decoupleR),75572,458 / 481,1,50.9,2.5,0
+Scoring cells against the DAM reference (data of Hammond et al.),ULM (decoupleR),75572,1794 / 3815,1,62.7,2.69,0
+Scoring cells against the DAM reference (data of Hammond et al.),UCell,75572,458 / 481,1,147.6,1.89,0
+Scoring cells against the DAM reference (data of Hammond et al.),UCell,75572,458 / 481,6,102.4,,0
+Scoring cells against the DAM reference (data of Hammond et al.),UCell,75572,1794 / 3815,6,116.6,,0
+Knock-out x knock-out matching (Supplementary Fig. S3),"RFind-sc (analysis code, Python)",2048,500 / 500,7,1078.0,,0

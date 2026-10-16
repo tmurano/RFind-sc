@@ -1,0 +1,241 @@
+cell_type,rank,gene,diff,det_in
+DG Glut,1,Pcp4,6.893,0.981
+DG Glut,2,C1ql3,5.8,0.967
+DG Glut,3,Nrgn,5.731,0.987
+DG Glut,4,Synpr,5.571,0.958
+DG Glut,5,Calb1,5.534,0.928
+DG Glut,6,C1ql2,5.459,0.896
+DG Glut,7,Cplx2,5.402,0.978
+DG Glut,8,Olfm1,5.323,0.987
+DG Glut,9,Camk2b,5.306,0.983
+DG Glut,10,Chn1,5.294,0.983
+DG Glut,11,Sncb,5.207,0.97
+DG Glut,12,Caly,5.186,0.976
+DG Glut,13,Ahcyl2,5.156,0.927
+DG Glut,14,Ncdn,5.124,0.984
+DG Glut,15,Snca,5.101,0.98
+DG Glut,16,Bex2,5.086,0.974
+DG Glut,17,Map1b,5.019,0.984
+DG Glut,18,Nrn1,4.961,0.952
+DG Glut,19,Ncald,4.9,0.95
+DG Glut,20,Snap25,4.873,0.985
+DG Glut,21,Ctxn1,4.861,0.959
+DG Glut,22,Grin2b,4.85,0.96
+DG Glut,23,Gria2,4.831,0.995
+DG Glut,24,Fam163b,4.83,0.844
+DG Glut,25,Bcl11b,4.827,0.911
+DG Glut,26,Ppp1r1a,4.825,0.919
+DG Glut,27,Dgkh,4.813,0.891
+DG Glut,28,Cnih2,4.803,0.953
+DG Glut,29,Atp1b1,4.781,0.985
+DG Glut,30,Meg3,4.759,0.999
+CA1 Glut,1,Snhg11,6.382,0.999
+CA1 Glut,2,Meg3,6.126,1
+CA1 Glut,3,Nrgn,5.503,0.941
+CA1 Glut,4,Cck,5.468,0.933
+CA1 Glut,5,Neurod6,5.352,0.917
+CA1 Glut,6,Grin2b,5.251,0.965
+CA1 Glut,7,Rprml,5.069,0.916
+CA1 Glut,8,Hpca,5.018,0.943
+CA1 Glut,9,Ociad2,4.967,0.915
+CA1 Glut,10,Syt1,4.88,0.961
+CA1 Glut,11,Ly6h,4.857,0.959
+CA1 Glut,12,Gria2,4.826,0.995
+CA1 Glut,13,Cnih2,4.813,0.929
+CA1 Glut,14,Atp6v1g2,4.81,0.92
+CA1 Glut,15,Rasgrp1,4.792,0.893
+CA1 Glut,16,Gap43,4.788,0.873
+CA1 Glut,17,Prkcg,4.784,0.91
+CA1 Glut,18,Gria1,4.763,0.953
+CA1 Glut,19,Atp2b1,4.755,0.98
+CA1 Glut,20,Cpne7,4.746,0.876
+CA1 Glut,21,Gng3,4.706,0.906
+CA1 Glut,22,Sncb,4.694,0.919
+CA1 Glut,23,Ctxn1,4.69,0.925
+CA1 Glut,24,Camkv,4.663,0.955
+CA1 Glut,25,Grin2a,4.632,0.929
+CA1 Glut,26,Atp1b1,4.63,0.952
+CA1 Glut,27,Slc8a1,4.623,0.89
+CA1 Glut,28,Prkcb,4.622,0.909
+CA1 Glut,29,Snap25,4.595,0.965
+CA1 Glut,30,Shank1,4.576,0.938
+CA3 Glut,1,Nrgn,5.919,0.998
+CA3 Glut,2,Snap25,5.697,0.998
+CA3 Glut,3,Neurod6,5.669,0.972
+CA3 Glut,4,Stmn2,5.579,0.988
+CA3 Glut,5,Hpca,5.513,0.997
+CA3 Glut,6,Gng3,5.47,0.982
+CA3 Glut,7,Cck,5.362,0.981
+CA3 Glut,8,Atp6v1g2,5.311,0.988
+CA3 Glut,9,Snca,5.264,0.998
+CA3 Glut,10,Scn1b,5.251,0.99
+CA3 Glut,11,Chgb,5.237,0.969
+CA3 Glut,12,Olfm1,5.057,0.992
+CA3 Glut,13,Syt1,4.988,0.977
+CA3 Glut,14,Chn1,4.942,0.99
+CA3 Glut,15,Syn2,4.929,0.961
+CA3 Glut,16,Nrn1,4.888,0.96
+CA3 Glut,17,Stmn3,4.872,0.996
+CA3 Glut,18,Nptxr,4.827,0.904
+CA3 Glut,19,Slc17a7,4.81,0.952
+CA3 Glut,20,Sncb,4.782,0.979
+CA3 Glut,21,Mllt11,4.781,0.983
+CA3 Glut,22,Cnih2,4.772,0.98
+CA3 Glut,23,Sh3gl2,4.752,0.922
+CA3 Glut,24,Celf4,4.666,0.949
+CA3 Glut,25,Thy1,4.659,0.97
+CA3 Glut,26,Nptx1,4.576,0.88
+CA3 Glut,27,Uchl1,4.575,0.982
+CA3 Glut,28,Cplx2,4.547,0.955
+CA3 Glut,29,Dnm1,4.544,0.934
+CA3 Glut,30,Ppp3r1,4.524,0.989
+GABA,1,Snhg11,5.508,0.933
+GABA,2,Meg3,5.213,0.948
+GABA,3,Nap1l5,5.134,0.938
+GABA,4,Gng3,4.853,0.933
+GABA,5,Nrxn3,4.761,0.87
+GABA,6,Slc6a1,4.735,0.896
+GABA,7,Syt1,4.716,0.927
+GABA,8,Sncb,4.664,0.927
+GABA,9,Snap25,4.607,0.984
+GABA,10,Atp1b1,4.606,0.974
+GABA,11,Stmn2,4.575,0.917
+GABA,12,Cplx1,4.56,0.87
+GABA,13,Stmn3,4.51,0.938
+GABA,14,Cit,4.494,0.839
+GABA,15,Resp18,4.492,0.803
+GABA,16,Ly6h,4.484,0.953
+GABA,17,Rnf227,4.482,0.902
+GABA,18,Vstm2a,4.471,0.834
+GABA,19,Elavl2,4.404,0.824
+GABA,20,Ndrg4,4.385,0.948
+GABA,21,Camk2n2,4.346,0.85
+GABA,22,Zwint,4.324,0.943
+GABA,23,Rab3c,4.321,0.86
+GABA,24,Nrsn1,4.269,0.86
+GABA,25,Mllt11,4.252,0.922
+GABA,26,Tmsb10,4.213,0.953
+GABA,27,Vsnl1,4.149,0.917
+GABA,28,Gap43,4.113,0.834
+GABA,29,Rtn1,4.071,0.974
+GABA,30,Zcchc18,4.071,0.922
+Astro,1,Aldoc,7.619,0.982
+Astro,2,Clu,7.481,0.994
+Astro,3,Gja1,6.898,0.942
+Astro,4,Mt2,6.864,0.971
+Astro,5,Ntsr2,6.851,0.962
+Astro,6,Slc1a3,6.836,0.974
+Astro,7,Slc1a2,6.634,0.988
+Astro,8,Pla2g7,6.554,0.926
+Astro,9,Plpp3,6.468,0.956
+Astro,10,Gpr37l1,6.438,0.916
+Astro,11,Atp1a2,6.436,0.969
+Astro,12,Cldn10,6.345,0.904
+Astro,13,Ndrg2,5.895,0.941
+Astro,14,Mfge8,5.598,0.883
+Astro,15,Mlc1,5.545,0.822
+Astro,16,Id4,5.52,0.814
+Astro,17,Cxcl14,5.512,0.808
+Astro,18,Bcan,5.445,0.843
+Astro,19,Htra1,5.383,0.907
+Astro,20,Cspg5,5.345,0.879
+Astro,21,Mt3,5.198,0.978
+Astro,22,Gstm1,5.163,0.916
+Astro,23,Ttyh1,5.157,0.893
+Astro,24,Apoe,5.139,1
+Astro,25,Fxyd1,5.089,0.803
+Astro,26,Atp1b2,5.005,0.882
+Astro,27,Sparcl1,4.919,0.975
+Astro,28,Scg3,4.903,0.806
+Astro,29,Gjb6,4.853,0.72
+Astro,30,Ntrk2,4.849,0.865
+Microglia,1,C1qa,9.022,0.999
+Microglia,2,C1qb,8.893,0.999
+Microglia,3,Hexb,8.75,0.999
+Microglia,4,C1qc,8.727,0.997
+Microglia,5,Ctss,8.521,0.997
+Microglia,6,P2ry12,7.972,0.97
+Microglia,7,Selplg,7.951,0.976
+Microglia,8,Csf1r,7.772,0.977
+Microglia,9,Tyrobp,7.585,0.974
+Microglia,10,Tmem119,7.319,0.946
+Microglia,11,Fcer1g,7.274,0.956
+Microglia,12,Trem2,7.232,0.952
+Microglia,13,Gpr34,7.179,0.935
+Microglia,14,Cx3cr1,7.113,0.934
+Microglia,15,Laptm5,7.012,0.94
+Microglia,16,Olfml3,6.812,0.912
+Microglia,17,Fcrl2,6.793,0.9
+Microglia,18,Ly86,6.758,0.914
+Microglia,19,Fcgr3,6.682,0.908
+Microglia,20,Cd53,6.439,0.89
+Microglia,21,Lgmn,6.419,0.99
+Microglia,22,Vsir,6.3,0.883
+Microglia,23,Ctsd,6.299,0.997
+Microglia,24,Rgs10,5.959,0.853
+Microglia,25,Itgb5,5.655,0.841
+Microglia,26,Unc93b1,5.598,0.829
+Microglia,27,Sparc,5.393,0.964
+Microglia,28,Ctsz,5.262,0.882
+Microglia,29,Siglech,5.226,0.749
+Microglia,30,Lpcat2,5.187,0.77
+Oligodendrocytes,1,Plp1,8.993,1
+Oligodendrocytes,2,Cldn11,8.085,0.999
+Oligodendrocytes,3,Mobp,7.751,0.999
+Oligodendrocytes,4,Ptgds,7.701,0.958
+Oligodendrocytes,5,Cnp,7.653,1
+Oligodendrocytes,6,Mbp,7.612,1
+Oligodendrocytes,7,Mag,7.552,0.993
+Oligodendrocytes,8,Cryab,7.451,1
+Oligodendrocytes,9,Trf,7.443,0.999
+Oligodendrocytes,10,Mal,7.195,0.998
+Oligodendrocytes,11,Mog,7.153,0.981
+Oligodendrocytes,12,Apod,7.11,0.991
+Oligodendrocytes,13,Ermn,7.062,0.986
+Oligodendrocytes,14,Car2,7.018,0.997
+Oligodendrocytes,15,Enpp2,6.751,0.983
+Oligodendrocytes,16,Septin4,6.606,0.996
+Oligodendrocytes,17,Qdpr,6.386,0.989
+Oligodendrocytes,18,Csrp1,6.363,0.993
+Oligodendrocytes,19,Ppp1r14a,6.321,0.952
+Oligodendrocytes,20,Gsn,6.2,0.928
+Oligodendrocytes,21,Olig1,6.058,0.946
+Oligodendrocytes,22,Tspan2,5.861,0.913
+Oligodendrocytes,23,Gatm,5.718,0.997
+Oligodendrocytes,24,Opalin,5.678,0.819
+Oligodendrocytes,25,Tubb4a,5.612,0.971
+Oligodendrocytes,26,Gpr37,5.541,0.901
+Oligodendrocytes,27,Pllp,5.521,0.919
+Oligodendrocytes,28,Aspa,5.484,0.848
+Oligodendrocytes,29,Tnfaip6,5.476,0.862
+Oligodendrocytes,30,Nkx6-2,5.462,0.855
+Endothelial,1,Cldn5,8.558,0.993
+Endothelial,2,Ly6c1,8.483,0.995
+Endothelial,3,Itm2a,8.066,0.981
+Endothelial,4,Ly6a,7.86,0.975
+Endothelial,5,Pglyrp1,7.287,0.932
+Endothelial,6,Slco1a4,7.136,0.94
+Endothelial,7,Igfbp7,7.135,0.962
+Endothelial,8,Flt1,6.965,0.928
+Endothelial,9,Klf2,6.754,0.927
+Endothelial,10,Pltp,6.752,0.926
+Endothelial,11,Hspb1,6.226,0.889
+Endothelial,12,Id1,6.187,0.877
+Endothelial,13,Id3,6.178,0.919
+Endothelial,14,Slc2a1,6.149,0.922
+Endothelial,15,Ctla2a,5.93,0.808
+Endothelial,16,Ifitm3,5.836,0.864
+Endothelial,17,Vwa1,5.769,0.851
+Endothelial,18,Esam,5.574,0.834
+Endothelial,19,Nherf2,5.551,0.866
+Endothelial,20,Egfl7,5.37,0.868
+Endothelial,21,Ramp2,5.169,0.878
+Endothelial,22,Sgms1,5.124,0.822
+Endothelial,23,Adgrl4,5.084,0.757
+Endothelial,24,Sparc,4.785,0.925
+Endothelial,25,Slco1c1,4.769,0.752
+Endothelial,26,Crip2,4.735,0.915
+Endothelial,27,Ly6e,4.716,0.939
+Endothelial,28,Wfdc1,4.703,0.714
+Endothelial,29,Abcg2,4.697,0.748
+Endothelial,30,Fxyd5,4.656,0.717

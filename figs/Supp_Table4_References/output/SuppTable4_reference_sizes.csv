@@ -1,0 +1,11 @@
+reference,dataset,type_code,genes_analysed,up_before,down_before,up_after,down_after,background_U
+DAM,Hammond,B,8960,500,500,408,427,5368
+Maturity,Hammond,B,8960,500,500,353,287,8772
+PS2APP,Hammond,B,8960,500,500,109,118,8627
+Interferon,Hammond,C,8960,100,0,77,0,8959
+G2M,Hammond,C,8960,198,0,168,0,8959
+Glucocorticoid,DeDonno,B,11647,500,500,243,401,11584
+Forced swim,DeDonno,B,11647,500,500,278,248,10941
+Seizure,DeDonno,B,11647,200,0,108,0,11307
+NF-kB,DeDonno,C,11647,199,0,142,0,11644
+UPR,DeDonno,C,11647,113,0,101,0,11644

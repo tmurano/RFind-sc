@@ -1,0 +1,28 @@
+DG x g017_DG: 12,059 genes, 1,857 knock-outs; ULM regression over 12,059 genes
+  RFind    from the opposed end: Nr3c1 76, Nr3c2 178, Hsp90ab1 418, Ncoa1 10, Ncoa3 770, Crebrf 1855  | Spearman with RFind +1.000; opposed top 20 shared 20  | opposed top 10: Cep290, Pak1, Zfp799, Kcnab2, Cask, Lmx1b, Chd8, Ikzf3, Mef2d, Ncoa1
+  ULM      from the opposed end: Nr3c1 181, Nr3c2 187, Hsp90ab1 324, Ncoa1 6, Ncoa3 700, Crebrf 1854  | Spearman with RFind +0.929; opposed top 20 shared 10  | opposed top 10: Cep290, Zfp1, Gpi1, Scn3a, Tfdp1, Ncoa1, Chd8, Ikzf3, Klf11, Zfp846
+  ULM_all  from the opposed end: Nr3c1 283, Nr3c2 281, Hsp90ab1 491, Ncoa1 5, Ncoa3 1089, Crebrf 1855  | Spearman with RFind +0.905; opposed top 20 shared 6  | opposed top 10: Cep290, Tfdp1, Fgfrl1, Fgfr3, Ncoa1, Foxl1, Zfp1, Ror1, Klf11, Ankrd12
+  scFOCAL  from the opposed end: Nr3c1 286, Nr3c2 72, Hsp90ab1 441, Ncoa1 3, Ncoa3 1071, Crebrf 1852  | Spearman with RFind +0.893; opposed top 20 shared 10  | opposed top 10: Cep290, Chd8, Ncoa1, Ror1, Ankrd12, Adgra1, Foxl1, Adra2a, Tfdp1, Stmn2
+CA1 x CA1: 12,017 genes, 1,822 knock-outs; ULM regression over 12,017 genes
+  RFind    from the opposed end: Nr3c1 92, Nr3c2 107, Hsp90ab1 44, Ncoa1 47, Ncoa3 52, Crebrf 1200  | Spearman with RFind +1.000; opposed top 20 shared 20  | opposed top 10: Tanc2, Ebf3, Ufc1, Rhot1, Ntrk1, Itga2, Rab27a, Nek9, Hjv, Snx10
+  ULM      from the opposed end: Nr3c1 90, Nr3c2 190, Hsp90ab1 74, Ncoa1 64, Ncoa3 68, Crebrf 1290  | Spearman with RFind +0.976; opposed top 20 shared 13  | opposed top 10: Ebf3, Tanc2, Ufc1, Neurod2, Stag1, Hjv, Irf9, Ifnar1, Rab27a, Dhdds
+  ULM_all  from the opposed end: Nr3c1 55, Nr3c2 154, Hsp90ab1 48, Ncoa1 99, Ncoa3 46, Crebrf 1217  | Spearman with RFind +0.965; opposed top 20 shared 12  | opposed top 10: Tanc2, Rab27a, Ebf3, Stag1, Neurod2, Ppp2r1a, Ifnar1, Pax3, Dhdds, Itga2
+  scFOCAL  from the opposed end: Nr3c1 130, Nr3c2 341, Hsp90ab1 48, Ncoa1 128, Ncoa3 62, Crebrf 1288  | Spearman with RFind +0.953; opposed top 20 shared 11  | opposed top 10: Tanc2, Rab27a, Ebf3, Irf9, Ifnar1, Neurod2, Hjv, Stag1, Ppip5k2, Ufc1
+CA3 x g017_CA3: 12,159 genes, 1,937 knock-outs; ULM regression over 12,159 genes
+  RFind    from the opposed end: Nr3c1 1181, Nr3c2 1490, Hsp90ab1 1711, Ncoa1 820, Ncoa3 1860, Crebrf 1067  | Spearman with RFind +1.000; opposed top 20 shared 20  | opposed top 10: Gstm5, Gclm, Mtnr1b, Litaf, Ywhaz, Arhgap18, Prox1, Gpr158, Grin1, Htr1a
+  ULM      from the opposed end: Nr3c1 750, Nr3c2 1618, Hsp90ab1 1722, Ncoa1 356, Ncoa3 1727, Crebrf 768  | Spearman with RFind +0.927; opposed top 20 shared 13  | opposed top 10: Gstm5, Gclm, Litaf, Zfp451, Ywhaz, Mtnr1b, Bcap31, Zbtb21, Irf1, Clpx
+  ULM_all  from the opposed end: Nr3c1 742, Nr3c2 1308, Hsp90ab1 1828, Ncoa1 405, Ncoa3 1734, Crebrf 791  | Spearman with RFind +0.881; opposed top 20 shared 10  | opposed top 10: Gstm5, Gclm, Fgfrl1, Zfp451, Cyld, Mtnr1b, Ski, Litaf, Pknox2, Tbc1d24
+  scFOCAL  from the opposed end: Nr3c1 923, Nr3c2 796, Hsp90ab1 1903, Ncoa1 156, Ncoa3 1741, Crebrf 481  | Spearman with RFind +0.823; opposed top 20 shared 11  | opposed top 10: Gstm5, Zfp451, Gclm, Irf1, Klhl20, Ndufaf4, Ptprt, Cyld, Gabrr2, Litaf
+GABA x GABA3: 12,101 genes, 1,947 knock-outs; ULM regression over 12,101 genes
+  RFind    from the opposed end: Nr3c1 335, Nr3c2 1824, Hsp90ab1 577, Ncoa1 122, Ncoa3 1156, Crebrf 1881  | Spearman with RFind +1.000; opposed top 20 shared 20  | opposed top 10: Lrrc3b, Snrpn, Bap1, Nalcn, Ifnar1, Ndufs2, Trappc9, Prox1, Cdc40, Kmt2e
+  ULM      from the opposed end: Nr3c1 56, Nr3c2 1677, Hsp90ab1 990, Ncoa1 43, Ncoa3 685, Crebrf 1375  | Spearman with RFind +0.737; opposed top 20 shared 7  | opposed top 10: Sos1, Cacna2d2, Hmgb1, Nalcn, Trappc9, Kmt2e, Bap1, Nr5a2, Pou3f4, Tpm3
+  ULM_all  from the opposed end: Nr3c1 184, Nr3c2 1772, Hsp90ab1 582, Ncoa1 103, Ncoa3 1055, Crebrf 1236  | Spearman with RFind +0.694; opposed top 20 shared 3  | opposed top 10: Sos1, Nr5a2, Itga7, Tpm3, Cacna2d2, Nalcn, Rac1, Prr12, Tubb2a, Samd12
+  scFOCAL  from the opposed end: Nr3c1 563, Nr3c2 1675, Hsp90ab1 1234, Ncoa1 261, Ncoa3 690, Crebrf 1365  | Spearman with RFind +0.602; opposed top 20 shared 4  | opposed top 10: Crlf1, Tubb2a, Mef2c, Cox11, Nefh, Samd12, Prr12, Lrrc3b, Itgb2, Comt
+Supplementary Table 2 (five knock-outs of Fig. 4d against random sets of five; AUC < 0.5 = towards the opposed end):
+  RFind    DG AUC 0.155 P 0.0023 / matched 0.0012; CA1 AUC 0.036 P 1e-05 / matched 1e-05; CA3 AUC 0.730 P 0.96 / matched 0.97; GABA AUC 0.412 P 0.25 / matched 0.27
+  ULM      DG AUC 0.149 P 0.002 / matched 0.00072; CA1 AUC 0.052 P 1e-05 / matched 2e-05; CA3 AUC 0.637 P 0.85 / matched 0.88; GABA AUC 0.354 P 0.13 / matched 0.14
+  ULM_all  DG AUC 0.230 P 0.017 / matched 0.0094; CA1 AUC 0.043 P 1e-05 / matched 1e-05; CA3 AUC 0.621 P 0.82 / matched 0.86; GABA AUC 0.379 P 0.18 / matched 0.19
+  scFOCAL  DG AUC 0.201 P 0.0087 / matched 0.0038; CA1 AUC 0.076 P 4e-05 / matched 0.00013; CA3 AUC 0.570 P 0.7 / matched 0.76; GABA AUC 0.454 P 0.36 / matched 0.41
+  RFind reproduces geneset_random_null.csv (AUC and both P, every cell type)
+  RFind reproduces fig4d_GR-complex_positions.csv (the 20 positions)
+done in 11 s

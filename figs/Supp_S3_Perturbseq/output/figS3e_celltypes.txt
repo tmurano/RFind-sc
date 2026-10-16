@@ -1,0 +1,4 @@
+Pairs named as similar by Shi et al. that fall in the top 1% of all knock-out pairs of the cell type (by chance 1%).
+TH Prkcd Grin2c Glut (thalamus)  83/117 =  70.9%   median nuclei per knock-out 177
+Hippocampus      7/ 89 =   7.9%   median nuclei per knock-out 76
+GABA            24/117 =  20.5%   median nuclei per knock-out 198

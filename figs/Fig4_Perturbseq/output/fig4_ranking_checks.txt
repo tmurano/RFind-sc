@@ -1,0 +1,6 @@
+Fig. 4 ranking check (figs/Fig4_Perturbseq/analysis/fig4_ranking_checks.py)
+Lower limit of 5 nuclei per knock-out instead of 10 (base_check/all_minc5)
+   DG: 1,857 knock-outs in both; Spearman 0.9998
+   CA1: 1,822 knock-outs in both; Spearman 0.9999
+   CA3: 1,937 knock-outs in both; Spearman 1.0000
+   GABA: 1,947 knock-outs in both; Spearman 1.0000

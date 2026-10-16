@@ -1,0 +1,6 @@
+RFind-sc between all pairs, g151 (2,047 columns, 12,286 genes; UP/DOWN 500 by Delta; 4-term Running Fisher)
+KOxKO   mean +0.436  median +0.287  sd 8.084  positive 0.521  n 1,894,431
+safexsafe mean +0.582  median +0.523  sd 7.070  positive 0.539  n 4,950
+KOxsafe mean +0.377  median +0.358  sd 7.116  positive 0.528  n 194,700
+top KO pairs: Psmc5xPsmb4 +757.8, Uba5xUfc1 +656.0, Psmc1xPsmb4 +635.0, Psmc5xPsmc1 +621.3, Ddx23xPrpf6 +504.2, Ap2s1xAp2m1 +489.5, PompxPsmb4 +414.6, CicxAtxn1 +397.3, Tsc2xTsc1 +389.0, Psmc1xPomp +384.4, Gfpt1xAtp2a2 +369.7, Elp1xElp2 +367.8, Elp1xHspa9 +363.7, Psmc5xPomp +340.8, Smarcb1xSmarcc2 +333.2
+time 1077 s

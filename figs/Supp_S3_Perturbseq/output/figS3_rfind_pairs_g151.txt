@@ -1,0 +1,153 @@
+RFind score (4-term Running Fisher) between all pairs of columns, g151 (1,947 knock-outs + 100 safe-targeting groups; median nuclei knock-out 177, safe-targeting 99).
+Knock-out × knock-out            mean  +0.436  median  +0.287  sd  8.084  positive 0.521  min   -130.7  max   +757.8  n 1,894,431
+Knock-out × safe-targeting       mean  +0.377  median  +0.358  sd  7.116  positive 0.528  min    -58.3  max    +71.6  n 194,700
+Safe-targeting × safe-targeting  mean  +0.582  median  +0.523  sd  7.070  positive 0.539  min    -39.3  max    +40.0  n 4,950
+highest safe x safe pair +40.0; knock-out pairs above it 3,570 of 1,894,431 (0.19%); expected if distributed like the control pairs 383 -> 9.3 times
+20 most similar knock-out pairs (rank, pair, score, statement of Shi et al.):
+   1 Psmc5 x Psmb4  +757.8  Fig. 2F-G
+   2 Uba5 x Ufc1  +656.0  Fig. 2F-G
+   3 Psmc1 x Psmb4  +635.0  Fig. 2F-G
+   4 Psmc5 x Psmc1  +621.3  Fig. 2F-G
+   5 Ddx23 x Prpf6  +504.2  -
+   6 Ap2s1 x Ap2m1  +489.5  Fig. 3C
+   7 Pomp x Psmb4  +414.6  Fig. 2F-G, Fig. 3B
+   8 Cic x Atxn1  +397.3  -
+   9 Tsc2 x Tsc1  +389.0  Fig. 2H
+  10 Psmc1 x Pomp  +384.4  Fig. 2F-G
+  11 Gfpt1 x Atp2a2  +369.7  -
+  12 Elp1 x Elp2  +367.8  -
+  13 Elp1 x Hspa9  +363.7  -
+  14 Psmc5 x Pomp  +340.8  Fig. 2F-G
+  15 Smarcb1 x Smarcc2  +333.2  Fig. 2I
+  16 Gfpt1 x Hspa9  +331.9  -
+  17 Hspa9 x Hspa5  +330.6  Fig. 3B
+  18 Dhdds x Gfpt1  +322.3  -
+  19 Hspa9 x Atp2a2  +306.1  -
+  20 Gfpt1 x Hspa5  +305.7  -
+pairs named by Shi et al. (score, rank among all knock-out pairs, top %):
+  Fig. 2F-G    Psmc1 x Psmb4      +635.0  rank         3  top  0.000%
+  Fig. 2F-G    Psmc1 x Psmc5      +621.3  rank         4  top  0.000%
+  Fig. 2F-G    Psmc1 x Pomp       +384.4  rank        10  top  0.001%
+  Fig. 2F-G    Psmc1 x Uba5       +129.7  rank       236  top  0.012%
+  Fig. 2F-G    Psmc1 x Ufc1       +170.5  rank       131  top  0.007%
+  Fig. 2F-G    Psmb4 x Psmc5      +757.8  rank         1  top  0.000%
+  Fig. 2F-G    Psmb4 x Pomp       +414.6  rank         7  top  0.000%
+  Fig. 2F-G    Psmb4 x Uba5       +154.8  rank       164  top  0.009%
+  Fig. 2F-G    Psmb4 x Ufc1       +183.7  rank       110  top  0.006%
+  Fig. 2F-G    Psmc5 x Pomp       +340.8  rank        14  top  0.001%
+  Fig. 2F-G    Psmc5 x Uba5       +163.7  rank       143  top  0.008%
+  Fig. 2F-G    Psmc5 x Ufc1       +202.6  rank        73  top  0.004%
+  Fig. 2F-G     Pomp x Uba5        +96.4  rank       494  top  0.026%
+  Fig. 2F-G     Pomp x Ufc1       +117.4  rank       306  top  0.016%
+  Fig. 2F-G     Uba5 x Ufc1       +656.0  rank         2  top  0.000%
+  Fig. 2H       Tsc1 x Tsc2       +389.0  rank         9  top  0.000%
+  Fig. 2I    Smarcb1 x Smarcc2    +333.2  rank        15  top  0.001%
+  Fig. 3A      Kmt2a x Arid2       -12.0  rank 1,818,377  top 95.985%
+  Fig. 3A      Kmt2a x Chd2         -3.3  rank 1,401,530  top 73.982%
+  Fig. 3A      Kmt2a x Smarcb1     -35.3  rank 1,892,705  top 99.909%
+  Fig. 3A      Arid2 x Chd2        +10.6  rank   122,960  top  6.491%
+  Fig. 3A      Arid2 x Smarcb1     +95.8  rank       509  top  0.027%
+  Fig. 3A       Chd2 x Smarcb1     +18.0  rank    33,539  top  1.770%
+  Fig. 3A    Snrnp70 x Srsf1       +77.8  rank       770  top  0.041%
+  Fig. 3A    Snrnp70 x Hnrnpu      +97.0  rank       487  top  0.026%
+  Fig. 3A    Snrnp70 x Tardbp      +20.2  rank    24,042  top  1.269%
+  Fig. 3A      Srsf1 x Hnrnpu      +47.0  rank     2,418  top  0.128%
+  Fig. 3A      Srsf1 x Tardbp      +50.2  rank     2,061  top  0.109%
+  Fig. 3A     Hnrnpu x Tardbp      +28.8  rank     8,480  top  0.448%
+  Fig. 3A     Grin2a x Grin2b       -3.1  rank 1,386,447  top 73.185%
+  Fig. 3A     Grin2a x Kcnb1        -8.0  rank 1,717,096  top 90.639%
+  Fig. 3A     Grin2b x Kcnb1       -19.9  rank 1,877,109  top 99.086%
+  Fig. 3B      Psmb4 x Hspa5      +211.9  rank        62  top  0.003%
+  Fig. 3B      Psmb4 x Hspa8      +125.6  rank       252  top  0.013%
+  Fig. 3B      Psmb4 x Hspa9      +208.3  rank        69  top  0.004%
+  Fig. 3B      Psmb4 x Lonp1       +15.2  rank    52,721  top  2.783%
+  Fig. 3B      Psmb4 x Opa1        +68.0  rank     1,043  top  0.055%
+  Fig. 3B      Psmb4 x Dnm1l      +125.5  rank       253  top  0.013%
+  Fig. 3B       Pomp x Hspa5      +116.1  rank       313  top  0.017%
+  Fig. 3B       Pomp x Hspa8       +78.1  rank       763  top  0.040%
+  Fig. 3B       Pomp x Hspa9      +124.3  rank       260  top  0.014%
+  Fig. 3B       Pomp x Lonp1        +4.3  rank   451,044  top 23.809%
+  Fig. 3B       Pomp x Opa1        +57.2  rank     1,532  top  0.081%
+  Fig. 3B       Pomp x Dnm1l       +78.7  rank       755  top  0.040%
+  Fig. 3B      Hspa5 x Hspa8      +170.5  rank       132  top  0.007%
+  Fig. 3B      Hspa5 x Hspa9      +330.6  rank        17  top  0.001%
+  Fig. 3B      Hspa5 x Lonp1       +25.2  rank    12,680  top  0.669%
+  Fig. 3B      Hspa5 x Opa1       +112.7  rank       341  top  0.018%
+  Fig. 3B      Hspa5 x Dnm1l      +160.8  rank       150  top  0.008%
+  Fig. 3B      Hspa8 x Hspa9      +177.3  rank       123  top  0.006%
+  Fig. 3B      Hspa8 x Lonp1       +18.4  rank    31,165  top  1.645%
+  Fig. 3B      Hspa8 x Opa1        +63.8  rank     1,207  top  0.064%
+  Fig. 3B      Hspa8 x Dnm1l       +88.1  rank       596  top  0.031%
+  Fig. 3B      Hspa9 x Lonp1       +38.9  rank     3,800  top  0.201%
+  Fig. 3B      Hspa9 x Opa1       +205.0  rank        71  top  0.004%
+  Fig. 3B      Hspa9 x Dnm1l      +299.7  rank        21  top  0.001%
+  Fig. 3B      Lonp1 x Opa1        +35.5  rank     4,774  top  0.252%
+  Fig. 3B      Lonp1 x Dnm1l       +47.1  rank     2,407  top  0.127%
+  Fig. 3B       Opa1 x Dnm1l      +185.9  rank       105  top  0.006%
+  Fig. 3B     Vps37a x Vps53        +9.1  rank   165,319  top  8.727%
+  Fig. 3B     Vps37a x Snf8        +20.8  rank    22,102  top  1.167%
+  Fig. 3B     Vps37a x Atp6v0c     +27.6  rank     9,670  top  0.510%
+  Fig. 3B     Vps37a x Atp6v1a     +27.6  rank     9,647  top  0.509%
+  Fig. 3B     Vps37a x Sec31a      +23.2  rank    16,094  top  0.850%
+  Fig. 3B     Vps37a x Pitpna      +28.7  rank     8,618  top  0.455%
+  Fig. 3B     Vps37a x Tbcd        +17.5  rank    35,684  top  1.884%
+  Fig. 3B      Vps53 x Snf8         -4.9  rank 1,546,933  top 81.657%
+  Fig. 3B      Vps53 x Atp6v0c     +87.7  rank       602  top  0.032%
+  Fig. 3B      Vps53 x Atp6v1a     +15.7  rank    47,916  top  2.529%
+  Fig. 3B      Vps53 x Sec31a      +38.6  rank     3,875  top  0.205%
+  Fig. 3B      Vps53 x Pitpna      +75.2  rank       830  top  0.044%
+  Fig. 3B      Vps53 x Tbcd        +34.8  rank     5,056  top  0.267%
+  Fig. 3B       Snf8 x Atp6v0c     +11.7  rank    98,884  top  5.220%
+  Fig. 3B       Snf8 x Atp6v1a     +28.1  rank     9,193  top  0.485%
+  Fig. 3B       Snf8 x Sec31a      +12.7  rank    82,231  top  4.341%
+  Fig. 3B       Snf8 x Pitpna      +14.0  rank    64,019  top  3.379%
+  Fig. 3B       Snf8 x Tbcd        +10.5  rank   123,996  top  6.545%
+  Fig. 3B    Atp6v0c x Atp6v1a    +122.3  rank       277  top  0.015%
+  Fig. 3B    Atp6v0c x Sec31a     +201.0  rank        78  top  0.004%
+  Fig. 3B    Atp6v0c x Pitpna     +164.5  rank       142  top  0.007%
+  Fig. 3B    Atp6v0c x Tbcd       +103.1  rank       420  top  0.022%
+  Fig. 3B    Atp6v1a x Sec31a      +83.4  rank       668  top  0.035%
+  Fig. 3B    Atp6v1a x Pitpna      +39.3  rank     3,707  top  0.196%
+  Fig. 3B    Atp6v1a x Tbcd        +53.6  rank     1,771  top  0.093%
+  Fig. 3B     Sec31a x Pitpna      +54.2  rank     1,721  top  0.091%
+  Fig. 3B     Sec31a x Tbcd        +50.6  rank     2,033  top  0.107%
+  Fig. 3B     Pitpna x Tbcd        +57.8  rank     1,502  top  0.079%
+  Fig. 3B      Prpf6 x Snrnp70    +183.4  rank       111  top  0.006%
+  Fig. 3B      Prpf6 x Rnpc3      +186.2  rank       103  top  0.005%
+  Fig. 3B      Prpf6 x U2af2      +183.3  rank       112  top  0.006%
+  Fig. 3B      Prpf6 x Srrm2       +64.8  rank     1,160  top  0.061%
+  Fig. 3B    Snrnp70 x Rnpc3      +192.0  rank        98  top  0.005%
+  Fig. 3B    Snrnp70 x U2af2      +178.0  rank       121  top  0.006%
+  Fig. 3B    Snrnp70 x Srrm2       +83.9  rank       662  top  0.035%
+  Fig. 3B      Rnpc3 x U2af2      +122.5  rank       275  top  0.015%
+  Fig. 3B      Rnpc3 x Srrm2       +55.1  rank     1,660  top  0.088%
+  Fig. 3B      U2af2 x Srrm2       +64.0  rank     1,197  top  0.063%
+  Fig. 3B      Kmt2a x Kmt2e       +21.2  rank    21,053  top  1.111%
+  Fig. 3B      Kmt2a x Huwe1        +2.8  rank   612,937  top 32.355%
+  Fig. 3B      Kmt2a x Cic         -46.2  rank 1,893,996  top 99.977%
+  Fig. 3B      Kmt2a x Tbl1xr1     +18.4  rank    31,415  top  1.658%
+  Fig. 3B      Kmt2e x Huwe1       +29.7  rank     7,813  top  0.412%
+  Fig. 3B      Kmt2e x Arid2       -36.0  rank 1,892,842  top 99.916%
+  Fig. 3B      Kmt2e x Cic          +0.8  rank   880,505  top 46.479%
+  Fig. 3B      Kmt2e x Tbl1xr1      -0.8  rank 1,103,501  top 58.250%
+  Fig. 3B      Huwe1 x Arid2       -43.1  rank 1,893,793  top 99.966%
+  Fig. 3B      Huwe1 x Cic         +31.2  rank     6,796  top  0.359%
+  Fig. 3B      Huwe1 x Tbl1xr1      +8.7  rank   179,329  top  9.466%
+  Fig. 3B      Arid2 x Cic          -0.4  rank 1,041,967  top 55.002%
+  Fig. 3B      Arid2 x Tbl1xr1      +2.3  rank   677,994  top 35.789%
+  Fig. 3B        Cic x Tbl1xr1     +35.2  rank     4,906  top  0.259%
+  Fig. 3B        Yy1 x Brd4        +62.9  rank     1,240  top  0.065%
+  Fig. 3C     Grin2b x Ap2m1       +69.7  rank       986  top  0.052%
+  Fig. 3C     Grin2b x Ap2s1      +112.5  rank       345  top  0.018%
+  Fig. 3C      Ap2m1 x Ap2s1      +489.5  rank         6  top  0.000%
+  Fig. 3C     Grin2a x Gabrg2       -2.3  rank 1,295,761  top 68.398%
+  Fig. 3C      Kcnb1 x Gabrg2       +0.7  rank   888,796  top 46.916%
+b: 464 knock-outs with at least one knock-out partner above the highest safe x safe pair (+40.0)
+   module UFMylation (E1–E2): rows 420-425
+   module AP-2 adaptor: rows 0-1
+   module TSC complex: rows 8-30
+   module SWI/SNF: rows 345-347
+   module U5 snRNP: rows 440-444
+   module Elongator: rows 399-400
+   proteasome ticks: {'Psmb4': 376, 'Pomp': 381}
+   proteasome ticks: {'Psmc5': 438, 'Psmc1': 439}

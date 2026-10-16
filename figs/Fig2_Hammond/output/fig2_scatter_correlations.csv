@@ -1,0 +1,13 @@
+mode,pair,group,r
+dev,Maturity_vs_DAM,development,-0.303
+dev,Maturity_vs_DAM,Early development (E14.5–P4/P5),0.079
+dev,Maturity_vs_DAM,Maturation/ageing (P30–P540),0.522
+inj,Maturity_vs_DAM,Saline/LPC,0.192
+inj,Maturity_vs_DAM,Saline,0.379
+inj,Maturity_vs_DAM,LPC,0.019
+dev,DAM_vs_Interferon,development,-0.091
+dev,DAM_vs_Interferon,Early development (E14.5–P4/P5),-0.039
+dev,DAM_vs_Interferon,Maturation/ageing (P30–P540),0.224
+inj,DAM_vs_Interferon,Saline/LPC,0.561
+inj,DAM_vs_Interferon,Saline,0.212
+inj,DAM_vs_Interferon,LPC,0.393

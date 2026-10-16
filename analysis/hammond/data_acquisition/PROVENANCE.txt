@@ -1,0 +1,71 @@
+================================================================
+ Hammond et al. 2019 Microglia scRNA-seq — Provenance
+================================================================
+
+[Paper]
+  Single-Cell RNA Sequencing of Microglia throughout the Mouse Lifespan
+  and in the Injured Brain Reveals Complex Cell-State Changes
+  Hammond TR, Dufort C, Dissing-Olesen L, Giera S, Young A, Wysoker A,
+  Walker AJ, Gergits F, Segel M, Nemesh J, Marsh SE, Saunders A,
+  Macosko E, Ginhoux F, Chen J, Franklin RJM, Piao X, McCarroll SA,
+  Stevens B.
+  Immunity 50(1):253-271.e6, 2019.
+  DOI:  10.1016/j.immuni.2018.11.004
+  PMID: 30471926   PMCID: PMC6655561
+
+[Raw data]
+  NCBI GEO: GSE121654
+  https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE121654
+  (per-sample .txt.gz count matrices; raw reads in SRA)
+
+[Processed object source]
+  Annotated object released by Samuel E. Marsh (co-author of the paper)
+  Repo:     https://github.com/samuel-marsh/Hammond-et-al_2019_Microglia_scRNAseq
+  figshare: article 21201616 / file 37624073
+  Direct:   https://ndownloader.figshare.com/files/37624073
+  Original file name: Hammond_et-al-2019_anndata_Converted_v0-8-0.h5ad (366,187,535 bytes)
+
+[Interactive portal]
+  https://www.microgliasinglecell.com/
+
+----------------------------------------------------------------
+[Generated files] (in the output folder given to run_pipeline.py;
+ see WORKFLOW.md; not tracked in git)
+----------------------------------------------------------------
+  Hammond_AllSamples_anndata.h5ad
+      The unmodified object downloaded from figshare.
+
+  Hammond2019_microglia_AllSamples_annotated.h5ad  (main product)
+      The object above after clean-up: the "X" prefix that R added to
+      gene names removed (original names kept in var['symbol_original']),
+      cell_type_paper column added, provenance embedded in
+      uns['provenance'], UMAP coordinates added in obsm['X_umap'].
+      X        = log-normalized expression.
+      layers['counts'] = raw UMI counts (merged from GEO GSE121654).
+      Check: the raw-count sum of every cell == obs['nCount_RNA']
+      (exact match).
+
+  Hammond2019_microglia_cell_metadata.csv
+      Metadata of the 76,149 cells: Paper_Cluster / cell_type_paper
+      (the 14 clusters of the paper), Age, Sex, Condition, Batch, GEO
+      number, t-SNE coordinates.
+
+  Hammond2019_microglia_clusterMean_expression.csv
+      Mean log-normalized expression, Paper_Cluster (14) x genes (20,579).
+
+  Hammond2019_microglia_cluster_counts.csv
+      Number of cells per cluster.
+
+----------------------------------------------------------------
+[Notes]
+----------------------------------------------------------------
+  - The expression in X is log-normalized (Seurat LogNormalize). Raw
+    counts are in layers['counts'] (from GEO GSE121654).
+  - Cluster definitions of the paper (Paper_Cluster): the 14 clusters
+    1, 2a, 2b, 2c, 3, 4, 5, 6, 7a, 7b, 7c, 8, 9, Mono/Mac.
+  - The expression of all 76,149 cells x 20,579 genes would take
+    several GB as one CSV, so it is kept in the h5ad; only the cluster
+    means are written as CSV.
+
+  Retrieved: 2026-05-27
+  Assembled by: Claude Code (for T. Murano, Miyakawa Lab)

@@ -1,0 +1,14 @@
+Cluster,Dominant age,Top markers,Identity / state
+1,P4/P5,"Arg1, Cd74, Ccl24",Small Arg1+ population
+2a,E14.5–P4/P5,"Rrm2, Pcna, Mcm6",Proliferative microglia
+2b,E14.5–P4/P5,"Ube2c, Birc5, H2afx",Proliferative microglia
+2c,E14.5–P4/P5,"Cenpa, Hist1h2bc, Ccnb2",Proliferative microglia
+3,E14.5,"Fabp5, Mif, Ldha, Tpi1",Metabolically active (Fabp5+ Mif+)
+4,P4/P5,"Spp1, Igf1, Gpnmb",Axon tract-associated microglia (ATM)
+5,E14.5–P4/P5,"Hmox1, Gclm, Prdx1",Hmox1+ microglia
+6,E14.5–P4/P5,"Ms4a7, Ms4a6b, Ms4a6c, Ccr1","Ms4a7+, resemble border macrophages"
+7a,P100,"Selplg, Tmem119, Mafb",Juvenile/adult; no unique genes
+7b,P100/P30,"Selplg, Mafb, Tmem119",Juvenile/adult; no unique genes
+7c,P100,"Selplg, Tmem119, Mafb",Juvenile/adult; no unique genes
+8,mixed,"Ccl4, Ccl3, Cd83",Inflammatory (Ccl4+); expand in aging
+9,P100 LPC WM,"Ifi27l2a, Ifitm3, Rtp4",White-matter injury (Ifi27l2a+)

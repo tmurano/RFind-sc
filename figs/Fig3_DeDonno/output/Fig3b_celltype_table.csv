@@ -1,0 +1,9 @@
+Cell type,Top markers,Description
+DG Glut,"Pcp4, Nrgn, Cplx2",Dentate gyrus granule neurons
+CA1 Glut,"Snhg11, Meg3, Nrgn",CA1 pyramidal neurons
+CA3 Glut,"Nrgn, Snap25, Neurod6",CA3 pyramidal neurons
+GABA,"Snhg11, Meg3, Nap1l5",GABAergic neurons
+Astro,"Aldoc, Clu, Gja1",Astrocytes
+Microglia,"C1qa, C1qb, Hexb",Microglia
+Oligodendrocytes,"Plp1, Cldn11, Mobp",Oligodendrocytes
+Endothelial,"Cldn5, Ly6c1, Itm2a",Endothelial cells

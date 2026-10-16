@@ -1,0 +1,194 @@
+cell_type,marker,in_universe,rank
+DG Glut,mt-Nd1,FALSE,
+DG Glut,Meg3,TRUE,30
+DG Glut,Gria2,TRUE,23
+DG Glut,mt-Cytb,FALSE,
+DG Glut,mt-Atp6,FALSE,
+DG Glut,mt-Co3,FALSE,
+DG Glut,mt-Nd4,FALSE,
+DG Glut,mt-Co2,FALSE,
+DG Glut,mt-Co1,FALSE,
+DG Glut,Camk2b,TRUE,9
+DG Glut,Dgkh,TRUE,27
+DG Glut,Camk2a,TRUE,33
+DG Glut,Celf2,TRUE,63
+DG Glut,Adcy1,TRUE,34
+DG Glut,mt-Nd2,FALSE,
+DG Glut,Pcp4,TRUE,1
+DG Glut,Nrgn,TRUE,3
+DG Glut,Ppp3ca,TRUE,43
+DG Glut,Olfm1,TRUE,8
+DG Glut,Ncdn,TRUE,14
+DG Glut,Chn1,TRUE,10
+DG Glut,Bex2,TRUE,16
+DG Glut,Snca,TRUE,15
+DG Glut,Calm2,TRUE,573
+DG Glut,Map1b,TRUE,17
+DG Glut,Sncb,TRUE,11
+DG Glut,Snap25,TRUE,20
+DG Glut,Cplx2,TRUE,7
+DG Glut,Ywhah,TRUE,146
+DG Glut,Caly,TRUE,12
+DG Glut,Prox1,TRUE,71
+CA1 Glut,Meg3,TRUE,2
+CA1 Glut,Snhg11,TRUE,1
+CA1 Glut,Gria2,TRUE,12
+CA1 Glut,Atp2b1,TRUE,19
+CA1 Glut,Opcml,TRUE,32
+CA1 Glut,Grin2b,TRUE,6
+CA1 Glut,Cpne7,TRUE,20
+CA1 Glut,Celf2,TRUE,88
+CA1 Glut,Shank1,TRUE,30
+CA1 Glut,Camk2a,TRUE,33
+CA1 Glut,R3hdm1,TRUE,166
+CA1 Glut,Miat,TRUE,250
+CA1 Glut,mt-Nd1,FALSE,
+CA1 Glut,Cttnbp2,TRUE,118
+CA1 Glut,Grm5,TRUE,34
+CA1 Glut,Nrgn,TRUE,3
+CA1 Glut,Cck,TRUE,4
+CA1 Glut,Atp6v1g2,TRUE,14
+CA1 Glut,Snrpn,TRUE,130
+CA1 Glut,Calm2,TRUE,896
+CA1 Glut,Sncb,TRUE,22
+CA1 Glut,Stmn3,TRUE,39
+CA1 Glut,Atp1b1,TRUE,26
+CA1 Glut,Fkbp1a,TRUE,661
+CA1 Glut,Snap25,TRUE,29
+CA1 Glut,Snca,TRUE,49
+CA1 Glut,Mllt11,TRUE,52
+CA1 Glut,Ywhah,TRUE,404
+CA1 Glut,Rtn1,TRUE,65
+CA1 Glut,Atp6v0c,TRUE,3559
+CA1 Glut,Ly6h,TRUE,11
+CA1 Glut,Ndfip1,TRUE,2186
+CA1 Glut,Tspan13,TRUE,119
+CA1 Glut,Gpm6a,TRUE,244
+CA1 Glut,Caly,TRUE,70
+CA1 Glut,Scg5,TRUE,167
+CA1 Glut,Prnp,TRUE,701
+CA1 Glut,Neurod6,TRUE,5
+CA1 Glut,Fibcd1,TRUE,43
+CA1 Glut,Spock1,TRUE,8472
+CA3 Glut,Meg3,TRUE,246
+CA3 Glut,Snhg11,TRUE,125
+CA3 Glut,Slc17a7,TRUE,19
+CA3 Glut,Gria2,TRUE,160
+CA3 Glut,Syt1,TRUE,13
+CA3 Glut,Nptxr,TRUE,18
+CA3 Glut,mt-Nd1,FALSE,
+CA3 Glut,Opcml,TRUE,176
+CA3 Glut,Atp1b1,TRUE,39
+CA3 Glut,mt-Nd4,FALSE,
+CA3 Glut,Atp2b1,TRUE,126
+CA3 Glut,Syp,TRUE,41
+CA3 Glut,Dnm1,TRUE,29
+CA3 Glut,Rnf112,TRUE,196
+CA3 Glut,Camk2a,TRUE,51
+CA3 Glut,Snap25,TRUE,2
+CA3 Glut,Atp6v1g2,TRUE,8
+CA3 Glut,Snrpn,TRUE,32
+CA3 Glut,Snca,TRUE,9
+CA3 Glut,Nrgn,TRUE,1
+CA3 Glut,Selenow,TRUE,354
+CA3 Glut,Gng3,TRUE,6
+CA3 Glut,Ywhah,TRUE,99
+CA3 Glut,Chn1,TRUE,14
+CA3 Glut,Basp1,TRUE,71
+CA3 Glut,Hpca,TRUE,5
+CA3 Glut,Mllt11,TRUE,21
+CA3 Glut,Calm2,TRUE,1121
+CA3 Glut,Stmn3,TRUE,17
+CA3 Glut,Rtn1,TRUE,46
+CA3 Glut,Pcsk1n,TRUE,179
+CA3 Glut,Scn1b,TRUE,10
+CA3 Glut,Calm1,TRUE,2023
+CA3 Glut,Calm3,TRUE,276
+CA3 Glut,Atp6v0c,TRUE,1696
+CA3 Glut,Neurod6,TRUE,3
+CA3 Glut,Fibcd1,TRUE,
+CA3 Glut,Spock1,TRUE,42
+GABA,Snhg11,TRUE,1
+GABA,Gad2,FALSE,
+GABA,Gad1,FALSE,
+GABA,Syt1,TRUE,7
+GABA,Atp1b1,TRUE,10
+GABA,Meg3,TRUE,2
+GABA,Nap1l5,TRUE,3
+GABA,Nrxn3,TRUE,5
+GABA,Slc32a1,FALSE,
+GABA,Ttc3,TRUE,66
+GABA,Snap25,TRUE,9
+GABA,Slc6a1,TRUE,6
+GABA,Ndrg4,TRUE,20
+GABA,Elavl2,TRUE,19
+GABA,Rab3c,TRUE,23
+Astro,Aldoc,TRUE,1
+Astro,Clu,TRUE,2
+Astro,Mt1,TRUE,40
+Astro,Apoe,TRUE,24
+Astro,Mt3,TRUE,21
+Astro,Mt2,TRUE,4
+Astro,Slc1a2,TRUE,7
+Astro,Cst3,TRUE,59
+Astro,Slc1a3,TRUE,6
+Astro,Ndrg2,TRUE,13
+Astro,Dbi,TRUE,63
+Astro,Gstm1,TRUE,22
+Astro,Ckb,TRUE,99
+Astro,Sparcl1,TRUE,27
+Astro,Ntsr2,TRUE,5
+Astro,Atp1a2,TRUE,11
+Astro,Gpr37l1,TRUE,10
+Astro,Plpp3,TRUE,9
+Astro,Gm3764,FALSE,
+Astro,Bcan,TRUE,18
+Astro,Pla2g7,TRUE,8
+Astro,Htra1,TRUE,19
+Astro,Gja1,TRUE,3
+Astro,Dclk1,TRUE,47
+Microglia,Hexb,TRUE,3
+Microglia,C1qa,TRUE,1
+Microglia,C1qb,TRUE,2
+Microglia,C1qc,TRUE,4
+Microglia,Ctss,TRUE,5
+Microglia,Ctsd,TRUE,23
+Microglia,Lgmn,TRUE,21
+Microglia,Cst3,TRUE,39
+Microglia,Csf1r,TRUE,8
+Microglia,P2ry12,TRUE,6
+Microglia,Selplg,TRUE,7
+Microglia,Tyrobp,TRUE,9
+Microglia,Fcer1g,TRUE,11
+Microglia,Trem2,TRUE,12
+Microglia,Laptm5,TRUE,15
+Oligodendrocytes,Plp1,TRUE,1
+Oligodendrocytes,Mbp,TRUE,6
+Oligodendrocytes,Cnp,TRUE,5
+Oligodendrocytes,Cldn11,TRUE,2
+Oligodendrocytes,Trf,TRUE,9
+Oligodendrocytes,Mag,TRUE,7
+Oligodendrocytes,Aplp1,TRUE,36
+Oligodendrocytes,Sept4,FALSE,
+Oligodendrocytes,Mal,TRUE,10
+Oligodendrocytes,Mobp,TRUE,3
+Oligodendrocytes,Cryab,TRUE,8
+Oligodendrocytes,Enpp2,TRUE,15
+Oligodendrocytes,Car2,TRUE,14
+Oligodendrocytes,Mog,TRUE,11
+Oligodendrocytes,Fth1,TRUE,229
+Endothelial,Cldn5,TRUE,1
+Endothelial,Ly6c1,TRUE,2
+Endothelial,Bsg,TRUE,32
+Endothelial,Itm2a,TRUE,3
+Endothelial,Ly6a,TRUE,4
+Endothelial,Igfbp7,TRUE,7
+Endothelial,Flt1,TRUE,8
+Endothelial,Slco1a4,TRUE,6
+Endothelial,Pltp,TRUE,10
+Endothelial,Tsc22d1,TRUE,34
+Endothelial,Slc2a1,TRUE,14
+Endothelial,Ly6e,TRUE,27
+Endothelial,Pglyrp1,TRUE,5
+Endothelial,Klf2,TRUE,9
+Endothelial,Id3,TRUE,13

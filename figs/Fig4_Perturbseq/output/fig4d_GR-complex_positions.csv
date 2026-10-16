@@ -1,0 +1,21 @@
+GO,term,cell_type,KO,rfind,z_vs_KO,rank_from_aligned_end,rank_from_opposed_end,n_ko,nuclei
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,DG,Hsp90ab1,-4.398,-0.669,1440,418,1857,35
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA1,Hsp90ab1,-30.404,-2.034,1779,44,1822,11
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA3,Hsp90ab1,9.054,1.184,227,1711,1937,46
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,GABA,Hsp90ab1,-2.261,-0.533,1371,577,1947,210
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,DG,Ncoa1,-19.916,-2.617,1848,10,1857,19
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA1,Ncoa1,-30.027,-2.009,1776,47,1822,20
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA3,Ncoa1,-1.419,-0.248,1118,820,1937,34
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,GABA,Ncoa1,-6.584,-1.518,1826,122,1947,203
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,DG,Ncoa3,-1.054,-0.249,1088,770,1857,22
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA1,Ncoa3,-29.419,-1.969,1771,52,1822,16
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA3,Ncoa3,13.863,1.841,78,1860,1937,22
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,GABA,Ncoa3,1.052,0.222,792,1156,1947,209
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,DG,Nr3c1,-11.794,-1.597,1782,76,1857,10
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA1,Nr3c1,-24.77,-1.663,1731,92,1822,15
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA3,Nr3c1,1.991,0.218,757,1181,1937,30
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,GABA,Nr3c1,-4.015,-0.933,1613,335,1947,179
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,DG,Nr3c2,-8.171,-1.142,1680,178,1857,20
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA1,Nr3c2,-23.462,-1.577,1716,107,1822,14
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,CA3,Nr3c2,5.425,0.688,448,1490,1937,26
+GR-complex,Knock-outs of corticosteroid receptors and their complexes,GABA,Nr3c2,6.899,1.554,124,1824,1947,170
