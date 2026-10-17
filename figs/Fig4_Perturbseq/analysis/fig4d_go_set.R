@@ -41,12 +41,11 @@ PRESET <- list(
   ## coactivators; every library member of this definition (5 genes)
   "GR-complex" = list(name = "Knock-outs of corticosteroid receptors and their complexes",   # key: what the black dots are
                       genes = c("Nr3c1", "Nr3c2", "Hsp90ab1", "Ncoa1", "Ncoa3")),
-  ## Other presets (GR-lists, c-named) are kept as options; the paper uses GR-complex. GR-lists is Nr3c1 with the two GR
-  ## regulators of the DG lists of Fig4c (Ncoa1, Crebrf); c-named is the three knock-outs named in those lists (Ncoa1,
-  ## Crebrf, Gal). The knock-outs in marked_in_c are drawn as diamonds.
-  "GR-lists" = list(name = "GR and the GR regulators marked in c", genes = c("Nr3c1", "Ncoa1", "Crebrf"),
+  ## Other presets, not used in the paper: GR-lists (Nr3c1 with the GR regulators Ncoa1 and Crebrf) and c-named (Ncoa1,
+  ## Crebrf and Gal). The knock-outs in marked_in_c are drawn as diamonds.
+  "GR-lists" = list(name = "GR and the GR regulators Ncoa1 and Crebrf", genes = c("Nr3c1", "Ncoa1", "Crebrf"),
                     marked_in_c = c("Ncoa1", "Crebrf")),
-  "c-named" = list(name = "knock-outs named in the DG lists of c", genes = c("Ncoa1", "Crebrf", "Gal"),
+  "c-named" = list(name = "Knock-outs Ncoa1, Crebrf and Gal", genes = c("Ncoa1", "Crebrf", "Gal"),
                    marked_in_c = c("Ncoa1", "Crebrf", "Gal")))
 if (grepl("^GO:", GO)) {
   GO_NAME <- Term(GOTERM[[GO]])
@@ -102,10 +101,10 @@ p <- ggplot(R, aes(rank_opp, rfind)) +
   scale_colour_manual(values = c("Other knock-outs" = "grey75"), labels = c("Other knock-outs" = "All other knock-outs (about 1,900)"), name = NULL) +
   scale_fill_manual(values = c(set = "grey5", receptor = "grey5", marked = "grey5"), name = NULL,
                     labels = c(set = if (grepl("^GO:", GO)) sprintf("%s (%s)", GO_NAME, GO) else GO_NAME,
-                               receptor = "Nr3c1 (glucocorticoid receptor)", marked = if (GO == "c-named") "knock-outs named in c" else "GR regulators marked in c")) +
+                               receptor = "Nr3c1 (glucocorticoid receptor)", marked = if (GO == "c-named") "Ncoa1, Crebrf and Gal" else "GR regulators Ncoa1 and Crebrf")) +
   scale_shape_manual(values = c(set = 21, receptor = 21, marked = 23), name = NULL,
                      labels = c(set = if (grepl("^GO:", GO)) sprintf("%s (%s)", GO_NAME, GO) else GO_NAME,
-                                receptor = "Nr3c1 (glucocorticoid receptor)", marked = if (GO == "c-named") "knock-outs named in c" else "GR regulators marked in c")) +
+                                receptor = "Nr3c1 (glucocorticoid receptor)", marked = if (GO == "c-named") "Ncoa1, Crebrf and Gal" else "GR regulators Ncoa1 and Crebrf")) +
   scale_x_continuous(breaks = c(1, 1000), expand = expansion(mult = 0.04)) +   # 1 and 1000 only: 500 and 1500 overlap
   facet_wrap(~ct, nrow = 1, labeller = as_labeller(CT_LAB)) +   # the y axis shared by the four panels; the titles name the neurons
   ## no panel title or subtitle: what the panel shows is given in the figure legend

@@ -20,7 +20,7 @@ CT_NM <- c(DG = "DG\nGlut", CA1 = "CA1\nGlut", CA3 = "CA3\nGlut", GABA = "GABA\n
 SETS <- list(
   ## the set of the paper: the corticosteroid receptors and the GR complex, every library member of this definition (5 rows)
   "GR-complex" = c(Nr3c1 = "GR", Nr3c2 = "MR", Hsp90ab1 = "chaperone", Ncoa1 = "coactivator", Ncoa3 = "coactivator"),
-  ## other sets, kept as options: knock-outs of the DG lists of Fig4c, with Nr3c1 in GR-lit
+  ## other sets, not used in the paper: c-named (Ncoa1, Crebrf, Gal) and GR-lit (with Nr3c1 and Kmt2d)
   "c-named"    = c(Ncoa1 = "GR coactivator", Crebrf = "GR repressor", Gal = "galanin"),
   "GR-lit"     = c(Nr3c1 = "receptor", Ncoa1 = "coactivator", Kmt2d = "stabilises GR", Crebrf = "repressor"))
 args <- commandArgs(TRUE); SET <- if (length(args)) args[1] else "GR-complex"

@@ -24,12 +24,10 @@ In the paper: Supplementary Table 2, sheet "Other matching methods" (made by sup
 fig4_other_methods_summary.csv): the positions of the five knock-outs of Fig. 4d and the comparison with random sets for RFind,
 ULM and scFOCAL. ULM_all, Crebrf and the Spearman correlations with RFind are not in the paper.
 Output: figs/Fig4_Perturbseq/output/fig4_other_methods.txt (summary), fig4_other_methods_summary.csv (cell type x method)
-Run   : python figs/Fig4_Perturbseq/analysis/fig4_other_methods.py [n_workers]   (from the project root; numpy, scipy, pandas;
+Run   : python figs/Fig4_Perturbseq/analysis/fig4_other_methods.py   (from the project root; numpy, scipy, pandas;
         ~2 min)
 """
-import os, re, sys, time
-from itertools import combinations
-import multiprocessing as mp
+import os, time
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -41,9 +39,6 @@ DATA = os.path.join(BASE, 'data', 'Perturbseq')
 RES = os.path.join(BASE, 'analysis', 'perturbseq', 'results')
 FIG4 = os.path.join(BASE, 'figs', 'Fig4_Perturbseq', 'output')                 # Fig. 4 tables (inputs)
 OUT = os.path.join(os.path.dirname(HERE), 'output'); os.makedirs(OUT, exist_ok=True)   # outputs of this script
-S3 = os.path.join(BASE, 'figs', 'Supp_S3_Perturbseq', 'output')
-sys.path.insert(0, os.path.join(BASE, 'figs', 'Supp_S3_Perturbseq', 'analysis'))
-from figS3_shi_pairs import SHI
 
 CUT, MINC, N_SIG = 1.0, 10, 500                        # as 03_axis_vs_ko.py and figS3_rfind_allpairs.py
 PB = {'g017_DG': 'pb_g017_DG.npz', 'g017_CA3': 'pb_g017_CA3.npz', 'CA1': 'pb_CA1.npz', 'GABA3': 'pb_GABA3.npz',
@@ -54,10 +49,6 @@ FIG4D = ['Nr3c1', 'Nr3c2', 'Hsp90ab1', 'Ncoa1', 'Ncoa3']
 WATCH = FIG4D + ['Crebrf']
 METHODS = ['RFind', 'ULM', 'ULM_all', 'scFOCAL']
 B = 100_000
-## Supplementary Fig. S3e: contexts (key of rfind_allpairs_<key>.npz -> pseudo-bulk); HIP = DG + CA1 + CA3 (load_hip)
-S3E = [('g151', 'Thalamus'), ('HIP', 'Hippocampus'), ('GABA', 'GABAergic neurons'),
-       ('DG', 'Dentate gyrus'), ('CA1', 'CA1'), ('CA3', 'CA3')]
-S3PB = {'g151': 'g151', 'GABA': 'GABA3', 'DG': 'g017_DG', 'CA1': 'CA1', 'CA3': 'g017_CA3'}
 t0 = time.time()
 LOG = []
 def say(*a):
@@ -84,20 +75,6 @@ def load_delta(ctx):
     X = M[keep][:, sel]; ex = np.outer(base, X.sum(0))
     kind = np.array(['safe' if x.startswith('Safe_target') else 'KO' for x in t[sel]])
     return (X - ex) / np.sqrt(ex + 1), gn[keep], t[sel], n[sel], kind, cpm_non
-
-def load_hip():
-    """DG + CA1 + CA3: the Delta of each cell type summed over the genes and columns kept in all three (as load_hip of
-    figS3_rfind_allpairs.py)."""
-    parts = [load_delta(c) for c in ('g017_DG', 'CA1', 'g017_CA3')]
-    genes = sorted(set.intersection(*[set(p[1]) for p in parts]))
-    cols = sorted(set.intersection(*[set(p[2]) for p in parts]))
-    V = np.zeros((len(genes), len(cols)))
-    for Vx, gx, tx, *_ in parts:
-        gi = {x: i for i, x in enumerate(gx)}; ci = {x: i for i, x in enumerate(tx)}
-        V += Vx[np.ix_([gi[x] for x in genes], [ci[x] for x in cols])]
-    t = np.array(cols)
-    return V, np.array(genes), t, np.array(['safe' if x.startswith('Safe_target') else 'KO' for x in t])
-
 
 ## ---------- the matching methods: references = columns of R (genes x references); profile(s) = columns of Q ----------
 def ref_genes(R):
@@ -235,7 +212,6 @@ part1.ranks = []
 
 
 if __name__ == '__main__':
-    nw = int(sys.argv[1]) if len(sys.argv) > 1 else 6
     s1 = part1()
     s1.to_csv(os.path.join(OUT, 'fig4_other_methods_summary.csv'), index=False, float_format='%.6g')
     say(f'done in {time.time() - t0:.0f} s')

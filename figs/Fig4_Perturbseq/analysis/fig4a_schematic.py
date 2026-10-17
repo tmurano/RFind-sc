@@ -39,17 +39,14 @@ matplotlib.rcParams['font.family'] = 'Arial'
 fig = plt.figure(figsize=[(round(v / 25.4 * DPI) + 0.1) / DPI for v in (W_MM, H_MM)])
 ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, DW); ax.set_ylim(0, DH); ax.axis('off')
 
-## layout (mm). Every header box is as wide as its 7-pt bold text plus PADH on each side, GAPH between the boxes, the row
-## centred. YA = height of the three arrows between the boxes.
+## layout (mm). The header boxes sit at fixed positions (XS below); _tw = the width of each 7-pt bold header text, used to check
+## that each box holds its text with PADH on each side. YA = height of the three arrows between the boxes.
 HEADERS = ['1. Knock-out library in the brain', '2. Single-nucleus RNA-seq', '3. A comprehensive reference panel',
            '4. RFind score against a target']
-PADH, GAPH = 0.9 / SC, 1.1 / SC
+PADH = 0.9 / SC
 _r = fig.canvas.get_renderer()
 _tw = [fig.text(0, 0, h, fontsize=FSH, fontweight='bold').get_window_extent(_r).width / fig.dpi * 25.4 / SC for h in HEADERS]
 for t in list(fig.texts): t.remove()
-_x = (DW - sum(_tw) - 2 * PADH * 4 - 3 * GAPH) / 2; XS = []
-for w in _tw:
-    XS.append((_x, _x + w + 2 * PADH)); _x += w + 2 * PADH + GAPH
 ## the row spans the whole width and the spare width goes to panel 2 and 3, not to the margins; each box still at least as
 ## wide as its text
 XS = [(0.4, 42.3), (43.4, 83.2), (84.3, 137.6), (138.7, 179.6)]
@@ -121,8 +118,6 @@ OUTL = smooth([(-2.15, -0.15), (-2.05, 0.18), (-1.75, 0.3), (-1.45, 0.6), (-0.9,
 ax.add_patch(matplotlib.patches.Polygon(OUTL, closed=True, fc=BRAIN, ec=BEDGE, lw=1.9 * LW, joinstyle='round'))
 yy = np.linspace(0.42, -0.44, 20)
 ax.plot(BX + (-1.68 + 0.06 * np.sin((yy + 0.44) / 0.86 * np.pi)) * UB, BY + yy * UB, color=BEDGE, lw=1.0 * LW, solid_capstyle='round')   # olfactory bulb
-th = np.linspace(np.radians(115), np.radians(150), 20)   # a highlight on the dome
-## no highlight on the brain
 path = Path(OUTL)
 pts, tries = [], 0
 while len(pts) < 14 and tries < 8000:

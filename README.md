@@ -18,6 +18,10 @@ DAM-index stored by the paper's pipeline (`demo/expected_output.csv`; **< 1e-13*
 [`demo/README.md`](demo/README.md).
 
 **System requirements.** Tested on macOS 27.0.1 (Apple M3, 16 GB RAM) with the versions in [Requirements](#requirements).
+The whole pipeline was run again from the public data on 2026-10-16 and 17 on a second computer (Apple M3, 8 GB RAM) with
+other versions of some R packages (data.table 1.18.6.1, gridExtra 2.3.1, hdf5r 1.3.16, irlba 2.4.1, Matrix 1.7.4, msigdbr
+26.1.1, RANN 2.6.3, readxl 1.5.0.1, Seurat 5.6.0, uwot 0.2.5); every output table was reproduced except the simulated cells
+of Fig. 1b ([Fixed inputs](#fixed-inputs)). With 8 GB, the Fig. 5 benchmark took about 4 h instead of 3 h.
 The demo needs < 0.5 GB of memory; the pipelines need 16 GB RAM (the Fig. 5 benchmark uses about 10 GB). No non-standard
 hardware is needed.
 
@@ -206,7 +210,10 @@ recompute it):
 - `data/DeDonno2026/provided/umap_261015.csv` (UMAP of the wild-type cells) — depends on uwot / irlba / BLAS.
 - `data/DeDonno2026/provided/DeDonno_GR_glucocorticoid_261016.csv` (fold changes of the Glucocorticoid reference, from the GSE184924
   counts) — depends on the org.Mm.eg.db release (3.22.0) used to map Ensembl identifiers to gene names.
-- `data/DeDonno2026/provided/fig1a_sim_umap_261015.csv` — UMAP of the simulated cells of Fig. 1a (uwot 0.2.4).
+- `data/DeDonno2026/provided/fig1a_sim_umap_261015.csv` — UMAP of the simulated cells of Fig. 1a (uwot 0.2.4). The simulated
+  counts themselves depend on irlba and RANN (principal components and nearest neighbours of the real cells), so with other
+  versions the cells of Fig. 1b, an illustration, take other indices (with irlba 2.4.1 and RANN 2.6.3, r = 0.79–0.88 with the
+  indices in the paper).
 - `data/DeDonno2026/provided/DeDonno_KA6h_261016.csv` — fold changes of the Seizure reference from recount3 (genes with tied
   log2 fold changes can come in another order in a new download).
 - `data/Hammond2019/provided/cell_meta_hammond.csv`, `mt_frac_hammond.csv` — fixed inputs that no script here rebuilds.

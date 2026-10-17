@@ -68,7 +68,7 @@ EXTRA = ['DA1', 'AS1', 'AS2', 'AS3']                               # the added t
 PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}        # added task -> the task of c on the same cells
 TA_EVAL = TA + EXTRA                                               # type A tasks averaged in e (the eight)
 TB = ['H2', 'H3', 'H5']                                            # Maturity (H4) is left out of the main figure: at the ceiling
-                                                                      # (median AUC of the methods >= 0.99 at L = 500); Supplementary
+                                                                      # (median AUC of the methods >= 0.99 at L = 500); shown only in Supplementary Table 3
 TNAME = {'H2': ('Interferon', 'cluster 9'), 'H3': ('Interferon', 'P540 vs P100'), 'H5': ('G2M', 'cluster 2b'), 'H1': ('DAM', 'LPC vs saline'),
          'H4': ('Maturity', 'P100 vs E14–P5'), 'D1': ('Glucocorticoid', 'Oligodendrocytes'), 'D2': ('Glucocorticoid', 'Astro'),
          'D3': ('Glucocorticoid', 'Endothelial'), 'DA1': ('PS2APP', 'LPC vs saline'), 'AS1': ('Forced swim', 'Oligodendrocytes'),
@@ -199,7 +199,7 @@ CW = [27, 34, 13, 14, 12, 21, 18, 40]                          # column widths (
 HEAD = ['Method', 'Built for', 'Direction', 'Magnitude', 'Gene\nsets', 'Type A\ntasks', 'Type B\ntasks', 'What is measured']
 CENT = [False, False, True, True, True, True, True, False]
 GROUPS = [(1, 4, 'What the method uses, as designed'), (5, 6, 'Reference given in this study')]   # first and last column, label
-TOP = {0, 7}                                                       # columns whose header spans both header rows                                                    # columns whose header spans both header rows
+TOP = {0, 7}                                                       # columns whose header spans both header rows
 
 
 def draw_a(fig, H, y0):
