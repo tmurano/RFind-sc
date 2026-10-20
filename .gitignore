@@ -44,36 +44,16 @@
 # (rfind_allpairs_*.npz, 12-15 MB each); the scripts in figs/*/analysis/ regenerate them.
 /figs/*/output/**/*percell*
 /figs/Supp_S3_Perturbseq/output/data/*.npz
-# Also left out: exploratory analyses that are not reported in the paper, and internal working notes (the
-# Japanese findings tables).
-/figs/Fig5_benchmark/analysis/fig5_random_ref*.R
-/figs/Fig5_benchmark/output/random_ref/
-/figs/Fig5_benchmark/analysis/fig5_typeB_ablation.R
-/figs/Fig5_benchmark/output/fig5_typeB_ablation.csv
-/figs/Fig5_benchmark/analysis/fig5_hier_*.R
-/figs/Fig5_benchmark/output/fig5_hier_*.csv
-/figs/Fig5_benchmark/analysis/run_fig5_rebuild.sh
-/figs/Fig5_benchmark/output/fig5_runtime.csv
-/figs/*/Fig*x_findings_table_ja.md
-/figs/*/output/Fig*x_findings_table.png
-# The figure of the paper is figs/Fig5_benchmark/output/Fig5.png, with its panels in output/ (tracked). The patterns for the old
-# outputs of an earlier layout of Fig. 5 and its draft files were removed on 2026-10-15 (those files no longer exist).
 
 # ---- logs/ -----------------------------------------------------------------------------------------------
 # written by the run scripts (run logs, summaries, the Fig. 5 benchmark folders); not tracked
 /logs/
 
-# ---- manuscript/ -----------------------------------------------------------------------------------------
-# Not tracked (decided 2026-10-15; until then the Markdown text was tracked): the working text of the paper (English and
-# Japanese drafts, the cover letter, the draft Reporting Summary) and the authors' tools for the Word copy. The paper itself
-# is published by the journal; the repository holds the code, the fixed inputs and the outputs.
-/manuscript/
-
 # ---- tools/ ----------------------------------------------------------------------------------------------
 # Not tracked: clones of the companion packages, which are separate git repositories (github.com/tmurano/RFindsc,
 # github.com/tmurano/rfindsc-py); analysis/check_rfindsc.R expects a clone of RFindsc in tools/RFindsc (README).
 # rfindsc-py is not needed to run this project: the Python scripts use analysis/running_fisher.py, a copy of its
-# Running Fisher kernel (0.3.5, unchanged in 0.3.6).
+# Running Fisher kernel.
 /tools/RFindsc/
 /tools/rfindsc-py/
 # Beyondcell v2.2.2 source checkout, used only by the optional 'source' route of figs/Fig5_benchmark/analysis/fig5_bench_redo.R
@@ -90,14 +70,10 @@
 # ---- not code: working notes, slides, documents, papers ------------------------------------------------
 # internal hand-over notes between work sessions
 /HANDOVER.md
-# slides, slide images and the Word copy of the manuscript of 2026-09-18 (the text is in manuscript/)
+# slides, Word files and the files for the journal
 *.pptx
 /*.docx
 /submission/
-/RFind-sc_Figure*/
-# papers and a vendor note (publishers' copyright), and the earlier Running Fisher material (slides, report)
-/Materials/
-/Running Fisher資料/
 
 # ---- large data formats, wherever they are (safety net) --------------------------------------------------
 *.h5ad

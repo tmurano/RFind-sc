@@ -3,10 +3,11 @@ in the figure or quoted in the text (effect sizes, P values, correlations, AUC, 
 
 Reads only the outputs of the figure scripts (figs/*/output/) and the per-cell scores of the pipelines; computes nothing new
 except the per-mouse means drawn in Figs. 2c, 2d, 3c and 3d, and, for Fig. 5, what the figure scripts compute from the same files
-while drawing (the ROC curve of Fig. 5b, the means of Fig. 5e, the higher / not distinguished / lower rule). Fig. 5
-(figs/Fig5_benchmark/analysis/fig5_rebuild_figure_draft.py; a, table of methods; b, the DAM example; c, type A; d, type B;
-e, reference length over the eight type A tasks) and Supplementary Fig. S4 (figS4_capability_map.py; a, table of all tasks; b, the four
-added type A tasks) follow those scripts: their lists of methods and tasks are
+while drawing (the ROC curve of Fig. 5b, the means of Fig. 5f, the higher / not distinguished / lower rule). Fig. 5
+(figs/Fig5_benchmark/analysis/fig5_rebuild_figure_draft.py; a, table of methods; b, the DAM example; c, type A, the DAM task and the
+Glucocorticoid task in the astrocytes; d, type B; e, the mean over the tasks of each type, from results/fig5_task_means.csv; f, reference
+length over the eight type A tasks) and Supplementary Fig. S4 (figS4_capability_map.py; a, table of all tasks; b, the six type A tasks
+not drawn in Fig. 5c) follow those scripts: their lists of methods and tasks are
 copied below and must be changed with them. Only the tasks and methods drawn in these two figures are written; the other results
 of the benchmark that the paper reports (the Maturity task, the methods not drawn in these figures) are in Supplementary Table 3
 (figs/Fig5_benchmark/analysis/fig5_redo_tables.py).
@@ -187,8 +188,10 @@ RF = 'RFind-sc'
 ## as in fig5_rebuild_figure_draft.py: the methods of c and of the strip of b (CMETH), of d (SETM), the tasks and the lengths
 M5C = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM (log2FC)', 'scFOCAL-type']
 M5D = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM']
-TA5, TB5 = ['H1', 'D1', 'D2', 'D3'], ['H2', 'H3', 'H5']
-XA5 = ['DA1', 'AS1', 'AS2', 'AS3']                                  # the added type A tasks (Supplementary Fig. S4; in the mean of Fig. 5e)
+TA5, TB5 = ['H1', 'D1', 'D2', 'D3'], ['H2', 'H3', 'H5']             # the DAM and Glucocorticoid tasks; type B (d)
+TC5 = ['H1', 'D2']                                                  # the type A tasks drawn in c
+XA5 = ['DA1', 'AS1', 'AS2', 'AS3']                                  # the PS2APP and Forced swim tasks (in the means of Figs. 5e, f)
+S4B = [t for t in TA5 if t not in TC5] + XA5                        # Supplementary Fig. S4b, in the order drawn: D1, D3, DA1, AS1-AS3
 TNAME5 = {'H1': 'DAM, LPC vs saline', 'D1': 'Glucocorticoid, oligodendrocytes', 'D2': 'Glucocorticoid, astrocytes',
           'D3': 'Glucocorticoid, endothelial cells', 'H2': 'Interferon, cluster 9', 'H3': 'Interferon, P540 vs P100', 'H5': 'G2M, cluster 2b',
           'DA1': 'PS2APP, LPC vs saline', 'AS1': 'Forced swim, oligodendrocytes', 'AS2': 'Forced swim, astrocytes',
@@ -214,8 +217,7 @@ ROWS5A = [
     ('Names, direction and magnitude (ranks or weights)',),
     ('ULM (decoupleR)', 'Weighted networks', '✓', 'Weight', '✓', 'log2FC weights', 'Gene set', 't value of a linear model'),
     ('scFOCAL-type', 'Drug signatures (log2FC)', '✓', 'Rank', '–', 'Ranked lists', 'Not run', 'Rank correlation with log2FC')]
-GC5 = ['D1', 'D2', 'D3']
-RES = {'higher': 'RFind-sc higher', 'nd': 'not distinguished', 'lower': 'RFind-sc lower'}
+RES ={'higher': 'RFind-sc higher', 'nd': 'not distinguished', 'lower': 'RFind-sc lower'}
 
 
 def verdict5(diff, lo, hi):
@@ -261,6 +263,24 @@ def counts5(df):
     return ', '.join(f'{k} {c.get(k, 0)}' for k in RES.values()) + f' (of {int(c.sum())})'
 
 
+GCCELL5 = {'D1': 'oligodendrocytes', 'D2': 'astrocytes', 'D3': 'endothelial cells'}
+
+
+def gc_zero5(ids):
+    """The note on the Glucocorticoid tasks `ids` of a sheet: the share of cells to which signed UCell gives 0 and Beyondcell gives no
+    score (these cells set to 0, as in the benchmark)."""
+    BY = pd.read_csv(F5 / 'results/fig5_redo_beyondcell_L500.csv')
+    BY = BY[(BY.rule == 'as_zero') & BY.id.isin(ids)].set_index('id')
+    UZ = pd.read_csv(F5 / 'results/fig5_ucell_zero.csv')
+    UZ = UZ.assign(z=UZ.n_cells * UZ.share_score0).groupby('id')[['z', 'n_cells']].sum()
+    u0 = ' and '.join(f'{100 * UZ.loc[t, "z"] / UZ.loc[t, "n_cells"]:.2f}%' for t in ids)
+    b0 = ' and '.join(f'{100 * BY.frac_nan[t]:.1f}%' for t in ids)
+    cells = ' and the '.join(GCCELL5[t] for t in ids)
+    many = len(ids) > 1
+    return (f'Signed UCell gave 0 to {u0} of the cells of the Glucocorticoid task{"s" if many else ""} in the {cells}'
+            f'{", respectively" if many else ""}; Beyondcell gave no score to {b0} (these cells set to 0).')
+
+
 def fig5():
     A = pd.read_csv(F5 / 'results/fig5_redo_auc_L500.csv')
     assert {'ULM (log2FC)'} <= set(A.method)                       # otherwise the figure draws ULM with weights of 1 in its place
@@ -283,7 +303,7 @@ def fig5():
                           'ROC true positive rate (cells down to this one)': np.cumsum(pp) / pp.sum()})
     b_auc = auc5(A, ['H1'], M5C)
     vl = np.percentile(np.abs(v), 99); lo, hi = np.nanpercentile(v, [0.5, 99.5])
-    c = auc5(A, TA5, M5C)
+    c = auc5(A, TC5, M5C)
     d = auc5(A, TB5, M5D)
     assert np.allclose(b_auc.AUC.values, c[c['Task id'] == 'H1'].AUC.values)
 
@@ -300,15 +320,15 @@ def fig5():
             rows.append(r)
     el = pd.DataFrame(rows)
 
-    BY = pd.read_csv(F5 / 'results/fig5_redo_beyondcell_L500.csv')
-    BY = BY[(BY.rule == 'as_zero') & BY.id.isin(GC5)].set_index('id')
-    UZ = pd.read_csv(F5 / 'results/fig5_ucell_zero.csv')
-    UZ = UZ.assign(z=UZ.n_cells * UZ.share_score0).groupby('id')[['z', 'n_cells']].sum()
-    u0 = {t: UZ.loc[t, 'z'] / UZ.loc[t, 'n_cells'] for t in GC5}
+    TMS = pd.read_csv(F5 / 'results/fig5_task_means.csv')            # e: the mean over the tasks of each type (fig5_task_means.py)
+    me = pd.concat([TMS[(TMS.type == 'A') & TMS.method.isin(M5C)].assign(type='A, eight tasks, 500 genes per direction'),
+                    TMS[(TMS.type == 'B') & TMS.method.isin(M5D)].assign(type='B, three tasks (gene sets)')], ignore_index=True)
+    me = me[['type', 'tasks', 'method', 'mean AUC', 'mean AUC 95% CI low', 'mean AUC 95% CI high', 'RFind-sc minus method',
+             'difference 95% CI low', 'difference 95% CI high', 'result']]
     write(OUT / 'Source_Data_Fig5.xlsx', [
         'Source Data for Fig. 5 (capability benchmark against existing scoring methods).',
         'AUC = probability that a positive cell has a higher score than a negative cell. 95% CI of the AUC and of the difference in AUC: '
-        'bootstrap over the pooled cells of the task (1,000 resamples, the same draws for every method).',
+        'bootstrap over the mice of the task (all cells of each drawn mouse; 1,000 resamples, the same draws for every method).',
         'Result: RFind-sc higher / lower when the 95% CI of (AUC of RFind-sc minus AUC of the method) excludes 0 and the difference exceeds '
         '0.01, otherwise not distinguished (not marked in Fig. 5; given in Supplementary Table 3).',
         'Fig5a: the table as drawn (✓ uses as it is; △ only partly, ssGSEA up − down by convention; – cannot; scFOCAL-type, implemented '
@@ -324,47 +344,55 @@ def fig5():
         'density per group.',
         'Fig5b (right table): the AUC of each method in the DAM task (the same rows as the DAM task of Fig5c).',
         "Reference given (Figs. 5b-d): the form of reference given to the method (as in the table a; gene set = the Hallmark set).",
-        f'Fig5c: type A tasks, top 500 genes per direction (nominal; {int(A[A.id == "D1"].ref_up.iloc[0])} up and '
-        f'{int(A[A.id == "D1"].ref_down.iloc[0])} down Glucocorticoid genes remained among the genes analysed). '
-        f'Comparisons: {counts5(c)}.',
-        f'Signed UCell gave 0 to {", ".join(f"{100 * u0[t]:.2f}%" for t in GC5)} of the cells of D1, D2 and D3; Beyondcell gave no score '
-        f'to {", ".join(f"{100 * BY.frac_nan[t]:.1f}%" for t in GC5)} (these cells set to 0).',
+        f'Fig5c: the type A tasks drawn (DAM; Glucocorticoid in the astrocytes), top 500 genes per direction (nominal; '
+        f'{int(A[A.id == "D2"].ref_up.iloc[0])} up and {int(A[A.id == "D2"].ref_down.iloc[0])} down Glucocorticoid genes remained among '
+        f'the genes analysed). The other six type A tasks are in Supplementary Fig. S4b. Comparisons: {counts5(c)}.',
+        gc_zero5(['D2']),
         f'Fig5d: type B tasks (MSigDB Hallmark gene sets); the methods that take gene sets (ULM with weights of 1). Comparisons: {counts5(d)}. '
         'With a single gene set, ULM and VISION rank the cells in the same order (identical AUCs).',
-        'Fig5e: mean AUC over the eight type A tasks by reference length (genes per direction; all genes = the whole list): the four '
-        'tasks of Fig5c and the four added tasks of Supplementary Fig. S4 (the same cells with the PS2APP and the Forced swim '
-        'references; Source Data of Supplementary Fig. S4).',
+        'Fig5e: the mean AUC of each method over the eight type A tasks (500 genes per direction) and over the three type B tasks, and '
+        'RFind-sc minus each method, with 95% CIs (bootstrap over mice, the same draws for the tasks with the same mice; drawn: the '
+        'differences; result by the rule above, not marked in the figure).',
+        'Fig5f: mean AUC over the eight type A tasks by reference length (genes per direction; all genes = the whole list): the four '
+        'DAM and Glucocorticoid tasks and the four PS2APP and Forced swim tasks (the same cells with the PS2APP and the Forced swim '
+        'references); the AUC strips of the tasks not drawn in Fig5c are in the Source Data of Supplementary Fig. S4.',
         'Source tables: figs/Fig5_benchmark/output/results/fig5_redo_auc_L<L>.csv and extra_refs/fig5_extra_auc_L<L>.csv (L = 100, 250, 500, '
-        '1000, 2000, all), results/fig5_ucell_zero.csv, '
+        '1000, 2000, all), results/fig5_task_means.csv, results/fig5_ucell_zero.csv, '
         'results/fig5_redo_beyondcell_L500.csv; per-cell scores: results/fig5_redo_percell_L500.csv.gz; t-SNE: data/Hammond2019/raw/cell_meta_hammond.csv.'],
-        {'Fig5a': a, 'Fig5b': [cells, b_auc], 'Fig5c': c, 'Fig5d': d, 'Fig5e': el})
+        {'Fig5a': a, 'Fig5b': [cells, b_auc], 'Fig5c': c, 'Fig5d': d, 'Fig5e': me, 'Fig5f': el})
 
 
 def figS4():
-    """Supplementary Fig. S4 as drawn by figS4_capability_map.py: a, the table of all tasks; b, the AUC strips of the four added type A
-    tasks. (The comparisons of type A at each method's best length and of type B are in Supplementary Table 3.)"""
+    """Supplementary Fig. S4 as drawn by figS4_capability_map.py: a, the table of all tasks; b, the AUC strips of the six type A tasks
+    not drawn in Fig. 5c. (The comparisons of type A at each method's best length and of type B are in Supplementary Table 3.)"""
+    A = pd.read_csv(F5 / 'results/fig5_redo_auc_L500.csv')
     X5 = pd.read_csv(F5 / 'extra_refs' / 'fig5_extra_auc_L500.csv')
 
-    ## b: the AUC strips of the added tasks (the lower edge of a panel goes below the range of 0.2 only to show a whole CI)
-    top = auc5(X5, XA5, M5C, lowered=True)
+    ## b: the AUC strips of the six tasks (the lower edge of a panel goes below the range of 0.2 only to show a whole CI)
+    GB = [t for t in S4B if t in TA5]                               # D1, D3: the Glucocorticoid tasks not drawn in Fig. 5c
+    top = auc5(pd.concat([A[A.id.isin(GB)], X5], ignore_index=True), S4B, M5C, lowered=True)
 
     ## a: every task of the comparison (Supplementary Table 3, sheet Tasks; Maturity, the ceiling task, is only in the table)
     tasks = pd.read_excel(F5 / 'SuppTable3.xlsx', sheet_name='Tasks')
     tasks = tasks[~tasks.task.str.startswith('Maturity')][['task', 'reference', 'type', 'how the positive cells were defined',
                                                             'positive cells', 'negative cells', 'in the main figure']].reset_index(drop=True)
     write(OUT / 'Source_Data_Supplementary_FigS4.xlsx', [
-        'Source Data for Supplementary Fig. S4 (Fig. 5): a, the table of all tasks; b, the added type A tasks. The comparisons of each '
+        'Source Data for Supplementary Fig. S4 (Fig. 5): a, the table of all tasks; b, the type A tasks not drawn in Fig. 5c. The comparisons of each '
         'method with RFind-sc in the eight type A tasks (at 500 genes per direction and at each method\'s best reference length) and in the '
         'type B tasks are in Supplementary Table 3 (sheets AUC, L = 500, Comparisons and Best length).',
         'FigS4a_tasks: every task of the comparison (from the sheet Tasks of Supplementary Table 3; Maturity, the ceiling task, is only '
         'in that table).',
-        'FigS4b_added_tasks: the AUC of every method of Fig. 5c in the added tasks, top 500 genes per direction (PS2APP, the cells '
-        'of the DAM task with the PS2APP reference; Forced swim, the cells of the three Glucocorticoid tasks with the Forced swim '
-        f'reference: {int(X5[X5.id == "AS1"].ref_up.iloc[0])} up and {int(X5[X5.id == "AS1"].ref_down.iloc[0])} down genes remained among '
-        'the analysed genes); symbols and colours as in Fig. 5 (all filled; no comparison marked). '
+        'FigS4b_typeA_tasks: the AUC of every method of Fig. 5c in the six type A tasks not drawn in Fig. 5c, top 500 genes per '
+        'direction (Glucocorticoid in the oligodendrocytes and the endothelial cells: '
+        f'{int(A[A.id == "D1"].ref_up.iloc[0])} up and {int(A[A.id == "D1"].ref_down.iloc[0])} down genes remained among the analysed genes; '
+        'PS2APP, the cells of the DAM task with the PS2APP reference; Forced swim, the cells of the three Glucocorticoid tasks with the '
+        f'Forced swim reference: {int(X5[X5.id == "AS1"].ref_up.iloc[0])} up and {int(X5[X5.id == "AS1"].ref_down.iloc[0])} down genes '
+        'remained among the analysed genes); symbols and colours as in Fig. 5 (all filled; no comparison marked). '
         f'Comparisons: {counts5(top)}. The lower edge of a panel goes below the AUC range of 0.2 only so that no 95% CI is cut.',
-        'Source tables: figs/Fig5_benchmark/output/SuppTable3.xlsx (Tasks) and extra_refs/fig5_extra_auc_L500.csv.'],
-        {'FigS4a_tasks': tasks, 'FigS4b_added_tasks': top})
+        gc_zero5(GB),
+        'Source tables: figs/Fig5_benchmark/output/SuppTable3.xlsx (Tasks), results/fig5_redo_auc_L500.csv, '
+        'extra_refs/fig5_extra_auc_L500.csv, results/fig5_ucell_zero.csv and results/fig5_redo_beyondcell_L500.csv.'],
+        {'FigS4a_tasks': tasks, 'FigS4b_typeA_tasks': top})
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@
 ## and the knock-out x knock-out matching of Supplementary Fig. S3 (figS3_rfind_allpairs.py, 2,048 profiles of TH Prkcd Grin2c Glut,
 ## 7 workers). Each run is timed under /usr/bin/time -l (macOS; maximum resident set size of the main process, so the memory of the
 ## worker processes of multi-core runs is not included: the table gives the memory of the single-core runs).
-## Run on an otherwise idle computer (the times are meaningless while other jobs run), from the project root (about 1-2 h):
+## Run on an otherwise idle computer (the times are meaningless while other jobs run), from the project root (about 1 h):
 ##   bash figs/Fig5_benchmark/analysis/fig5_runtime.sh
 ## Output: figs/Fig5_benchmark/output/results/fig5_runtime.csv (one row per run) and fig5_runtime_env.tsv (the computer and the
 ## versions of the run; both go into the sheet "Run time and memory" of fig5_redo_tables.py).

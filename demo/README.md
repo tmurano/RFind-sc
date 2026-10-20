@@ -84,7 +84,7 @@ paper (0.906, 95% CI 0.898–0.914; Fig. 5 and Supplementary Table 3).
 ## Scoring your own data with the packages
 
 `run_demo_package.R` and `run_demo_package.py` score the same 1,000 cells with the public function `score_panel_pairs()` of the
-companion packages (RFindsc and rfindsc 0.3.8; installation in the main README, "Installing the companion packages"). This is how
+companion packages (RFindsc and rfindsc 1.0.1; installation in the main README, "Companion packages"). This is how
 you would score your own cells: a gene x cell matrix of raw UMI counts and a reference of up- and down-regulated genes, most
 changed first, in one call.
 
@@ -93,19 +93,21 @@ Rscript demo/run_demo_package.R      # RFindsc installed; set RFINDSC_LIB=<libra
 python demo/run_demo_package.py      # rfindsc installed (e.g. the virtual environment of the main README)
 ```
 
-The packages take the expected counts from the cells they are given (here these 1,000 cells, half of them from the injured white
-matter; the paper took them from all 75,572 cells of the atlas) and keep the genes detected in at least 1% of these cells (5,345
-of the 5,369 genes), so the values are shifted from the paper's, but the cells keep almost the same order. Both versions print:
+Both scripts first sum the two rows of the matrix whose names differ only in case (PISD and Pisd), because the packages match gene
+names without regard to case. The packages take the expected counts from the cells they are given (here these 1,000 cells, half of
+them from the injured white matter; the paper took them from all 75,572 cells of the atlas) and keep the genes detected in at least
+1% of these cells (5,345 of the 5,368 genes), so the values are shifted from the paper's, but the cells keep almost the same order.
+Both versions print:
 
 ```
-RFindsc 0.3.8: 1000 cells scored against the DAM reference (scoring universe 5345 genes)
+RFindsc 1.0.1: 1000 cells scored against the DAM reference (scoring universe 5345 genes)
 
 first cells:
                           cell_id condition DAM_index
- P100_M_LPC_A4_AACCATGTCGCCGTGA-1       LPC    1.5850
+ P100_M_LPC_A4_AACCATGTCGCCGTGA-1       LPC    1.5301
  P100_M_LPC_A4_AACGTTGGTTAAGAAC-1       LPC   -5.0596
  P100_M_LPC_A4_AACTCAGGTATCTGCA-1       LPC  -21.5596
- P100_M_LPC_A4_AACTCCCAGTTAACGA-1       LPC    8.1514
+ P100_M_LPC_A4_AACTCCCAGTTAACGA-1       LPC    8.0342
  P100_M_LPC_A4_AAGCCGCAGCCAGTAG-1       LPC   14.1598
 
 median DAM-index: LPC 2.976, saline -20.467
@@ -119,14 +121,14 @@ baseline of the whole atlas from `data/genes.tsv.gz`.
 
 ## Run time
 
-Measured on 2026-10-16 on an Apple M3 Mac with 8 GB RAM, whole script including loading the data (the time each script
-prints):
+Measured on 2026-10-20 on an Apple M3 Mac with 16 GB RAM: the whole script including loading the data (the time each
+script prints) and the peak memory (maximum resident set size):
 
-| version | software | time |
-|---|---|---|
-| `run_demo.R` | R 4.6.0, Matrix | 2.5 s |
-| `run_demo.py` | Python 3.13.9, numpy 2.4.2, scipy 1.16.1, pandas 2.3.3 | 4.2 s |
-| `run_demo_package.R` | R 4.6.0, Matrix, RFindsc 0.3.8 | 2.2 s |
-| `run_demo_package.py` | Python 3.13.9, numpy 2.4.2, scipy 1.16.1, pandas 2.3.3, rfindsc 0.3.8 | 1.6 s |
+| version | software | time | peak memory |
+|---|---|---|---|
+| `run_demo.R` | R 4.5.2, Matrix | 2.5 s | 0.25 GB |
+| `run_demo.py` | Python 3.12.12, numpy 2.4.2, scipy 1.17.1, pandas 3.0.1 | 5.8 s | 0.22 GB |
+| `run_demo_package.R` | R 4.5.2, Matrix, RFindsc 1.0.1 | 2.1 s | 0.36 GB |
+| `run_demo_package.py` | Python 3.12.12, numpy 2.4.2, scipy 1.17.1, pandas 3.0.1, rfindsc 1.0.1 | 1.6 s | 0.22 GB |
 
-No installation beyond R or Python with the packages above is needed. Peak memory (measured on 2026-10-04): about 0.26 GB (R) and 0.23 GB (Python).
+No installation beyond R or Python with the packages above is needed.

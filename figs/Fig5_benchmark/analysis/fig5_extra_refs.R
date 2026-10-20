@@ -1,4 +1,4 @@
-## Supplementary Fig. S4 / Fig. 5e — the two additional type A references of the benchmark (data, groups and construction rules fixed
+## Supplementary Fig. S4 / Figs. 5e, f — the two additional type A references of the benchmark (data, groups and construction rules fixed
 ## before any benchmark result was seen). Each reference = ranked lists of up- and down-regulated genes by the signed linear fold change,
 ## built as the existing type A references of the paper:
 ##   Forced swim    von Ziegler et al., Nat. Commun. 13, 1824 (2022); GEO GSE169505 (bulk RNA-seq of the hippocampus). Experiment

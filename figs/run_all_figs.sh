@@ -1,11 +1,11 @@
 #!/bin/bash
 ## Every figure, Supplementary Tables 1-4 and the Source Data workbooks from the pipeline outputs, in dependency order.
-## Needs the pipelines to have been run (analysis/hammond, analysis/dedonno, analysis/perturbseq).
+## Needs the pipelines to have been run (analysis/hammond, analysis/dedonno, analysis/kang, analysis/perturbseq).
 ## Run from the project root:  bash figs/run_all_figs.sh        (logs -> logs/runs/<step>.log, summary -> logs/runs/run_all_figs_summary.tsv)
 ## Environment: R_HOME = R 4.5 with the analysis packages; PYTHON = Python with numpy, scipy, pandas, matplotlib, openpyxl
 ## (e.g. PYTHON=/path/to/python; when unset, the first of python3 and python on the PATH that imports these packages, otherwise
 ## python3). Continues after a failed step; check the summary.
-## Time: about 5 h in all (run of 2026-10-07 on an Apple M3 with 16 GB): the Fig. 5 benchmark about 3 h, the rest of Fig. 5 about
+## Time: about 4 h in all (run of 2026-10-19 on an Apple M3 with 16 GB): the Fig. 5 benchmark about 2 h, the rest of Fig. 5 about
 ## 1 h, Supplementary Fig. S3 about 1 h, everything else a few minutes.
 ## The Fig. 5 benchmark needs about 10 GB of memory (16 GB RAM or more).
 cd "$(dirname "$0")/.." || exit 1
@@ -38,6 +38,10 @@ run fig1c_formula          $PY figs/Fig1_overview/analysis/fig1c_formula.py
 for f in fig2_tsne_original fig2_violins fig2_cluster_table fig2_scatter_pairs; do run "fig2_$f" $R "figs/Fig2_Hammond/analysis/$f.R"; done
 ## Fig. 3 (De Donno): violins first (the UMAP and the table read its list of cell types, Fig3_celltype_ncells.csv)
 for f in fig3_violins fig3_umap fig3_celltype_table fig3_scatter; do run "fig3_$f" $R "figs/Fig3_DeDonno/analysis/$f.R"; done
+## Supplementary Fig. S5 (Kang, human PBMC): the markers of b from the 2.7k PBMC tutorial, then a and b, the violins (c, d), the
+## scatter maps (e, f) and the whole figure (about 1 min)
+for f in figS5_pbmc3k_markers figS5_ab figS5_violins figS5_scatter; do run "$f" $R "figs/Supp_S5_Kang/analysis/$f.R"; done
+run figS5_figure           $PY figs/Supp_S5_Kang/analysis/figS5_compose.py
 ## Fig. 1
 ## a and b are drawn from simulated data
 run fig1ab_simulated       $R figs/Fig1_overview/analysis/fig1ab_simulated.R
@@ -60,7 +64,7 @@ run fig4_random_sets      $PY figs/Fig4_Perturbseq/analysis/fig4_random_set_null
 ## Fig. 5, Supplementary Fig. S4 and Supplementary Table 3 (capability benchmark), in the order of their inputs:
 ##  1  the benchmark: per-cell scores of every method at every reference length (fig5_redo_{auc,percell}_L<L>.*,
 ##     results/fig5_redo_beyondcell_L500.csv);
-##     about 3 h and ~10 GB RAM; logs and a run summary in logs/runs/fig5_redo_<yymmdd>/ (<yymmdd> = the day of the start); a finished
+##     about 2 h and ~10 GB RAM; logs and a run summary in logs/runs/fig5_redo_<yymmdd>/ (<yymmdd> = the day of the start); a finished
 ##     step is skipped when started again on the same day (on a later day, set FIG5_LOGD=logs/runs/fig5_redo_<yymmdd of the first start>).
 ##     The per-cell files are not in the repository, so this step is always needed on a fresh copy.
 run fig5_benchmark           bash figs/Fig5_benchmark/analysis/run_fig5_redo.sh
@@ -84,18 +88,21 @@ run fig5_best_length_8tasks  $PY figs/Fig5_benchmark/analysis/fig5_best_length_8
 ##  3c the balanced accuracy at a threshold of 0, how well the sign of each score separates the two groups (results/fig5_balanced_accuracy_L500.csv;
 ##     sheet Balanced accuracy of Supplementary Table 3; reads the per-cell files of steps 1 and 1c at L = 500; about 10 s)
 run fig5_balanced_accuracy   $PY figs/Fig5_benchmark/analysis/fig5_balanced_accuracy.py
+##  3d the mean over the tasks of each type (results/fig5_task_means.csv; Fig. 5e and the sheet Mean over tasks of Supplementary Table 3;
+##     reads the per-cell files of steps 1 and 1c at L = 500 and checks the type A differences against step 3b; about 3 min)
+run fig5_task_means          $PY figs/Fig5_benchmark/analysis/fig5_task_means.py
 ##  4  output/data/Fig5c_embedding.png and Fig5d_auc.png (the t-SNE and the DAM-index distributions that panel b of Fig. 5 is cut
 ##     from; reads step 1 only). Run here, before
 ##     steps 5, 6 and 7: fig5_rebuild_figure_draft.py (step 7, imported by step 6) reads these two images when it is loaded.
 run fig5_redo_figure         $PY figs/Fig5_benchmark/analysis/fig5_redo_figure.py
 ##  5  Supplementary Table 3 (SuppTable3.xlsx; reads steps 1, 1c, 3, 3b and 3c)
 run fig5_supp_table3         $PY figs/Fig5_benchmark/analysis/fig5_redo_tables.py
-##  6  Supplementary Fig. S4: all tasks and the added type A tasks (output/FigS4.png and the panels FigS4a_tasks.png and
-##     FigS4b_added_tasks.png, directly in output/); reads steps 1c, 5 [SuppTable3.xlsx, sheet Tasks] and 4
+##  6  Supplementary Fig. S4: all tasks and the type A tasks not in Fig. 5c (output/FigS4.png and the panels FigS4a_tasks.png and
+##     FigS4b_typeA_tasks.png, directly in output/); reads steps 1c, 5 [SuppTable3.xlsx, sheet Tasks] and 4
 ##     [Fig5c_embedding.png and Fig5d_auc.png, read when fig5_rebuild_figure_draft.py is imported] and imports the script of step 7
 ##     (which reads step 1)
 run figS4_capability_map     $PY figs/Supp_S4_Benchmark/analysis/figS4_capability_map.py
-##  7  Fig. 5: the whole figure (output/Fig5.png) and the panels pasted in the slide (output/Fig5a_methods_table.png ... Fig5e_reference_length.png and Fig5_methods_key.png); e averages
+##  7  Fig. 5: the whole figure (output/Fig5.png) and the panels pasted in the slide (output/Fig5a_methods_table.png ... Fig5e_task_means.png, Fig5f_reference_length.png and Fig5_methods_key.png); e and f average
 ##     the eight type A tasks (reads steps 1, 1c and 4)
 run fig5_figure              $PY figs/Fig5_benchmark/analysis/fig5_rebuild_figure_draft.py
 ## The scripts of an earlier stored run of the Fig. 5 benchmark are not in the repository; its two result tables kept in
@@ -104,9 +111,9 @@ run fig5_figure              $PY figs/Fig5_benchmark/analysis/fig5_rebuild_figur
 ## Supplementary Fig. S3 (Perturb-seq knock-outs as references; baseline = the summed counts of all columns, as Fig. 4; b-d in the thalamic
 ## glutamatergic neurons TH Prkcd Grin2c Glut = g151, the cell type Shi et al. name in their main-text comparison of knock-outs;
 ## e = the thalamus and the cell types of Fig. 4)
-run figS3_allpairs_g151    $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta g151  # ~15 min
-run figS3_allpairs_GABA    $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta GABA  # ~16 min
-run figS3_allpairs_HIP     $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta HIP   # e, hippocampus: DG + CA1 + CA3 (Delta summed per column; ~12 min)
+run figS3_allpairs_g151    $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta g151  # ~14 min
+run figS3_allpairs_GABA    $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta GABA  # ~15 min
+run figS3_allpairs_HIP     $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allpairs.py 7 delta HIP   # e, hippocampus: DG + CA1 + CA3 (Delta summed per column; ~27 min)
 run figS3_panels           $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_panels.py                 # b, c, d (thalamus)
 run figS3_celltypes        $PY figs/Supp_S3_Perturbseq/analysis/figS3e_celltypes.py                   # e
 run figS3_schematic        $R figs/Supp_S3_Perturbseq/analysis/figS3_schematic.R
@@ -114,12 +121,12 @@ run figS3_schematic        $R figs/Supp_S3_Perturbseq/analysis/figS3_schematic.R
 ## tables above; ~2 min), then the workbook
 run fig4_other_methods     $PY figs/Fig4_Perturbseq/analysis/fig4_other_methods.py 6
 run supp_table_random_sets $PY figs/Fig4_Perturbseq/analysis/supp_table_random_sets.py  # needs openpyxl
-## Supplementary Table 4 (the references and their numbers of genes; reads the reference files of the Hammond and De Donno pipelines
-## and of step 1b of Fig. 5): the numbers (R), then the workbook
+## Supplementary Table 4 (the references and their numbers of genes; reads the reference files of the Hammond, De Donno and Kang
+## pipelines and of step 1b of Fig. 5): the numbers (R), then the workbook
 run supp_table4_sizes      $R figs/Supp_Table4_References/analysis/supp_table_references.R
 run supp_table4_references $PY figs/Supp_Table4_References/analysis/supp_table_references.py  # needs openpyxl
 ## Source Data (one workbook per figure; read the outputs above, Fig. 5 and S4 also those of step 1c): Figs. 2-5 and
-## Supplementary Fig. S4, then Supplementary Figs. S1-S3
+## Supplementary Fig. S4, then Supplementary Figs. S1-S3 and S5
 run source_data              $PY figs/make_source_data.py
 run source_data_supp         $PY figs/make_source_data_supp.py
 echo "=== [$(date +%H:%M:%S)] DONE (summary: $SUM)"

@@ -1,0 +1,9 @@
+cell_type,n_Unstimulated,n_IFNb,n_total,donors_Unstimulated,donors_IFNb,shown
+CD14+ Monocytes,2785,2600,5385,8,8,TRUE
+FCGR3A+ Monocytes,739,860,1599,8,8,TRUE
+Dendritic cells,203,229,432,6,8,TRUE
+Megakaryocytes,122,138,260,6,6,TRUE
+CD4 T cells,5161,5228,10389,8,8,TRUE
+B cells,1307,1266,2573,8,8,TRUE
+CD8 T cells,1082,960,2042,8,8,TRUE
+NK cells,916,1077,1993,8,8,TRUE

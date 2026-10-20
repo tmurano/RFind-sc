@@ -8,8 +8,9 @@ Input : figs/Supp_Table4_References/output/SuppTable4_reference_sizes.csv (supp_
         reference before and after the restriction to the genes analysed, computed from the reference files used for scoring)
 Output: figs/Supp_Table4_References/output/SuppTable4_references.xlsx (README + sheet "References")
 The descriptions below follow the scripts that build the references: analysis/hammond/06_build_references.R (DAM, Maturity,
-Interferon, G2M), analysis/dedonno/03_references.R (Glucocorticoid, Seizure, NF-kB, UPR) and
-figs/Fig5_benchmark/analysis/fig5_extra_refs.R (PS2APP, Forced swim).
+Interferon, G2M), analysis/dedonno/03_references.R (Glucocorticoid, Seizure, NF-kB, UPR),
+figs/Fig5_benchmark/analysis/fig5_extra_refs.R (PS2APP, Forced swim) and analysis/kang/03_references.R (IFNb, PGE2, Interferon
+with human genes, Chemokine).
 """
 import datetime, os
 import pandas as pd
@@ -23,13 +24,16 @@ HEAD = PatternFill("solid", fgColor="DDE3EA")
 
 n = pd.read_csv(os.path.join(OUT, "SuppTable4_reference_sizes.csv")).set_index("reference")
 
-DATASET = {"Hammond": "Hammond et al. (Fig. 2)", "DeDonno": "De Donno et al., wild-type mice (Fig. 3)"}
+DATASET = {"Hammond": "Hammond et al. (Fig. 2)", "DeDonno": "De Donno et al., wild-type mice (Fig. 3)",
+           "Kang": "Kang et al., human PBMC (Supplementary Fig. S5)"}
 TYPE = {"B": "A (differential expression list)", "C": "B (gene set)"}
 EXCL_A = "Genes without informative names, mitochondrial genes and haemoglobin genes"
 BULK = "Counts summed per group, converted to CPM over the nuclear genes; genes ranked by the difference in log2(CPM + 1)"
 HALLMARK = "MSigDB Hallmark {}, mouse orthologues (msigdbr 26.1.0; MSigDB 2026.1.Hs)"
 SET_RULE = "Membership: the whole set, without order or direction"
-## one row per reference, in the order of Methods: the six differential expression lists, then the four gene sets
+KANG_NAMES = "; gene names matched to the data of Kang et al. by Ensembl ID"
+## one row per reference, in the order of Methods: the six differential expression lists, then the four gene sets; then the four
+## references of Supplementary Fig. S5 (human)
 ROWS = [
     ("DAM", "Figs. 2c, e, f and 5b, c, e",
      "Keren-Shaul et al., 2017; Table S3 of the original article",
@@ -61,6 +65,19 @@ ROWS = [
     ("G2M", "Figs. 2d and 5d", HALLMARK.format("G2M_CHECKPOINT"), "—", "—", SET_RULE, "—"),
     ("NF-κB", "Fig. 3d, f", HALLMARK.format("TNFA_SIGNALING_VIA_NFKB"), "—", "—", SET_RULE, "—"),
     ("UPR", "Fig. 3d, f", HALLMARK.format("UNFOLDED_PROTEIN_RESPONSE"), "—", "—", SET_RULE, "—"),
+    ("IFNb", "Supplementary Fig. S5c, e",
+     "Galbraith et al., 2022; GEO GSE191317 (raw gene counts; 3′ mRNA-seq)",
+     "Peripheral blood mononuclear cells, IFN-β vs mock (PBS), 18 h", "7 vs 7 donors",
+     BULK + "; top 500 per direction, then restricted to the genes analysed" + KANG_NAMES, EXCL_A),
+    ("PGE2", "Supplementary Fig. S5c, e",
+     "Sokhi et al., 2025; GEO GSE272019 (raw gene counts)",
+     "CD14+ monocytes cultured overnight with M-CSF, PGE2 (280 nM) vs unstimulated, 3 h", "3 vs 3 donors",
+     BULK + "; top 500 per direction, then restricted to the genes analysed" + KANG_NAMES, EXCL_A),
+    ("Interferon (human)", "Supplementary Fig. S5d, f",
+     "MSigDB Hallmark INTERFERON_ALPHA_RESPONSE, human genes (msigdbr 26.1.0; MSigDB 2026.1.Hs)" + KANG_NAMES, "—", "—", SET_RULE, "—"),
+    ("Chemokine", "Supplementary Fig. S5d, f",
+     "KEGG CHEMOKINE_SIGNALING_PATHWAY (MSigDB C2, KEGG legacy), human genes (msigdbr 26.1.0; MSigDB 2026.1.Hs)" + KANG_NAMES,
+     "—", "—", SET_RULE, "—"),
 ]
 KEY = {"NF-κB": "NF-kB"}                                       # name in the CSV (ASCII)
 assert sorted(KEY.get(r[0], r[0]) for r in ROWS) == sorted(n.index), "references in the CSV and in this script differ"
@@ -93,12 +110,12 @@ readme = [
     ("Cells scored — the dataset whose cells were scored with the reference (De Donno et al., the wild-type mice only).", F),
     ("Source — the study and the data from which the reference was taken or computed.", F),
     ("Comparison (up = higher in the first group) — the two groups compared; up-regulated genes are those higher in the first group.", F),
-    ("Samples — the numbers of mice or samples in the first and second groups, whose counts were summed per group.", F),
+    ("Samples — the numbers of mice, donors or samples in the first and second groups, whose counts were summed per group.", F),
     ("Ranking or selection of genes — how the genes were ranked and how many were taken. CPM, counts per million.", F),
     ("Genes excluded — genes removed before ranking. Genes without informative names: predicted genes, RIKEN cDNA clones and other "
      "clone names (patterns in the analysis code). Gene sets: no genes were removed beyond the restriction to the genes analysed.", F),
-    ("Genes in the reference: up / down — number of genes in the up- and down-regulated lists (gene sets: the number of mouse "
-     "genes in the set) before the restriction to the genes analysed.", F),
+    ("Genes in the reference: up / down — number of genes in the up- and down-regulated lists (gene sets: the number of genes in "
+     "the set; mouse orthologues for Figs. 2 and 3, human genes for Supplementary Fig. S5) before the restriction to the genes analysed.", F),
     ("Genes analysed in the dataset — the genes analysed in the dataset whose cells were scored (Methods).", F),
     ("Genes used, after restriction to the genes analysed: up / down — number of genes of the reference used for matching. "
      "Empty cells, no down-regulated list (Seizure and the gene sets; the Seizure-index is Score(UP, UP) − Score(DOWN, UP)).", F),

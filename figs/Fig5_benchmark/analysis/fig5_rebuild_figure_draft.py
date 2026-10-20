@@ -6,22 +6,27 @@ below the range, 95% interval as a bar.
   a  what each method can use from a reference (table, with the form of the reference each method is given in the type A and the
      type B tasks; the key to the symbols is in the legend, not under the table)
   b  the DAM example (t-SNE, the DAM-index distributions and the ROC curve of RFind-sc, and the AUC of every method in this task)
-  c  type A (4 tasks: DAM and the three Glucocorticoid tasks): every method once, in the most complete form it can take, side by side
+  c  type A (2 tasks: DAM and Glucocorticoid in Astro; the Glucocorticoid tasks in Oligodendrocytes and Endothelial are in
+     Supplementary Fig. S4b): every method once, in the most complete form it can take, side by side; the method key right of them
   d  type B (3 tasks: MSigDB Hallmark sets): every method that takes a gene set
-  e  reference length (type A): mean AUC over the eight type A tasks (the four of c and the four added tasks of Supplementary
-     Fig. S4: DA1, the cells of the DAM task with the PS2APP reference; AS1-AS3, the cells of the three Glucocorticoid tasks
+  e  the mean over the tasks of each type: the mean AUC of RFind-sc minus that of each method, with its 95% interval, over the eight
+     type A tasks (500 genes per direction) and the three type B tasks (results/fig5_task_means.csv; fig5_task_means.py)
+  f  reference length (type A): mean AUC over the eight type A tasks (the four DAM and Glucocorticoid tasks and the four PS2APP and
+     Forced swim tasks: DA1, the cells of the DAM task with the PS2APP reference; AS1-AS3, the cells of the three Glucocorticoid tasks
      with the Forced swim reference; fig5_extra_score.R) by the number of reference genes per direction
-All symbols are filled: the figure shows no comparison with RFind-sc (the comparisons are in Supplementary Table 3). Headers name the
-type of reference of c and d. The method key sits right of d.
-Intervals: bootstrap over the pooled cells of the task (1,000 resamples, the same draws for every method), as in the benchmark.
+All symbols are filled: the figure shows no comparison with RFind-sc (the comparisons are in Supplementary Table 3). The panels have
+no header line (the legend names the type of reference of c and d). Layout: c (with the key) above d on the left, three small panels
+wide; e above f on the right; the whole figure fits the 180 mm height of the slide.
+Intervals: bootstrap over the mice of the task (all cells of each drawn mouse; 1,000 resamples, the same draws for every method), as in
+the benchmark.
 The panels are blocks placed in rows by render(). For the slide, render_panels() draws each block alone (no panel letter: the letters
 belong to the slide) on a canvas of the figure's width and cuts it to its drawn content with a 0.5 mm margin, so that the images keep
 the physical size of the figure at 600 dpi (paste at 100%).
 Inputs: figs/Fig5_benchmark/output/results/fig5_redo_auc_L<L>.csv (all tasks of the figure), extra_refs/fig5_extra_auc_L<L>.csv (the added
-        type A tasks, e only), Fig5c_embedding.png and Fig5d_auc.png (b; fig5_redo_figure.py)
+        type A tasks, f only), results/fig5_task_means.csv (e), Fig5c_embedding.png and Fig5d_auc.png (b; fig5_redo_figure.py)
 Output: figs/Fig5_benchmark/output/Fig5.png (the figure of the paper) and, in the same folder, the
-        panels Fig5a_methods_table.png, Fig5b_DAM_example.png, Fig5c_typeA.png, Fig5d_typeB.png,
-        Fig5e_reference_length.png and Fig5_methods_key.png (the method key; the note on filled / open symbols is in the legend, KEY_NOTE): the panels for the
+        panels Fig5a_methods_table.png, Fig5b_DAM_example.png, Fig5c_typeA.png, Fig5d_typeB.png, Fig5e_task_means.png,
+        Fig5f_reference_length.png and Fig5_methods_key.png (the method key; the note on filled / open symbols is in the legend, KEY_NOTE): the panels for the
         slide, with their sizes in mm printed
 Run from the project root: python3 figs/Fig5_benchmark/analysis/fig5_rebuild_figure_draft.py
 """
@@ -59,13 +64,14 @@ LABEL = {'UCell (up genes)': 'UCell (up genes)', 'UCell': 'UCell', 'ULM': 'ULM (
 ## methods: up names only). UCell with the up genes only is reported in Supplementary Table 3.
 ## The forms are given in the table (a) and the text; c shows the methods side by side in the order of the table, as d does.
 ## Reported in Supplementary Table 3 only: decoupleR's WMEAN and ORA (decoupleR is represented by one method, ULM). Beyondcell is shown
-## although it gives no score to the cells expressing fewer than 10% of the reference genes (21-84% of the cells of the Glucocorticoid
-## tasks; counted as 0, as in the benchmark).
+## although it gives no score to the cells expressing fewer than 10% of the reference genes (counted as 0, as in the benchmark; the
+## numbers of these cells are in Supplementary Table 3, sheet Beyondcell missing).
 CMETH = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM (log2FC)', 'scFOCAL-type']
 SETM = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM']
-TA = ['H1', 'D1', 'D2', 'D3']                                      # type A tasks of c (and of b: H1)
+TA = ['H1', 'D1', 'D2', 'D3']                                      # the DAM and Glucocorticoid tasks (averaged in e and f with EXTRA)
+TA_C = ['H1', 'D2']                                                # the type A tasks drawn in c (and in b: H1); D1 and D3 in Supplementary Fig. S4b
 EXTRA = ['DA1', 'AS1', 'AS2', 'AS3']                               # the added type A tasks (Supplementary Fig. S4)
-PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}        # added task -> the task of c on the same cells
+PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}        # added task -> the DAM or Glucocorticoid task on the same cells
 TA_EVAL = TA + EXTRA                                               # type A tasks averaged in e (the eight)
 TB = ['H2', 'H3', 'H5']                                            # Maturity (H4) is left out of the main figure: at the ceiling
                                                                       # (median AUC of the methods >= 0.99 at L = 500); shown only in Supplementary Table 3
@@ -126,8 +132,8 @@ def txmm_g2m(fig, H, x, y, s, fontsize, **kw):                     # a label cen
 
 
 ## ---- data ----
-A = pd.read_csv(S + 'results/fig5_redo_auc_L500.csv')[['id', 'method', 'AUC', 'lo', 'hi', 'diff_vs_RFind', 'd_lo', 'd_hi']]   # 95% intervals: bootstrap over the pooled cells
-CI = 'bootstrap over cells (1,000 resamples)'
+A = pd.read_csv(S + 'results/fig5_redo_auc_L500.csv')[['id', 'method', 'AUC', 'lo', 'hi', 'diff_vs_RFind', 'd_lo', 'd_hi']]   # 95% intervals: bootstrap over the mice
+CI = 'bootstrap over mice (1,000 resamples)'
 ALL = []                                                           # every length: the tasks of the figure, then the added type A tasks (e)
 for L in LS:
     if not os.path.exists(f'{S}results/fig5_redo_auc_L{L}.csv'):
@@ -141,6 +147,7 @@ for L in LS:
         assert nn.shape[0] == 1 and (nn.to_numpy() == m0[m0.id == PAIR[t]][['n_pos', 'n_neg']].drop_duplicates().to_numpy()).all(), (t, L)
     ALL += [m0, x0[x0.id.isin(EXTRA)]]
 ALL = pd.concat(ALL, ignore_index=True)
+TM = pd.read_csv(S + 'results/fig5_task_means.csv')              # e: the mean over the tasks of each type (fig5_task_means.py)
 HAVE = set(A.method)
 assert {'ULM (log2FC)'} <= HAVE                                   # decoupleR of c and e: ULM with the log2FC weights
 print('intervals:', CI, '| methods with results at L = 500:', sorted(HAVE))
@@ -195,7 +202,8 @@ ROWS = [  # method; as designed: built for, direction, magnitude, gene sets; giv
 ## The header, in two rows, separates what each method uses as designed (built for, direction, magnitude, gene sets) from the
 ## reference given in this study (the form in the type A tasks, in words; the gene set or 'Not run' in the type B tasks); rank and
 ## numerical weight in one column, Magnitude; the key to the symbols is in the legend, not under the table
-CW = [27, 34, 13, 14, 12, 21, 18, 40]                          # column widths (mm), sum 179
+CW = [26.5, 34, 12.5, 12.5, 11, 21, 15.5, 40]                  # column widths (mm), sum 173
+A_HH, A_RH = 8.6, 2.95                                             # heights (mm) of the two header rows together and of a row
 HEAD = ['Method', 'Built for', 'Direction', 'Magnitude', 'Gene\nsets', 'Type A\ntasks', 'Type B\ntasks', 'What is measured']
 CENT = [False, False, True, True, True, True, True, False]
 GROUPS = [(1, 4, 'What the method uses, as designed'), (5, 6, 'Reference given in this study')]   # first and last column, label
@@ -203,7 +211,7 @@ TOP = {0, 7}                                                       # columns who
 
 
 def draw_a(fig, H, y0):
-    x0 = 0.5; g1 = 3.4; hh = 9.0; rh = 3.075                       # g1 = height of the group header row
+    x0 = 0.5; g1 = 3.4; hh = A_HH; rh = A_RH                       # g1 = height of the group header row
     ax = axmm(fig, H, x0, y0, sum(CW), hh + rh * len(ROWS) + 1); ax.set_xlim(0, sum(CW)); ax.set_ylim(hh + rh * len(ROWS) + 1, 0); ax.axis('off')
     ax.add_patch(plt.Rectangle((0, 0), sum(CW), hh, color=NAVY, lw=0))
     xs = np.cumsum([0] + CW[:-1])
@@ -229,26 +237,15 @@ def draw_a(fig, H, y0):
     return hh + rh * len(ROWS) + 1.0
 
 
-HDR = 4.0                                                          # height of the header line above c, d and e (mm)
-HEADS = {'typeA': 'Type A references: ranked lists of up- and down-regulated genes (top 500 genes per direction)',
-         'typeB': 'Type B references: gene sets (MSigDB Hallmark; no order)',
-         'length': 'Type A tasks: length of the reference'}
-
-
-def header(fig, H, x, y0, key):                                    # the type of reference, right of the panel letter
-    txmm(fig, H, x + 4.0, y0 + 3.0, HEADS[key], fontsize=T6, fontweight='bold', color=NAVY, ha='left', va='baseline')
-
-
-## ---- type A (4 tasks): every method once, side by side ----
-LEFT_W = 118.0                                                     # width of the left column (c above d); e on the right
-PW_S, GAP_S = (LEFT_W - 9.3 - (4 - 1) * 5.8) / 4, 5.8              # one width for the small panels of c and d
+## ---- c: type A (2 tasks): every method once, side by side ----
+LEFT_W = 104.0                                                     # width of the left column (c above d), about 6/10 of the figure
+PW_S, GAP_S = (LEFT_W - 9.3 - (3 - 1) * 5.8) / 3, 5.8              # three small panels fill it (c: two tasks and the key)
 
 
 def draw_b(fig, H, y0, X1=9.3, GAP=GAP_S):                         # X1 = left edge of the first small panel (room for its axis label)
-    PW, PH = PW_S, 24.0                                             # the four tasks fill the left column (c and d left, e right)
+    PW, PH = PW_S, 24.0                                             # c: the two tasks and the key fill the left column (c and d left, e and f right)
     STEP = PW + GAP
-    header(fig, H, 0, y0, 'typeA'); y0 += HDR
-    for k, t in enumerate(TA):
+    for k, t in enumerate(TA_C):
         xa = X1 + k * STEP; ax = axmm(fig, H, xa, y0 + 8, PW, PH)
         txmm(fig, H, xa + PW / 2, y0 + 3.6, TNAME[t][0], fontsize=T6, fontweight='bold', ha='center', va='baseline')
         txmm(fig, H, xa + PW / 2, y0 + 6.1, TNAME[t][1], fontsize=T6, ha='center', va='baseline', color='0.3')
@@ -263,7 +260,6 @@ def draw_b(fig, H, y0, X1=9.3, GAP=GAP_S):                         # X1 = left e
 def draw_c(fig, H, x0, y0):
     PW, PH, STEP = PW_S, 24.0, PW_S + GAP_S                           # the small panels of d as those of c
     ms = [m for m in SETM]
-    header(fig, H, x0, y0, 'typeB'); y0 += HDR
     for k, t in enumerate(TB):
         xa = x0 + 9.3 + k * STEP; ax = axmm(fig, H, xa, y0 + 8, PW, PH)
         txmm_g2m(fig, H, xa + PW / 2, y0 + 3.6, TNAME[t][0], fontsize=T6, fontweight='bold')   # G2M: subscript 2 at 5 pt
@@ -276,20 +272,49 @@ def draw_c(fig, H, x0, y0):
             ax.set_ylabel('AUC (95% CI)')
 
 
-## ---- e: reference length (type A) ----
+## ---- e: the mean over the tasks of each type, RFind-sc minus each method (the methods of c and d at their places) ----
+MEAN_TITLE = {'A': ('Type A', '8 tasks'), 'B': ('Type B', '3 tasks')}
+
+
+E_PW, E_GAP = 26.5, 6.0                                            # e: width of its two panels and the gap between them (mm)
+
+
+def draw_means(fig, H, x0, y0, X1=9.3):
+    PW, PH, STEP = E_PW, 24.0, E_PW + E_GAP                          # the height of the small panels of c and d
+    for k, (kind, ms) in enumerate((('A', CMETH), ('B', SETM))):
+        xa = x0 + X1 + k * STEP; ax = axmm(fig, H, xa, y0 + 8, PW, PH)
+        txmm(fig, H, xa + PW / 2, y0 + 3.6, MEAN_TITLE[kind][0], fontsize=T6, fontweight='bold', ha='center', va='baseline')
+        txmm(fig, H, xa + PW / 2, y0 + 6.1, MEAN_TITLE[kind][1], fontsize=T6, ha='center', va='baseline', color='0.3')
+        v = TM[TM.type == kind].set_index('method')
+        ax.axhline(0, color='0.45', lw=0.5, ls=(0, (2, 2)), zorder=1)
+        top = 0.0
+        for x, m in enumerate(ms):
+            if m == RF or m not in v.index:
+                continue
+            d, lo, hi = v.loc[m, ['RFind-sc minus method', 'difference 95% CI low', 'difference 95% CI high']]
+            ax.plot([x, x], [lo, hi], color=COL[m], lw=0.7, zorder=2, solid_capstyle='butt')
+            dot(ax, x, d, m); top = max(top, hi)
+        ax.set_xlim(-0.8, len(ms) - 0.2); ax.set_xticks([])
+        step = 0.05 if top > 0.1 else 0.01
+        ax.set_ylim(-step / 2, (np.floor(top / step) + 1) * step)
+        ax.yaxis.set_major_locator(MultipleLocator(step)); ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+        if k == 0:
+            ax.set_ylabel('RFind-sc minus method\n(mean AUC; 95% CI)')
+
+
+## ---- f: reference length (type A) ----
 def style(m):
     rf = m == RF
     return dict(marker=MARK[m], ms=3.6 if rf else 2.6, lw=1.4 if rf else 0.8, color=COL[m], ls='-', markerfacecolor=COL[m],
                 markeredgecolor='black' if rf else COL[m], markeredgewidth=0.5 if rf else 0.7)
 
 
-E_MAIN = 51.0                                                      # height (mm) of e
-E_W = 39.0                                                         # width (mm) of the plot of e
+E_MAIN = 28.0                                                      # height (mm) of the plot of f (the whole figure within the slide's 180 mm)
+E_W = 32.0                                                         # width (mm) of the plot of f
 
 
 def draw_d(fig, H, x0, y0):
-    y0 += HDR                                                      # no header over e; the space of a header is left blank above it
-    ax = axmm(fig, H, x0 + 10, y0 + 2, E_W, E_MAIN)                  # e: right of c and d, to the right edge of the figure
+    ax = axmm(fig, H, x0 + 10, y0 + 2, E_W, E_MAIN)                  # f: right of d (below e), to the right edge of the figure
     Lh = [L for L in LS if L in set(ALL.L)]
     for m in CMETH:
         y = []
@@ -301,7 +326,7 @@ def draw_d(fig, H, x0, y0):
         ax.plot(range(len(Lh)), y, zorder=5 if m == RF else 3, **style(m))
     ax.set_xticks(range(len(Lh))); ax.set_xticklabels([{'1000': '1,000', '2000': '2,000'}.get(L, L) for L in Lh])
     ax.axvline(Lh.index('500'), color='0.5', lw=0.4, ls=':', zorder=0)
-    ax.set_xlabel('Reference length\n(genes per direction)'); ax.set_ylabel(f'Mean AUC ({len(TA_EVAL)} type A tasks)')
+    ax.set_xlabel('Reference length\n(genes per direction)'); ax.set_ylabel(f'Mean AUC\n({len(TA_EVAL)} type A tasks)')
 
 
 MARKS_H = 7.0                                                      # height (mm) of the two lines on filled / open symbols under the key
@@ -364,19 +389,21 @@ def draw_example(fig, H, y0):
 
 
 ## ---- the whole figure: blocks in rows (a row = blocks side by side, each with its left edge x0 in mm); fixed panel letters (LETTER) ----
-TABLE_H = 9.0 + 3.075 * len(ROWS) + 1.0                           # the height draw_a returns (two header rows, no key below)
+TABLE_H = A_HH + A_RH * len(ROWS) + 1.0                           # the height draw_a returns (two header rows, no key below)
 BLOCKS = {  # name: (height in mm, drawing function (fig, H, x0, y0 = top of the block), baseline of the panel letter below the top)
     'table': (3.2 + TABLE_H, lambda fig, H, x0, y0: draw_a(fig, H, y0 + 3.2), 2.4),
     'example': (EX_H, lambda fig, H, x0, y0: draw_example(fig, H, y0), 3.0),
-    'typeA': (34.0 + HDR, lambda fig, H, x0, y0: draw_b(fig, H, y0), 3.0),
-    'typeB': (34.0 + HDR, lambda fig, H, x0, y0: draw_c(fig, H, x0, y0), 3.0),
-    'length': (HDR + 2 + E_MAIN + 10.0, lambda fig, H, x0, y0: draw_d(fig, H, x0, y0), 3.0)}
+    'typeA': (34.0, lambda fig, H, x0, y0: draw_b(fig, H, y0), 3.0),
+    'typeB': (34.0, lambda fig, H, x0, y0: draw_c(fig, H, x0, y0), 3.0),
+    'means': (34.0, lambda fig, H, x0, y0: draw_means(fig, H, x0, y0), 3.0),
+    'length': (2 + E_MAIN + 10.0, lambda fig, H, x0, y0: draw_d(fig, H, x0, y0), 3.0)}
 KEY_UNDER_D = (3, 100, 4)                                          # unused alternative: the key under d (x0, width, columns)
-KEY_RIGHT_OF_D = (9.3 + 3 * (PW_S + GAP_S) + 0.5, 1)               # the key right of the three panels of d: x0 (mm), one column
+KEY_RIGHT_OF_D = (9.3 + 2 * (PW_S + GAP_S) + 0.5, 1)               # the key right of the two panels of c (the third slot): x0 (mm), one column
+RIGHT_X = LEFT_W + 7.0                                             # left edge of the right column (e above f), 7 mm right of the left column
 KEY_NOTE = False                                                   # the note on filled / open symbols is in the legend, not the figure
-CURRENT = [[('table', 0)], [('example', 0)], [('typeA', 0), ('length', LEFT_W + 2.0)], [('typeB', 0)]]   # e spans the rows of c and d
-ROWSPAN = {'length'}                                               # blocks that span their row and the next
-LETTER = {'table': 'a', 'example': 'b', 'typeA': 'c', 'typeB': 'd', 'length': 'e'}   # as in the text and legend (not the reading order)
+CURRENT = [[('table', 0)], [('example', 0)], [('typeA', 0), ('means', RIGHT_X)], [('typeB', 0), ('length', RIGHT_X)]]   # e right of c, f right of d
+ROWSPAN = {'length'}                                               # blocks that may be taller than their row (f reaches below d)
+LETTER = {'table': 'a', 'example': 'b', 'typeA': 'c', 'typeB': 'd', 'means': 'e', 'length': 'f'}   # as in the text and legend
 
 
 def render(rows, path, note=None):
@@ -384,13 +411,14 @@ def render(rows, path, note=None):
         if b[0] == 'key':
             return key_h(b[3])
         return BLOCKS[b[0]][0]
-    hs = [max([bh(b) for b in row if b[0] not in ROWSPAN] or [0.0]) for row in rows]   # e spans two rows: it does not set its row's height
-    H = 0.8 + sum(hs) + 1.5 * (len(rows) - 1) + 3.0
+    hs = [max([bh(b) for b in row if b[0] not in ROWSPAN] or [0.0]) for row in rows]   # f may reach below its row: it does not set its row's height
+    bottom = 3.0 if note else 1.0                                  # the draft note needs room below the panels
+    H = 0.8 + sum(hs) + 1.5 * (len(rows) - 1) + bottom
     ys = np.cumsum([0.8] + [h + 1.5 for h in hs])
-    for row, y in zip(rows, ys):                                   # the figure is at least as tall as e
+    for row, y in zip(rows, ys):                                   # the figure is at least as tall as f
         for b in row:
             if b[0] in ROWSPAN:
-                H = max(H, y + BLOCKS[b[0]][0] + 3.0)
+                H = max(H, y + BLOCKS[b[0]][0] + bottom)
     fig = plt.figure(figsize=(FW / 25.4, H / 25.4))
     y, k = 0.8, 0
     for row, h in zip(rows, hs):
@@ -398,8 +426,8 @@ def render(rows, path, note=None):
             if b[0] == 'key':
                 draw_key(fig, H, b[1], y, w=b[2], ncol=b[3]); continue
             BLOCKS[b[0]][1](fig, H, b[1], y)
-            if b[0] == 'typeB':                                    # the key right of the three panels of d, one column
-                draw_key(fig, H, b[1] + KEY_RIGHT_OF_D[0], y + HDR + 2.0, w=LEFT_W - KEY_RIGHT_OF_D[0], ncol=KEY_RIGHT_OF_D[1], marks=KEY_NOTE)
+            if b[0] == 'typeA':                                    # the key right of the two panels of c, one column
+                draw_key(fig, H, b[1] + KEY_RIGHT_OF_D[0], y + 2.0, w=RIGHT_X - 1.0 - KEY_RIGHT_OF_D[0], ncol=KEY_RIGHT_OF_D[1], marks=KEY_NOTE)
             txmm(fig, H, b[1], y + BLOCKS[b[0]][2], LETTER[b[0]], fontsize=8, fontweight='bold', va='baseline'); k += 1   # fixed letters
         y += h + 1.5
     if note:
@@ -410,7 +438,7 @@ def render(rows, path, note=None):
 
 ## ---- the panels for the slide: each block alone, without its panel letter (the letters belong to the slide), then the key ----
 PANELS = [('a', 'methods_table', 'table'), ('b', 'DAM_example', 'example'), ('c', 'typeA', 'typeA'), ('d', 'typeB', 'typeB'),
-          ('e', 'reference_length', 'length')]                     # panel letter, name of the file, block
+          ('e', 'task_means', 'means'), ('f', 'reference_length', 'length')]   # panel letter, name of the file, block
 
 
 def save_trimmed(fig, path):                                       # saved, then cut to its drawn content with a 0.5 mm margin
@@ -433,7 +461,7 @@ def render_panels(out):                                            # every block
         save_trimmed(fig, f'{out}Fig5{letter}_{name}.png')
     H = key_h(1, marks=KEY_NOTE) + 2.0
     fig = plt.figure(figsize=(FW / 25.4, H / 25.4))
-    draw_key(fig, H, 3, 1.0, w=LEFT_W - KEY_RIGHT_OF_D[0], ncol=1, marks=KEY_NOTE)   # one column, as right of d
+    draw_key(fig, H, 3, 1.0, w=RIGHT_X - 1.0 - KEY_RIGHT_OF_D[0], ncol=1, marks=KEY_NOTE)   # one column, as right of c
     save_trimmed(fig, f'{out}Fig5_methods_key.png')            # the key of the methods
 
 

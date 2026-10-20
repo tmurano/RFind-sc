@@ -1,0 +1,9 @@
+label_authors,cell_type,Markers,Description,n_unstim,n_stim
+CD14+ Monocytes,cM,"S100A9, S100A8, LYZ",Classical monocytes,2785,2600
+FCGR3A+ Monocytes,ncM,"FCGR3A, LST1, FCER1G",Non-classical monocytes,739,860
+Dendritic cells,DC,"FCER1A, HLA-DPB1, HLA-DQA1",Dendritic cells,203,229
+Megakaryocytes,Mkc,"PPBP, PF4, GNG11",Megakaryocytes (platelets),122,138
+CD4 T cells,T[H],"LDHB, IL7R, CD3D",CD4+ helper T cells,5161,5228
+B cells,B,"CD79A, TCL1A, CD79B",B cells,1307,1266
+CD8 T cells,Tc,"CCL5, GZMK, GZMH",CD8+ cytotoxic T cells,1082,960
+NK cells,NK,"GNLY, GZMB, NKG7",Natural killer cells,916,1077

@@ -1,16 +1,19 @@
-"""Source Data for Supplementary Figs. S1-S3: one Excel file per figure, one sheet (or a few) per panel, with the numbers drawn in
-each panel and the statistics quoted in the legend or in Supplementary Notes 1-3. Same style as make_source_data.py (README sheet
-first, then the panels; one header row per sheet; notes, when needed, as rows under the table).
+"""Source Data for Supplementary Figs. S1-S3 and S5: one Excel file per figure, one sheet (or a few) per panel, with the numbers
+drawn in each panel and the statistics quoted in the legend or in Supplementary Notes 1-3 and 5. Same style as make_source_data.py
+(README sheet first, then the panels; one header row per sheet; notes, when needed, as rows under the table).
 
-Reads only the figure scripts' inputs and outputs (figs/Supp_S*/); the constants of the figures (toy lists of S1, complexes of S3d)
-are read from the figure scripts themselves (ast; the scripts are not run), so the workbooks follow any change made there.
+Reads only the figure scripts' inputs and outputs (figs/Supp_S*/ and, for S5, the per-cell scores of analysis/kang); the constants
+of the figures (toy lists of S1, complexes of S3d) are read from the figure scripts themselves (ast; the scripts are not run), so
+the workbooks follow any change made there.
 Computes nothing new except what the figure scripts compute on the fly from these inputs (the Running Fisher grid of S1, the
-summaries of the pair distributions of S3c, the ranks of S3e), with the same code.
-Not included: schematics without data (S2a, S2d, S3a) and the text table of S2b (definitions; no numbers).
+summaries of the pair distributions of S3c, the ranks of S3e, the per-donor means of S5), with the same code.
+Not included: schematics without data (S2a, S2d, S3a), the text table of S2b (definitions; no numbers) and S5a, b (the authors'
+t-SNE and the table of cell types and markers; as Fig. 3a, b).
 
 Run from the project root:  python figs/make_source_data_supp.py      (needs pandas, numpy, scipy, openpyxl)
 Output: submission/Source_Data_Supplementary_FigS1.xlsx, Source_Data_Supplementary_FigS2.xlsx,
-        Source_Data_Supplementary_FigS3.xlsx (the names used for the upload; submission/ is not tracked)
+        Source_Data_Supplementary_FigS3.xlsx, Source_Data_Supplementary_FigS5.xlsx (the names used for the upload; submission/
+        is not tracked)
 """
 import ast
 import sys
@@ -321,12 +324,11 @@ def figS3():
           ('GABA', 'GABAergic neurons', 'bar')]
     erows, epairs = [], []
     for key, name, shown in CT:
-        pr, npairs, mnuc, nko = shi_ranks(key)
+        pr, npairs, _, nko = shi_ranks(key)
         a, n = int(pr['In the top 1%'].sum()), len(pr)
         erows.append({'Cell type': name, 'Drawn': shown, 'Pairs of Shi et al. in the data (n; under the bar)': n,
                       'Of them in the top 1% (n)': a, 'Share in the top 1% (%, bar)': round(100 * a / n, 1),
-                      'Expected by chance (%)': 1, 'Knock-outs (n)': nko, 'Knock-out pairs (n)': npairs,
-                      'Median nuclei per knock-out': mnuc})
+                      'Expected by chance (%)': 1, 'Knock-outs (n)': nko, 'Knock-out pairs (n)': npairs})
         epairs.append(pr.assign(**{'Cell type': name}))
     e = pd.DataFrame(erows)
     ep = pd.concat(epairs, ignore_index=True)
@@ -351,8 +353,61 @@ def figS3():
     return {'smax': smax, 'n_above': n_above, 'n_exp': n_exp, 'n_strong': len(strong), 'd': d, 'e': e, 'c1': c1}
 
 
+# ------------------------------------------------------------------ Supplementary Fig. S5 (human PBMC of Kang et al., IFN-beta)
+S5 = Path('figs/Supp_S5_Kang/output')
+IDX5 = {'IFNb': 'IFNb-index', 'PGE2': 'PGE2-index', 'Interferon': 'Interferon-index', 'Chemokine': 'Chemokine-index'}
+CT5 = {'CD14+ Monocytes': 'cM', 'FCGR3A+ Monocytes': 'ncM', 'Dendritic cells': 'DC', 'Megakaryocytes': 'Mkc',
+       'CD4 T cells': 'TH', 'B cells': 'B', 'CD8 T cells': 'Tc', 'NK cells': 'NK'}       # abbreviations of the figure (TH = T_H)
+COND5 = {'ctrl': 'Unstimulated', 'stim': 'IFN-β'}
+
+
+def figS5():
+    st = pd.read_csv(S5 / 'figS5_violin_stats.csv')
+    nc = pd.read_csv(S5 / 'FigS5_celltype_ncells.csv').set_index('cell_type')
+    vio = pd.DataFrame({
+        'Panel': np.where(st.axis.isin(['IFNb', 'PGE2']), 'S5c', 'S5d'), 'Index': st.axis.map(IDX5), 'Cell type': st.cell_type.map(CT5),
+        'Unstimulated cells (n)': st.cell_type.map(nc.n_Unstimulated), 'IFN-β cells (n)': st.cell_type.map(nc.n_IFNb),
+        'Unstimulated patients (n)': st.n_donors_Unstimulated, 'IFN-β patients (n)': st.n_donors_IFNb,
+        "Cohen's d, IFN-β - unstimulated (per-patient means; number above the violins and point of the summary panels of e, f)": st.d.round(3),
+        'P, two-sided Wilcoxon rank-sum on per-patient means (nominal)': st.p.round(4)})
+
+    s = pd.read_csv('data/Kang2018/output/scores_kang.csv')
+    pm = (s.melt(id_vars=['cell_type', 'condition', 'donor'], value_vars=list(IDX5), var_name='axis', value_name='v')
+            .groupby(['axis', 'cell_type', 'condition', 'donor']).v.agg(['mean', 'size']).reset_index())
+    pm = pm[pm['size'] >= 10]
+    pm['ax'] = pd.Categorical(pm.axis, list(IDX5)); pm['ct'] = pd.Categorical(pm.cell_type, list(CT5))
+    pm = pm.sort_values(['ax', 'ct', 'condition', 'donor'])
+    pts = pd.DataFrame({'Index': pm.axis.map(IDX5), 'Cell type': pm.cell_type.map(CT5), 'Condition': pm.condition.map(COND5),
+                        'Patient': pm.donor, 'Cells (n)': pm['size'],
+                        'Mean index of the patient (point of c, d; with the other index of the pair, point of the small panels of e, f)':
+                            pm['mean'].round(4)})
+
+    rg = pd.read_csv(S5 / 'figS5_scatter_axis_ranges.csv'); ou = pd.read_csv(S5 / 'figS5_scatter_outside.csv')
+    w = ou.merge(rg, on=['pair', 'ct'], how='left')
+    win = pd.DataFrame({'Panel': np.where(w.pair.str.startswith('IFNb'), 'S5e', 'S5f'), 'Pair (x x y)': w.pair,
+                        'Cell type': w.ct.str.replace('T[H]', 'TH', regex=False),
+                        'x from': w.xlo, 'x to': w.xhi, 'y from': w.ylo, 'y to': w.yhi, 'Cells (n)': w.n_cells,
+                        'Cells outside the window (n; not drawn)': w.n_outside, 'Cells outside the window (%)': w.pct_outside})
+
+    write(OUT / 'Source_Data_Supplementary_FigS5.xlsx', [
+        'Source Data for Supplementary Fig. S5 (human PBMC of Kang et al., 2018; eight patients, unstimulated vs IFN-β 6 h; 8 cell types).',
+        "FigS5c-d_stats: Cohen's d (pooled SD) of IFN-β minus unstimulated over per-patient means (patients with >= 10 cells), as written above "
+        'the violins; the summary panels of e and f plot the same d. P = nominal two-sided Wilcoxon rank-sum on the per-patient means '
+        '(for reference).',
+        'FigS5c-f_points: per-patient means drawn as points in c and d; the small panels of e and f plot, for each patient, the means of the '
+        'two indices of the pair.',
+        'FigS5e-f_windows: the window of each small panel of e and f (all panels of a pair have the same width) and the cells outside it '
+        '(not drawn; the shares in the legend). Row "all": all cells.',
+        'Panels a and b (the t-SNE of the authors and the table of markers) have no sheet.',
+        'Source tables: figs/Supp_S5_Kang/output/figS5_violin_stats.csv, FigS5_celltype_ncells.csv, figS5_scatter_axis_ranges.csv, '
+        'figS5_scatter_outside.csv; per-cell scores: data/Kang2018/output/scores_kang.csv.'],
+        {'FigS5c-d_stats': vio, 'FigS5c-f_points': pts, 'FigS5e-f_windows': win})
+    return {'vio': vio, 'win': win, 'n_points': len(pts)}
+
+
 if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
     r1 = figS1(); print('S1:', r1)
     r2 = figS2(); print('S2:', r2['e1'].to_string(), r2['e3'].to_string(), sep='\n')
     r3 = figS3(); print('S3:', {k: r3[k] for k in ('smax', 'n_above', 'n_exp', 'n_strong')}); print(r3['e'].to_string()); print(r3['c1'].to_string())
+    r5 = figS5(); print('S5:', r5['n_points'], 'donor points'); print(r5['vio'].to_string()); print(r5['win'].to_string())

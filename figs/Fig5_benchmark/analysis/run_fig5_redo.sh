@@ -1,7 +1,7 @@
 #!/bin/bash
 ## Fig. 5 benchmark — the per-cell scores of every method at every reference length, in one command
 ## (run by figs/run_all_figs.sh, which then runs the other Fig. 5 scripts in order; see README "Which script makes what"). From any folder:
-##   bash figs/Fig5_benchmark/analysis/run_fig5_redo.sh          the test step, then everything (about 3 h on Apple silicon)
+##   bash figs/Fig5_benchmark/analysis/run_fig5_redo.sh          the test step, then everything (about 2 h on Apple silicon)
 ##   bash figs/Fig5_benchmark/analysis/run_fig5_redo.sh test     the test step only (about 5 min)
 ## Steps (logs and run_summary.txt in logs/runs/fig5_redo_<yymmdd>/, <yymmdd> = the day of the start; a finished step leaves <step>.ok and
 ## is skipped when the script is started again with the same log folder, so an interrupted run resumes where it stopped: on a later

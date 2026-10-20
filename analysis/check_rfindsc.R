@@ -1,5 +1,5 @@
-## Check that the RFindsc package (0.3.8; its tests are taken from the clone in tools/RFindsc) runs and reproduces the RFind-sc paper pipeline
-##   1  the package's own tests (testthat is not installed here: minimal stand-ins for the expectations used)
+## Check that the RFindsc package (1.0.1; its tests are taken from the clone in tools/RFindsc) runs and reproduces the RFind-sc paper pipeline
+##   1  the package's own tests (minimal stand-ins for the testthat functions used, so testthat is not needed)
 ##   2  kernel: running_fisher() vs analysis/running_fisher.R on random ranked lists
 ##   3  Hammond: per-cell scores computed with the package's functions (P2 signature from the paper's baseline, bundled
 ##      4 axes restricted to the universe) vs analysis/hammond/07 scores (data/Hammond2019/output/scores_hammond_9axes.csv)
@@ -12,6 +12,10 @@ suppressPackageStartupMessages({ library(Matrix); library(data.table) })
 LIB <- Sys.getenv("RFINDSC_LIB"); suppressPackageStartupMessages(library(RFindsc, lib.loc = LIB))
 cat("RFindsc", as.character(packageVersion("RFindsc", lib.loc = LIB)), "\n")
 ns <- asNamespace("RFindsc"); set.seed(1)
+## a name that differs from another only in case (PISD and Pisd in the data of Hammond et al.; three names in those of De Donno
+## et al.) can occur twice in a cell's lists; RFindsc >= 0.3.9 warns about it in running_fisher(), which steps 3 and 4 call
+## cell by cell, so the expected warning is muted there (the scores are computed as before)
+quiet_dup <- function(expr) withCallingHandlers(expr, rfindsc_duplicated_names = function(w) invokeRestart("muffleWarning"))
 
 ## ---- 1 package tests ----
 chk <- function(ok, msg) if (!isTRUE(ok)) stop(msg, call. = FALSE)
@@ -32,21 +36,45 @@ expect_message <- function(expr, regexp = NULL, ...) {            # a message (m
   withCallingHandlers(expr, message = function(m) { msgs <<- c(msgs, conditionMessage(m)); invokeRestart("muffleMessage") })
   chk(length(msgs) > 0 && (is.null(regexp) || any(grepl(regexp, msgs))), "no matching message")
 }
+expect_null <- function(x) chk(is.null(x), "not NULL")
+capture_warnings <- function(expr) {                            # the messages of the warnings given while evaluating expr
+  w <- character(0)
+  withCallingHandlers(expr, warning = function(c) { w <<- c(w, conditionMessage(c)); invokeRestart("muffleWarning") })
+  w
+}
+expect_warning <- function(expr, regexp = NULL, class = NULL, ...) {   # a warning matching regexp and of class is given
+  hit <- FALSE
+  withCallingHandlers(expr, warning = function(w) {
+    if ((is.null(regexp) || grepl(regexp, conditionMessage(w))) && (is.null(class) || inherits(w, class))) hit <<- TRUE
+    invokeRestart("muffleWarning") })
+  chk(hit, "no matching warning")
+}
+expect_silent <- function(expr) chk(!length(capture_warnings(expr)), "a warning was given")
 skip_if_not_installed <- function(pkg, minimum_version = NULL)
   if (!requireNamespace(pkg, quietly = TRUE) || (!is.null(minimum_version) && utils::packageVersion(pkg) < minimum_version))
     stop("skipped: ", pkg, " not installed")
-n_fail <- 0L
+skip_if <- function(condition, message = NULL) if (isTRUE(condition)) stop("skipped: ", message)
+undo <- list()                                                   # functions that undo local_mocked_bindings() after a test
+local_mocked_bindings <- function(..., .package) {               # replaces functions of a namespace until the test ends
+  e <- asNamespace(.package); new <- list(...); old <- mget(names(new), envir = e)
+  put <- function(v) for (n in names(v)) { unlockBinding(n, e); assign(n, v[[n]], envir = e); lockBinding(n, e) }
+  put(new); undo <<- c(undo, list(function() put(old)))
+}
+n_fail <- 0L; n_skip <- 0L
 test_that <- function(desc, code) {
-  ok <- tryCatch({ eval(substitute(code), envir = new.env(parent = ns)); TRUE },
-                 error = function(e) { cat("      ", conditionMessage(e), "\n"); FALSE })
-  if (!ok) n_fail <<- n_fail + 1L
-  cat(sprintf("  [%s] %s\n", if (ok) "ok" else "FAIL", desc))
+  on.exit({ for (f in rev(undo)) f(); undo <<- list() })
+  res <- tryCatch({ eval(substitute(code), envir = new.env(parent = ns)); "ok" },
+                  error = function(e) if (startsWith(conditionMessage(e), "skipped: ")) "skip" else {
+                    cat("      ", conditionMessage(e), "\n"); "FAIL" })
+  if (res == "FAIL") n_fail <<- n_fail + 1L
+  if (res == "skip") n_skip <<- n_skip + 1L
+  cat(sprintf("  [%s] %s\n", res, desc))
 }
 cat("\n1. package tests\n")
 if (!dir.exists("tools/RFindsc/tests/testthat"))
   stop("tools/RFindsc/tests/testthat not found: clone the package into tools/RFindsc first (README, \"Companion software\")", call. = FALSE)
 for (f in list.files("tools/RFindsc/tests/testthat", pattern = "^test-.*\\.R$", full.names = TRUE)) sys.source(f, envir = environment())
-cat(sprintf("  -> %d failed\n", n_fail))
+cat(sprintf("  -> %d failed, %d skipped\n", n_fail, n_skip))
 
 ## ---- 2 kernel ----
 E <- new.env(); sys.source("analysis/running_fisher.R", envir = E)
@@ -66,7 +94,7 @@ cat("\n3. pair universe per axis (package): ", paste(sprintf("%s %d", ax, vapply
 pipe <- fread("data/Hammond2019/output/scores_hammond_9axes.csv"); stopifnot(identical(pipe$cell_id, colnames(cf)))
 cells <- sample(ncol(cf), 300)
 S <- t(vapply(cells, function(j) { r <- ns$rank_cell_residuals(as.numeric(cf[, j]), rate * cs[j])
-  vapply(ax, function(a) ns$score_cell_ranking(r, b2[[a]], gl, n_cell = 500, clip = 300), 0) }, numeric(length(ax))))
+  vapply(ax, function(a) quiet_dup(ns$score_cell_ranking(r, b2[[a]], gl, n_cell = 500, clip = 300)), 0) }, numeric(length(ax))))
 dh <- abs(S - as.matrix(pipe[cells, ..ax]))
 cat("\n3. Hammond, 300 cells, package vs analysis/hammond/07 (max |diff| per axis):\n"); print(signif(apply(dh, 2, max), 3))
 
@@ -83,7 +111,7 @@ res4 <- rbindlist(lapply(c("DG Glut", "Oligodendrocytes"), function(ctp) {
   rate_ct <- Matrix::rowMeans(X$counts[, idx] %*% Diagonal(x = 1e6 / X$cs[idx])) / 1e6   # per-cell-type baseline (02_signature.R)
   pick <- sample(idx, 100)
   Sd <- t(vapply(pick, function(j) { r <- ns$rank_cell_residuals(as.numeric(X$counts[, j]), rate_ct * X$cs[j])
-    vapply(names(map), function(a) ns$score_cell_ranking(r, b2d[[a]], glD, n_cell = 500, clip = 300), 0) },
+    vapply(names(map), function(a) quiet_dup(ns$score_cell_ranking(r, b2d[[a]], glD, n_cell = 500, clip = 300)), 0) },
     numeric(length(map))))
   data.table(cell_type = ctp, axis = names(map), max_abs_diff = apply(abs(Sd - as.matrix(pdd[pick, unname(map), with = FALSE])), 2, max))
 }))

@@ -10,6 +10,7 @@ Run (from the project root; rfindsc importable, e.g. PYTHONPATH=tools/rfindsc-py
   RFIND_RUNTIME_EXPORT=<folder> python3 figs/Fig5_benchmark/analysis/fig5_runtime_score.py n=1000 L=500 cores=1
 """
 import os
+import math
 import sys
 import time
 
@@ -43,7 +44,7 @@ dn = [g for g in (dnl if LV is None else dnl[:LV]) if g in gset]
 print(f'rfindsc_py: {X.shape[1]} cells x {X.shape[0]} genes; DAM L = {LARG}: up {len(up)}, down {len(dn)}; {CORES} core(s)', flush=True)
 
 t0 = time.perf_counter()
-out = rfindsc.score_panel_pairs(X, {'DAM': {'up': up, 'down': dn}}, config=rfindsc.rfindsc_config(n_cores=CORES), genes=genes,
+out = rfindsc.score_panel_pairs(X, {'DAM': {'up': up, 'down': dn}}, config=rfindsc.rfindsc_config(n_cores=CORES, top_n=math.inf if LV is None else LV), genes=genes,
                                 cells=cells[keep].tolist(), libsize=libsize)
 secs = time.perf_counter() - t0
 s = out['scores']

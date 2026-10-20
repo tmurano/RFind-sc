@@ -1,4 +1,4 @@
-## Supplementary Fig. S4 / Fig. 5e — the four added type A tasks of the benchmark, scored with RFind-sc and the methods of the Fig. 5
+## Supplementary Fig. S4 / Figs. 5e, f — the four added type A tasks of the benchmark, scored with RFind-sc and the methods of the Fig. 5
 ## benchmark (the settings and functions of fig5_bench_redo.R, read from that script; paper settings). The tasks were fixed before any
 ## result was seen; each uses the cells of a task of the main figure with one of the two references of fig5_extra_refs.R:
 ##   DA1      the cells of H1 (Hammond: LPC- vs saline-injected white matter, microglia) with the PS2APP reference
@@ -10,8 +10,8 @@
 ## As in fig5_bench_redo.R: VISION on all QC cells of the data set (Hammond) or of the cell type (De Donno), AUCell rankings over all
 ## QC Hammond cells and over the task cells in De Donno, AddModuleScore / scFOCAL-type / Beyondcell with all cells of the cell type,
 ## Beyondcell cells without a score set to 0 (counted in n_na), UCell maxRank raised above 1,500 signature genes (note column),
-## AUC with the paired percentile bootstrap over cells (boot_task: 1,000 resamples, set.seed(1) per task).
-## Reference length L (Fig. 5e): the top L genes per direction of the fold-change table ('all' = every gene of that sign), by the rules of
+## AUC with the paired percentile bootstrap over mice (boot_task of fig5_bench_redo.R: 1,000 resamples, set.seed(1) per task).
+## Reference length L (Fig. 5f): the top L genes per direction of the fold-change table ('all' = every gene of that sign), by the rules of
 ## fig5_extra_refs.R (the top L of the whole list, cut to the analysed genes when used, as all references);
 ## RFind-sc's cell lists stay at 500 (as fig5_bench_redo.R). At L = 500 the lists must equal the stored references (the script stops
 ## otherwise).
@@ -33,7 +33,7 @@ ARGS <- commandArgs(trailingOnly = TRUE)
 argv <- function(key, default) { a <- grep(paste0("^", key, "="), ARGS, value = TRUE); if (length(a)) sub(paste0("^", key, "="), "", a[1]) else default }
 PARTS <- strsplit(argv("parts", "DA,AS"), ",")[[1]]; stopifnot(length(PARTS) > 0, all(PARTS %in% c("DA", "AS")))
 PARTS <- intersect(c("DA", "AS"), PARTS)                          # Hammond first
-LARG <- argv("L", "500"); stopifnot(LARG %in% c("100", "250", "500", "1000", "2000", "all"))   # reference length (Fig. 5e)
+LARG <- argv("L", "500"); stopifnot(LARG %in% c("100", "250", "500", "1000", "2000", "all"))   # reference length (Fig. 5f)
 OUT <- argv("outdir", "figs/Fig5_benchmark/output/extra_refs"); dir.create(OUT, showWarnings = FALSE, recursive = TRUE)
 
 ## ---- the settings and functions of fig5_bench_redo.R (top-level assignments of a function or a single constant only) ----
@@ -96,7 +96,7 @@ auc_task <- function(tid, task, refname, cell_id, S, pos, grp, n_up, n_dn, m_not
   stopifnot(nrow(S) == length(pos), !anyNA(S[, setdiff(colnames(S), "Beyondcell")]), any(pos), any(!pos))
   PC[[tid]] <<- data.table(id = tid, cell_id = cell_id, positive = pos, group = grp, S)
   nav <- colSums(is.na(S))                                        # cells without a score (Beyondcell only; 0 for the others)
-  r <- boot_task(tid, task, "condition", refname, bc0(S), pos)
+  r <- boot_task(tid, task, "condition", refname, bc0(S), pos, mouse_of(cell_id))
   r[, c("n_na", "L", "ref_up", "ref_down", "note") := list(unname(nav[r$method]), LARG, n_up, n_dn, "")]
   for (m in intersect(names(m_note), r$method)) r[method == m, note := m_note[[m]]]
   RES[[tid]] <<- r

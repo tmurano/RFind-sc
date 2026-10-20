@@ -1,17 +1,18 @@
 """Fig. 5 — each method at its best reference length (type A tasks). For every method (RFind-sc included) and task, the reference length
 among 100, 250, 500, 1,000, 2,000 and all genes per direction with the highest AUC is taken ('per task'); as a second version, for
 task t the length with the highest mean AUC over the other three main tasks ('leave one task out'). RFind-sc at its best length is then
-compared with each method at its best length by the 95% CI of the difference in AUC from a bootstrap over cells (1,000 resamples, the
-same resamples for every method and length; RFind-sc higher / lower when the CI excludes 0 and |difference| > 0.01, otherwise not
+compared with each method at its best length by the 95% CI of the difference in AUC from a bootstrap over mice (fig5_mice.py: all
+cells of a drawn mouse; 1,000 resamples, the same resamples for every method and length; RFind-sc higher / lower when the CI excludes 0 and |difference| > 0.01, otherwise not
 distinguished; 'comparable' when the whole CI lies within -0.01..+0.01).
 Re-selection columns: the best length is chosen again inside every bootstrap resample (for each method, RFind-sc included, the length
 with the highest resampled AUC in that resample; for 'leave one task out', the highest mean of the resampled AUCs over the other three
 main tasks), the resampled difference uses those lengths; the point difference stays the point-estimate one.
 The share of resamples in which RFind-sc chose its point-estimate length is reported.
 Methods: the 10 main-figure methods and the table-only methods UCell (up genes), WMEAN (log2FC) and ORA.
-Tasks: the four type A tasks H1, D1, D2, D3. The same comparisons over the eight type A tasks (these four and the four added tasks of
-Supplementary Fig. S4) are made by fig5_best_length_8tasks.py, which reproduces the two outputs of this script first.
-Random draws: default_rng(1), one generator for all tasks, drawn task by task in the order H1, D1, D2, D3.
+Tasks: the four DAM and Glucocorticoid tasks H1, D1, D2, D3. The same comparisons over the eight type A tasks (these four and the four
+PS2APP and Forced swim tasks) are made by fig5_best_length_8tasks.py, which reproduces the two outputs of this script first.
+Random draws: default_rng(1), one generator for all tasks, asked task by task in the order H1, D1, D2, D3 (D1-D3 share the De Donno
+draws: the same donors).
 Scores: the per-cell scores of the benchmark (results/fig5_redo_percell_L<L>.csv.gz); Beyondcell without a score = 0, as in the benchmark.
 The point AUCs are checked against results/fig5_redo_auc_L<L>.csv.
 Outputs (figs/Fig5_benchmark/output/):
@@ -21,9 +22,13 @@ Outputs (figs/Fig5_benchmark/output/):
 Run from the project root: python figs/Fig5_benchmark/analysis/fig5_best_length.py
 """
 import os
+import sys
 import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from fig5_mice import MouseDraws, mouse_of  # noqa: E402
 
 O = 'figs/Fig5_benchmark/output/'
 os.makedirs(O + 'results', exist_ok=True)                        # the tables in output/results/
@@ -60,7 +65,7 @@ for L in LS:
 ref = {L: pd.read_csv(f'{O}results/fig5_redo_auc_L{L}.csv').set_index(['id', 'method']).AUC for L in LS}
 
 ## point AUCs and bootstrap AUCs (B x columns) per task; columns = (method, length)
-rng = np.random.default_rng(SEED)
+DRAWS = MouseDraws(np.random.default_rng(SEED), B)
 point, boot, col = {}, {}, {}
 maxdiff = 0.0
 for t in TA + TN:
@@ -78,9 +83,7 @@ for t in TA + TN:
         assert abs(v - ref[L][(t, m)]) < 1e-5, (t, m, L, v, ref[L][(t, m)])     # the stored point AUCs are reproduced (the per-cell
         maxdiff = max(maxdiff, abs(v - ref[L][(t, m)]))                         # files keep ~15 digits, so near-ties can move ~1e-7)
     bt = np.empty((B, S.shape[1]))
-    n = len(pos)
-    for b in range(B):
-        i = rng.integers(0, n, n)
+    for b, i in enumerate(DRAWS.cells(mouse_of(base.cell_id), pos)):
         bt[b] = aucs(S[i], pos[i])
     boot[t] = bt
     col[t] = {nm: k for k, nm in enumerate(names)}

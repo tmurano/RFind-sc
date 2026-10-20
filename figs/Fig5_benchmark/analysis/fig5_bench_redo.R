@@ -7,8 +7,11 @@
 ##   LEN_CORT below; gene sets as they are.
 ## As in fig5_bench_v2.R / fig5_final.R: data loading; input = ln(1 + counts per 10,000) with the library size over ALL genes (raw
 ##   counts where a method wants counts); AddModuleScore bins and the centring groups (Hammond: all QC cells; De Donno: all cells
-##   of the cell type); boot_task (AUC, paired percentile bootstrap over cells, set.seed(1) per task, 1,000 resamples, RFind-sc =
-##   column 1; the draws do not depend on the other columns).
+##   of the cell type); boot_task (AUC; RFind-sc = column 1).
+## 95% CIs: paired percentile bootstrap over MICE (boot_task: all cells of a drawn mouse; mice drawn within the
+##   positive and the negative group when every mouse is in one group, else from all mice, as in the tasks defined by a cluster;
+##   set.seed(1) per task, 1,000 resamples; the draws do not depend on the methods). Mouse = the sample of a Hammond cell (the name
+##   before its barcode) or the donor of a De Donno cell (donor_id).
 ## Differences from fig5_bench_v2.R:
 ##   - 'UCellUp' = UCell with the up genes only (the usual use of UCell; = fig5_ucell_up.R), at every L. 'UCell' = UCell with the up
 ##     genes and the down genes marked "-" (UCell's own signed input; 2nd string).
@@ -227,10 +230,28 @@ lg("Fixed by the script: duplicated gene names -> make.unique (VISION, ssGSEA); 
 
 ## ============================================ scoring functions (fig5_final.R) ============================================
 auc_v <- function(s, pos) { n1 <- sum(pos); n0 <- length(s) - n1; r <- rank(s); (sum(r[pos]) - n1 * (n1 + 1) / 2) / (n1 * n0) }
-boot_task <- function(id, task, kind, ref, S, pos, B = 1000) {         # verbatim from fig5_final.R
-  est <- apply(S, 2, auc_v, pos = pos)
-  set.seed(1); n <- length(pos)
-  bs <- t(replicate(B, { i <- sample.int(n, n, replace = TRUE); apply(S[i, , drop = FALSE], 2, auc_v, pos = pos[i]) }))
+DONOR_FILE <- "data/DeDonno2026/output/cell_meta_qc.csv"
+mouse_of <- function(cell_id) {                                   # the mouse of each cell: Hammond = the sample prefix of the cell name
+  dd <- !grepl("_", cell_id)                                      # (e.g. P100_M_SALINE_A3); De Donno (no '_' in the names) = donor_id
+  m <- sub("_[^_]*$", "", cell_id)
+  if (any(dd)) { d <- fread(DONOR_FILE, select = c("cell_id", "donor_id")); m[dd] <- d$donor_id[match(cell_id[dd], d$cell_id)] }
+  stopifnot(!anyNA(m)); m
+}
+boot_task <- function(id, task, kind, ref, S, pos, mouse, B = 1000) {  # paired percentile bootstrap over MICE (all cells of a drawn mouse)
+  est <- apply(S, 2, auc_v, pos = pos)                            # mice drawn within the positive and the negative group when every mouse
+  stopifnot(length(mouse) == length(pos), !anyNA(mouse))          # is in one group, else from all mice (tasks defined by a cluster)
+  cm <- split(seq_along(pos), mouse)
+  nested <- all(vapply(cm, function(i) length(unique(pos[i])) == 1L, logical(1)))
+  mp <- sort(unique(mouse[pos])); mn <- sort(unique(mouse[!pos])); ma <- sort(names(cm))
+  set.seed(1)
+  bs <- t(replicate(B, {
+    repeat {
+      d <- if (nested) c(mp[sample.int(length(mp), length(mp), replace = TRUE)], mn[sample.int(length(mn), length(mn), replace = TRUE)])
+           else ma[sample.int(length(ma), length(ma), replace = TRUE)]
+      i <- unlist(cm[d], use.names = FALSE)
+      if (any(pos[i]) && any(!pos[i])) break                      # (a draw from all mice must contain both groups)
+    }
+    apply(S[i, , drop = FALSE], 2, auc_v, pos = pos[i]) }))
   d <- bs[, 1] - bs
   data.table(id = id, task = task, definition = kind, reference = ref, method = colnames(S), n_pos = sum(pos), n_neg = sum(!pos), AUC = est,
              lo = apply(bs, 2, quantile, 0.025), hi = apply(bs, 2, quantile, 0.975),
@@ -443,10 +464,10 @@ bc_scores <- function(lnm, up, dn, ix) {                          # lnm = ln(1 +
   }
   list(score = out)
 }
-bc_rule_table <- function(tid, raw, pos, rfv) {                  # Beyondcell: NaN cells, and the AUC with CI with them set to 0 (paired with RFind-sc)
+bc_rule_table <- function(tid, raw, pos, rfv, mouse) {           # Beyondcell: NaN cells, and the AUC with CI with them set to 0 (paired with RFind-sc)
   na <- is.na(raw); s <- raw; s[na] <- 0
   o <- if (!(any(pos) && any(!pos))) data.table(rule = "as_zero", n_cells = length(pos), n_pos = sum(pos)) else {
-    b <- boot_task(tid, "", "", "", cbind(`RFind-sc` = rfv, Beyondcell = s), pos)
+    b <- boot_task(tid, "", "", "", cbind(`RFind-sc` = rfv, Beyondcell = s), pos, mouse)
     data.table(rule = "as_zero", n_cells = length(pos), n_pos = sum(pos), AUC = b$AUC[2], lo = b$lo[2], hi = b$hi[2], RFind_AUC = b$AUC[1],
                diff_vs_RFind = b$diff_vs_RFind[2], d_lo = b$d_lo[2], d_hi = b$d_hi[2])
   }
@@ -591,7 +612,7 @@ finish_task <- function(tid, task, kind, refname, cell_id, rfv, pos, sc, na_note
   keep <- rep(TRUE, nrow(S)); note_txt <- ""
   if ("Beyondcell" %in% colnames(S)) {
     raw <- S[, "Beyondcell"]; na <- is.na(raw)
-    BCN[[tid]] <<- bc_rule_table(tid, raw, pos, S[, "RFind-sc"])
+    BCN[[tid]] <<- bc_rule_table(tid, raw, pos, S[, "RFind-sc"], mouse_of(cell_id))
     lg(sprintf("  Beyondcell %s: NaN %d of %d cells (%.2f%%) -> %s", tid, sum(na), length(na), 100 * mean(na), BEYONDCELL_NAN))
     if (any(na)) {
       if (BEYONDCELL_NAN == "as_zero") { S[na, "Beyondcell"] <- 0
@@ -600,7 +621,7 @@ finish_task <- function(tid, task, kind, refname, cell_id, rfv, pos, sc, na_note
     }
   }
   S <- S[keep, , drop = FALSE]; p <- pos[keep]
-  r <- boot_task(tid, task, kind, refname, S, p)
+  r <- boot_task(tid, task, kind, refname, S, p, mouse_of(cell_id)[keep])
   r[, c("n_na", "L", "ref_up", "ref_down", "note") := list(unname(nav[r$method]), LARG, n_up, n_dn, note_txt)]
   if (length(na_note)) r <- rbind(r, data.table(id = tid, task = task, definition = kind, reference = refname, method = names(na_note),
                                                 n_pos = sum(pos), n_neg = sum(!pos), n_na = NA_real_, L = LARG, ref_up = n_up, ref_down = n_dn,
@@ -609,13 +630,13 @@ finish_task <- function(tid, task, kind, refname, cell_id, rfv, pos, sc, na_note
   rr <- r[r$method == "RFind-sc", ]
   if (!TEST && tid %in% CHANGED) CHK <<- c(CHK, sprintf("  %s RFind-sc: new or changed task in the redo (no stored result to reproduce); AUC %.6f [%.6f, %.6f], %d / %d cells",
                                                        tid, rr$AUC, rr$lo, rr$hi, rr$n_pos, rr$n_neg))
-  if (!TEST && all(keep) && !tid %in% CHANGED) {                  # data loading and bootstrap draws must reproduce the stored results
-    ref0 <- if (FAIR) SW[SW$id == tid & SW$L == LARG, ] else BM[BM$id == tid & BM$method == "RFind-sc", ]
+  if (!TEST && all(keep) && !tid %in% CHANGED) {                  # data loading must reproduce the stored AUC and cell numbers (the stored
+    ref0 <- if (FAIR) SW[SW$id == tid & SW$L == LARG, ] else BM[BM$id == tid & BM$method == "RFind-sc", ]   # CIs come from a bootstrap over cells: not compared)
     tol <- if (FAIR) 1e-6 else 1e-9
-    d <- if (nrow(ref0) == 1L) max(abs(c(rr$AUC - ref0$AUC, rr$lo - ref0$lo, rr$hi - ref0$hi, rr$n_pos - ref0$n_pos, rr$n_neg - ref0$n_neg))) else Inf
-    CHK <<- c(CHK, sprintf("  %s RFind-sc AUC %.6f [%.6f, %.6f] vs %s: max |diff| %.2g -> %s", tid, rr$AUC, rr$lo, rr$hi,
+    d <- if (nrow(ref0) == 1L) max(abs(c(rr$AUC - ref0$AUC, rr$n_pos - ref0$n_pos, rr$n_neg - ref0$n_neg))) else Inf
+    CHK <<- c(CHK, sprintf("  %s RFind-sc AUC %.6f vs %s: max |diff| %.2g -> %s", tid, rr$AUC,
                            if (FAIR) sprintf("results/fig5_reflength_sweep_auc.csv (L = %s)", LARG) else "results/fig5_final_auc.csv", d, if (d < tol) "reproduced" else "NOT reproduced"))
-    if (!(d < tol)) stop(sprintf("%s: RFind-sc does not reproduce the stored AUC / CI (max |diff| %.3g)", tid, d), call. = FALSE)
+    if (!(d < tol)) stop(sprintf("%s: RFind-sc does not reproduce the stored AUC (max |diff| %.3g)", tid, d), call. = FALSE)
   }
   RES[[tid]] <<- r
   lg(sprintf("%s (%d cells, %d positive; reference %d / %d): %s", tid, length(pos), sum(pos), n_up, n_dn,

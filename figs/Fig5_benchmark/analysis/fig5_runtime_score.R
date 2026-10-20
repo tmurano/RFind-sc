@@ -32,7 +32,8 @@ cat(sprintf("%s: %d cells x %d genes; DAM L = %s: up %d, down %d; %d core(s)\n",
 t0 <- proc.time()[["elapsed"]]
 if (METHOD == "rfindsc") {
   suppressPackageStartupMessages(library(RFindsc))
-  out <- score_panel_pairs(X, list(DAM = list(up = up, down = dn)), config = rfindsc_config(n_cores = CORES), libsize = libsize)
+  out <- score_panel_pairs(X, list(DAM = list(up = up, down = dn)), config = rfindsc_config(n_cores = CORES, top_n = if (LARG == "all") Inf else LV),
+                             libsize = libsize)   # top_n = Inf: the package would otherwise cut the whole list to 500 per side
   s <- as.numeric(out$scores[, "DAM"])
 } else if (METHOD == "ulm") {
   fc <- setNames(tab$`Fold Change`, tab$Symbol)[c(up, dn)]

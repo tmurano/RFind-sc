@@ -3,7 +3,7 @@
 ## The package takes the expected counts from the cells it is given (here these 1,000 cells; the paper took them from all 75,572
 ## cells of the atlas) and keeps the genes detected in at least 1% of these cells, so the values differ slightly from the paper's
 ## DAM-index; the script reports how closely they agree.
-## Needs RFindsc 0.3.8 (README, "Installing the companion packages"). Run from the project root:
+## Needs RFindsc 1.0.1 (README, "Companion packages"). Run from the project root:
 ##   Rscript demo/run_demo_package.R          (set RFINDSC_LIB=<library> if RFindsc was installed into a separate library)
 ## Output: demo/output_package_R.csv (cell_id, condition, DAM_index)
 suppressPackageStartupMessages(library(Matrix))
@@ -17,6 +17,14 @@ X <- as(readMM(gzfile(file.path(D, "counts.mtx.gz"))), "CsparseMatrix")
 genes <- read.delim(gzfile(file.path(D, "genes.tsv.gz")), colClasses = c("character", "numeric"))
 cells <- read.delim(file.path(D, "labels.tsv"), colClasses = c("character", "character", "numeric"))
 dimnames(X) <- list(genes$gene, cells$cell_id)
+## The packages match gene names without regard to case and warn about rows whose names then coincide; this matrix has two
+## (PISD and Pisd), which are summed into one row here
+key <- tolower(rownames(X))
+if (anyDuplicated(key)) {
+  first <- !duplicated(key)
+  X <- fac2sparse(factor(key, levels = key[first])) %*% X
+  rownames(X) <- genes$gene[first]
+}
 
 ## ---- your reference: up- and down-regulated genes, most changed first ----
 ref <- read.delim(file.path(D, "dam_reference.tsv"), colClasses = c("character", "integer", "character"))

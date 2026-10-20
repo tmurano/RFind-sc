@@ -1,14 +1,14 @@
 item	value
-date	2026-10-16
-computer	Mac15,12 (Apple M3, 8 cores, 8 GB memory)
+date	2026-10-20
+computer	Mac15,13 (Apple M3, 8 cores, 16 GB memory)
 operating system	macOS 27.0.1
-R	4.6.0
-RFindsc	0.3.8
-decoupleR	2.17.0
-UCell	2.16.0
+R	4.5.2
+RFindsc	1.0.1
+decoupleR	2.16.0
+UCell	2.14.0
 Matrix	1.7.5
-Python	3.13.9
-rfindsc	0.3.8
+Python	3.12.12
+rfindsc	1.0.1
 numpy	2.4.2
-scipy	1.16.1
-pandas	2.3.3
+scipy	1.17.1
+pandas	3.0.1

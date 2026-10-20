@@ -25,4 +25,4 @@ Supplementary Table 2 (five knock-outs of Fig. 4d against random sets of five; A
   scFOCAL  DG AUC 0.201 P 0.0087 / matched 0.0038; CA1 AUC 0.076 P 4e-05 / matched 0.00013; CA3 AUC 0.570 P 0.7 / matched 0.76; GABA AUC 0.454 P 0.36 / matched 0.41
   RFind reproduces geneset_random_null.csv (AUC and both P, every cell type)
   RFind reproduces fig4d_GR-complex_positions.csv (the 20 positions)
-done in 11 s
+done in 17 s

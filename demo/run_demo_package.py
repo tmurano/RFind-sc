@@ -3,7 +3,7 @@ The same 1,000 microglia and DAM reference as demo/run_demo.py, scored with the 
 The package takes the expected counts from the cells it is given (here these 1,000 cells; the paper took them from all 75,572 cells
 of the atlas) and keeps the genes detected in at least 1% of these cells, so the values differ slightly from the paper's DAM-index;
 the script reports how closely they agree.
-Needs rfindsc 0.3.8 (README, "Installing the companion packages") with numpy, scipy and pandas. Run from the project root:
+Needs rfindsc 1.0.1 (README, "Companion packages") with numpy, scipy and pandas. Run from the project root:
   python demo/run_demo_package.py
 Output: demo/output_package_py.csv (cell_id, condition, DAM_index)
 """
@@ -14,6 +14,7 @@ t_start = time.perf_counter()
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from scipy.io import mmread  # noqa: E402
+from scipy.sparse import csr_matrix  # noqa: E402
 from scipy.stats import rankdata, spearmanr  # noqa: E402
 import rfindsc  # noqa: E402
 
@@ -24,6 +25,13 @@ D = os.path.join(ROOT, 'demo', 'data')
 X = mmread(os.path.join(D, 'counts.mtx.gz')).tocsc()
 genes = pd.read_csv(os.path.join(D, 'genes.tsv.gz'), sep='\t', dtype={'gene': str, 'baseline_share': float})
 cells = pd.read_csv(os.path.join(D, 'labels.tsv'), sep='\t', dtype={'cell_id': str, 'condition': str, 'total_umi': float})
+# The packages match gene names without regard to case and warn about rows whose names then coincide; this matrix has two
+# (PISD and Pisd), which are summed into one row here
+key = genes.gene.str.lower()
+if key.duplicated().any():
+    codes, _ = pd.factorize(key)
+    X = (csr_matrix((np.ones(len(codes)), (codes, np.arange(len(codes))))) @ X).tocsc()
+    genes = genes.loc[~key.duplicated()].reset_index(drop=True)
 
 # ---- your reference: up- and down-regulated genes, most changed first ----
 ref = pd.read_csv(os.path.join(D, 'dam_reference.tsv'), sep='\t', dtype={'direction': str, 'rank': int, 'gene': str})

@@ -1,22 +1,22 @@
-"""Supplementary Table 3 — the capability benchmark of Fig. 5 and Supplementary Fig. S4 (the seven tasks of the main figure, the four
-added type A tasks of Supplementary Fig. S4, the Maturity task at the ceiling, the ten methods of the figure, the methods reported only
-here).
-Tasks (12): type A (differential expression lists with direction and size) = H1 DAM and D1-D3 Glucocorticoid (oligodendrocytes, astrocytes,
-  endothelial cells) in Fig. 5c; the added type A tasks of Supplementary Fig. S4 (fig5_extra_score.R) = DA1, the cells of H1 with the
-  PS2APP reference, and AS1-AS3, the cells of D1-D3 with the Forced swim reference; Fig. 5e averages the eight type A tasks;
-  type B (MSigDB Hallmark gene sets) = H2, H3 Interferon and H5 G2M; H4 Maturity (type A) is left out of the main figure
+"""Supplementary Table 3 — the capability benchmark of Fig. 5 and Supplementary Fig. S4 (the eight type A tasks and the three type B
+tasks of these figures, the Maturity task at the ceiling, the ten methods of the figure, the methods reported only here).
+Tasks (12): type A (differential expression lists with direction and size) = the DAM and Glucocorticoid tasks, H1 DAM and D1-D3
+  Glucocorticoid (oligodendrocytes, astrocytes, endothelial cells), and the PS2APP and Forced swim tasks (fig5_extra_score.R), DA1, the
+  cells of H1 with the PS2APP reference, and AS1-AS3, the cells of D1-D3 with the Forced swim reference; Fig. 5c draws H1 and D2,
+  Supplementary Fig. S4b the other six; Figs. 5e and 5f average the eight type A tasks;
+  type B (MSigDB Hallmark gene sets) = H2, H3 Interferon and H5 G2M (Fig. 5d); H4 Maturity (type A) is left out of the main figure
   because the median AUC of the methods is 0.99 or more at L = 500 (ceiling) and is shown here only, without win / tie / loss.
 Methods in the main figure: RFind-sc, AddModuleScore, AUCell, UCell (its signed signature: up genes and down genes), singscore, ssGSEA,
   VISION, Beyondcell, ULM of decoupleR (log2 fold changes as weights for type A; weight 1 for gene sets) and scFOCAL-type (type A only).
 Reported here only: UCell with the up genes only and decoupleR's WMEAN (log2FC weights; weight 1 for gene sets) and ORA.
-Comparison (Methods): AUC over all task cells; 95% CI of the AUC and of the difference from RFind-sc by bootstrap over cells (1,000
-  resamples, the same resamples for every method); RFind-sc higher / lower when the CI of the difference excludes 0 and |difference| > 0.01,
+Comparison (Methods): AUC over all task cells; 95% CI of the AUC and of the difference from RFind-sc by bootstrap over mice (all cells of
+  each drawn mouse; 1,000 resamples, the same resamples for every method); RFind-sc higher / lower when the CI of the difference excludes 0 and |difference| > 0.01,
   otherwise not distinguished (the difference is 0.01 or less or cannot be told apart; this does not show that the two are at the same level).
 Beyondcell: cells without a score are kept and set to 0, as in the benchmark.
 Sheets Best length (block 1: fig5_best_length_8tasks.py, every method at its best reference length in the eight type A tasks, per
   task / leave one task out over the other seven, with the length re-selected in each resample; block 2: fig5_best_length.py, leave one
-  task out over the other three tasks of Fig. 5c) and Mean AUC differences (block 1: the mean over the eight type A tasks; block 2: the
-  mean over the four tasks of Fig. 5c; RFind-sc minus each method); "comparable" = the whole 95% CI of the difference lies within
+  task out within the four DAM and Glucocorticoid tasks) and Mean AUC differences (block 1: the mean over the eight type A tasks;
+  block 2: the mean over the four DAM and Glucocorticoid tasks; RFind-sc minus each method); "comparable" = the whole 95% CI of the difference lies within
   -0.01..+0.01.
 Sheet Balanced accuracy (fig5_balanced_accuracy.py): how well the sign of each score separates the two groups, the
   balanced accuracy at a threshold of 0 in the eight type A tasks (L = 500) and the three type B tasks, with 95% CIs and the result
@@ -38,12 +38,13 @@ import pandas as pd
 
 O = 'figs/Fig5_benchmark/output/'
 LS = ['100', '250', '500', '1000', '2000', 'all']
-TYPE_A_MAIN, TYPE_A_ADDED = ['H1', 'D1', 'D2', 'D3'], ['DA1', 'AS1', 'AS2', 'AS3']   # Fig. 5c; Supplementary Fig. S4
-TYPE_A = TYPE_A_MAIN + TYPE_A_ADDED                                # the eight type A tasks (Fig. 5e)
+TYPE_A_MAIN, TYPE_A_ADDED = ['H1', 'D1', 'D2', 'D3'], ['DA1', 'AS1', 'AS2', 'AS3']   # DAM and Glucocorticoid; PS2APP and Forced swim
+TYPE_A = TYPE_A_MAIN + TYPE_A_ADDED                                # the eight type A tasks (Figs. 5e, f)
+TYPE_A_C = ['H1', 'D2']                                            # the type A tasks drawn in Fig. 5c; the other six in Supplementary Fig. S4b
 TYPE_B, CEIL = ['H2', 'H3', 'H5'], ['H4']
 TASKS = TYPE_A + TYPE_B + CEIL
-PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}         # added task -> the task of Fig. 5c on the same cells
-TSETNAME = {**{t: 'Fig. 5c' for t in TYPE_A_MAIN}, **{t: 'Supplementary Fig. S4' for t in TYPE_A_ADDED}}
+PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}         # added task -> the DAM or Glucocorticoid task on the same cells
+TSETNAME = {t: 'Fig. 5c' if t in TYPE_A_C else 'Supplementary Fig. S4b' for t in TYPE_A}   # where each type A task is drawn
 MAIN_A = ['AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM (log2FC)', 'scFOCAL-type']
 MAIN_B = ['AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM']
 EXTRA_A = ['UCell (up genes)', 'WMEAN (log2FC)', 'ORA']
@@ -77,7 +78,9 @@ def load(L):                                                       # the benchma
 
 
 def in_main(t):
-    return 'no (ceiling)' if t in CEIL else ('no (Supplementary Fig. S4; in the mean of Fig. 5e)' if t in TYPE_A_ADDED else 'yes')
+    if t in CEIL:
+        return 'no (ceiling)'
+    return 'no (Supplementary Fig. S4b; in the means of Figs. 5e and 5f)' if t in TYPE_A and t not in TYPE_A_C else 'yes'
 
 
 def judge(a, b):
@@ -124,7 +127,7 @@ A = {L: load(L) for L in LS if os.path.exists(f'{O}results/fig5_redo_auc_L{L}.cs
 a500 = table(A['500'], '500')
 along = pd.concat([table(A[L], L) for L in LS if L != '500' and L in A], ignore_index=True)
 
-## mean AUC over the type A tasks by reference length: the eight tasks (Fig. 5e) and the four tasks of Fig. 5c
+## mean AUC over the type A tasks by reference length: the eight tasks (Fig. 5f) and the four DAM and Glucocorticoid tasks
 def mean_length(tasks):
     rows = []
     for L, d in A.items():
@@ -141,14 +144,14 @@ def mean_length(tasks):
 
 
 length8, length4 = mean_length(TYPE_A), mean_length(TYPE_A_MAIN)
-length_notes = [['Mean AUC over the eight type A tasks by the reference length per direction (Fig. 5e): DAM and Glucocorticoid in the '
-                 'oligodendrocytes, astrocytes and endothelial cells (Fig. 5c), and the same cells with the PS2APP and the Forced swim '
-                 'references (Supplementary Fig. S4).'],
-                ['Mean AUC over the four type A tasks of Fig. 5c by the reference length per direction.']]
+length_notes = [['Mean AUC over the eight type A tasks by the reference length per direction (Fig. 5f): the four DAM and Glucocorticoid '
+                 'tasks (DAM, and Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells) and the four PS2APP and Forced '
+                 'swim tasks (the same cells with the PS2APP and the Forced swim references).'],
+                ['Mean AUC over the four DAM and Glucocorticoid tasks by the reference length per direction.']]
 
 ## counts of the comparisons (main-figure methods; L = 500 and all genes; type A by task set)
 cnt = []
-SETS = [('A', 'the four type A tasks of Fig. 5c', TYPE_A_MAIN), ('A', 'the four added type A tasks (Supplementary Fig. S4)', TYPE_A_ADDED),
+SETS = [('A', 'the four DAM and Glucocorticoid tasks', TYPE_A_MAIN), ('A', 'the four PS2APP and Forced swim tasks', TYPE_A_ADDED),
         ('A', 'all eight type A tasks', TYPE_A), ('B', 'the three type B tasks (Fig. 5d)', TYPE_B)]
 for L, tab in [('500', a500), ('all', along[along['reference length per direction'] == 'all'])]:
     for typ, tsname, ts in SETS:
@@ -221,7 +224,7 @@ RULE = ('Result against RFind-sc: RFind-sc higher or lower when the 95% CI of th
         'otherwise not distinguished. Comparable: the whole 95% CI of the difference lies within -0.01 to +0.01 (a subset of not distinguished).')
 
 
-## Best length: the eight type A tasks (fig5_best_length_8tasks.py), and leave one task out over the four tasks of Fig. 5c
+## Best length: the eight type A tasks (fig5_best_length_8tasks.py), and leave one task out within the four DAM and Glucocorticoid tasks
 bl = pd.read_csv(O + 'results/fig5_best_length_8tasks.csv', dtype={'RFind-sc length': str, 'method length': str})
 bl4 = pd.read_csv(O + 'results/fig5_best_length.csv', dtype={'RFind-sc length': str, 'method length': str})
 
@@ -252,26 +255,27 @@ def best_sorted(x):                                                 # main metho
 
 
 assert set(bl.version) == {'per task', 'leave one task out'} and set(bl['task id']) == set(TYPE_A)
-pt8, pt4 = bl[bl.version == 'per task'], bl4[bl4.version == 'per task']   # per task: the rows of Fig. 5c tasks are those of the 4-task file
+pt8, pt4 = bl[bl.version == 'per task'], bl4[bl4.version == 'per task']   # per task: the rows of the DAM and Glucocorticoid tasks are those of the 4-task file
 for c in pt4.columns:
     a_, b_ = pt8[pt8['task id'].isin(TYPE_A_MAIN)][c].reset_index(drop=True), pt4[c].reset_index(drop=True)
     assert (np.allclose(a_, b_, rtol=0, atol=1e-12) if pd.api.types.is_float_dtype(b_) else (a_.astype(str) == b_.astype(str)).all()), c
 best = best_sorted(bl)
 best4 = best_sorted(bl4[(bl4.version == 'leave one task out') & (bl4['task set'] == 'main')])
 best_note = [
-    'Each method at its best reference length in the eight type A tasks (DAM and Glucocorticoid in the oligodendrocytes, astrocytes and '
-    'endothelial cells, Fig. 5c; the same cells with the PS2APP and the Forced swim references, Supplementary Fig. S4; '
-    'fig5_best_length_8tasks.py). The length per direction (100, 250, 500, 1,000, 2,000 or all genes) is chosen '
+    'Each method at its best reference length in the eight type A tasks (the four DAM and Glucocorticoid tasks: DAM, and Glucocorticoid in '
+    'the oligodendrocytes, astrocytes and endothelial cells; the four PS2APP and Forced swim tasks: the same cells with the PS2APP and the '
+    'Forced swim references; fig5_best_length_8tasks.py). The length per direction (100, 250, 500, 1,000, 2,000 or all genes) is chosen '
     'for each method separately, RFind-sc included. Per task: the length with the highest AUC in the task. Leave one task out: for each '
     'task, the length with the highest mean AUC over the other seven tasks.',
     'The length is chosen on the same cells on which the AUC is measured (per task), so these AUCs are upper bounds, alike for '
-    'every method; leave one task out does not use the task itself for the choice. 95% CIs: bootstrap over cells, 1,000 resamples, the '
-    'same resamples for every method and length. Columns "length re-selected in each resample": the length is chosen again in every '
+    'every method; leave one task out does not use the task itself for the choice. 95% CIs: bootstrap over mice (all cells of each drawn '
+    'mouse), 1,000 resamples, the same resamples for every method and length. Columns "length re-selected in each resample": the length is chosen again in every '
     'resample (for every method, RFind-sc included); the difference shown is still the point-estimate difference, only the CI changes. ' + RULE]
-best4_note = ['Leave one task out within the four type A tasks of Fig. 5c (fig5_best_length.py): for each task, the length with the highest '
-              'mean AUC over the other three tasks of Fig. 5c. The per-task rows of these tasks are those of the table above.']
+best4_note = ['Leave one task out within the four DAM and Glucocorticoid tasks (fig5_best_length.py): for each task, the length with the '
+              'highest mean AUC over the other three of these tasks. The per-task rows of these tasks are those of the table above.']
 
-## Mean AUC differences: the mean over the eight type A tasks (results/fig5_mean_auc_diff_8tasks.csv) and over the four of Fig. 5c
+## Mean AUC differences: the mean over the eight type A tasks (results/fig5_mean_auc_diff_8tasks.csv) and over the four DAM and
+## Glucocorticoid tasks (results/fig5_mean_auc_diff.csv)
 def meandiff_table(md):
     return pd.DataFrame({
     'reference length': md.comparison, 'method': md.method.map(lambda m: DISPLAY.get(m, m)),
@@ -284,15 +288,29 @@ def meandiff_table(md):
 
 meandiff, meandiff4 = meandiff_table(pd.read_csv(O + 'results/fig5_mean_auc_diff_8tasks.csv')), meandiff_table(pd.read_csv(O + 'results/fig5_mean_auc_diff.csv'))
 meandiff_note = [
-    'Mean AUC over the eight type A tasks (Fig. 5e: DAM and Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells, and '
+    'Mean AUC over the eight type A tasks (Figs. 5e, f: DAM and Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells, and '
     'the same cells with the PS2APP and the Forced swim references), RFind-sc minus each method (fig5_best_length_8tasks.py). Fixed '
     'length: every method at the same length per direction. Best length per task: each method (RFind-sc included) at its own best length '
     'in each task. Leave one task out: each task at '
     'the length that is best over the other seven tasks. The best lengths are chosen on the same cells (upper bounds, alike for every method).',
-    '95% CIs: bootstrap over cells, 1,000 resamples drawn task by task (also for two tasks on the same cells); in each resample the mean '
-    'over the eight tasks of the resampled AUCs. ' + RULE]
-meandiff4_note = ['Mean AUC over the four type A tasks of Fig. 5c, RFind-sc minus each method (fig5_best_length.py; the same comparisons, '
+    '95% CIs: bootstrap over mice (all cells of each drawn mouse), 1,000 resamples, the same draws for the tasks with the same mice; in each '
+    'resample the mean over the eight tasks of the resampled AUCs. ' + RULE]
+meandiff4_note = ['Mean AUC over the four DAM and Glucocorticoid tasks, RFind-sc minus each method (fig5_best_length.py; the same comparisons, '
                   'leave one task out over the other three tasks).']
+
+## Mean over the tasks of each type (Fig. 5e; results/fig5_task_means.csv of fig5_task_means.py)
+tm = pd.read_csv(O + 'results/fig5_task_means.csv')
+tm['result'] = tm.result.fillna('')
+tm_cols = {'method': 'method', 'mean AUC': 'mean AUC', 'mean AUC 95% CI low': 'mean AUC 95% CI low', 'mean AUC 95% CI high': 'mean AUC 95% CI high',
+           'RFind-sc minus method': 'RFind-sc minus method (mean AUC)', 'difference 95% CI low': 'difference 95% CI low',
+           'difference 95% CI high': 'difference 95% CI high', 'result': 'result against RFind-sc'}
+tmA, tmB = [tm[tm.type == k][list(tm_cols)].rename(columns=tm_cols) for k in ('A', 'B')]
+tmA_note = ['Mean AUC over the eight type A tasks with references of 500 genes per direction (Fig. 5e, left: the four DAM and '
+            'Glucocorticoid tasks and the four PS2APP and Forced swim tasks), and RFind-sc minus each method (fig5_task_means.py).',
+            '95% CIs: bootstrap over mice (all cells of each drawn mouse), 1,000 resamples, the same draws for the tasks with the same mice and '
+            'for every method; in each resample the mean over the tasks of the resampled AUCs. ' + RULE]
+tmB_note = ['Mean AUC over the three type B tasks (Fig. 5e, right: the Hallmark gene sets of Fig. 5d), and RFind-sc minus each method; '
+            'the same bootstrap (H2 and H5, defined by clusters, draw from all mice).']
 
 ## Balanced accuracy at a threshold of 0 (results/fig5_balanced_accuracy_L500.csv of fig5_balanced_accuracy.py): the tasks and the
 ## methods of the AUC table at L = 500 (the ceiling task left out), on the same cells
@@ -337,7 +355,8 @@ ba_note = [
     'the mean of the fraction of positive cells with a score above 0 and the fraction of negative cells with a score of 0 or below '
     '(0.5 = chance, also for a score that is above 0 in every cell). The same cells and scores as the AUC (type A references of 500 '
     'genes per direction; Beyondcell cells without a score set to 0); the Maturity task (ceiling) is not included.',
-    '95% CIs: bootstrap over cells, 1,000 resamples, the same resamples for every method. Result against RFind-sc: RFind-sc higher or '
+    '95% CIs: bootstrap over mice (all cells of each drawn mouse), 1,000 resamples, the same resamples for every method. Result against '
+    'RFind-sc: RFind-sc higher or '
     'lower when the 95% CI of the difference excludes 0 and the difference exceeds 0.01; otherwise not distinguished.']
 basum_note = ['Mean balanced accuracy over the tasks, and the numbers of tasks in which RFind-sc was higher, not distinguished or lower '
               'than each method.']
@@ -364,12 +383,13 @@ def write_blocks(w, name, blocks):
 
 readme = [
     ('Supplementary Table 3', 'Capability benchmark against existing scoring methods (Fig. 5 and Supplementary Fig. S4).'),
-    ('Tasks', 'Twelve tasks: seven in the main figure with the data and references of Fig. 2 and Fig. 3 (type A, Fig. 5c: DAM and '
-              'Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells; type B, Fig. 5d: two Interferon tasks and G2M); four '
-              'added type A tasks (Supplementary Fig. S4) on the same cells as the type A tasks of Fig. 5c, with a second reference of each '
-              'state (PS2APP for the DAM task; Forced swim for the three Glucocorticoid tasks); and the Maturity task, left out of the '
-              'main figure because the median AUC of the methods was 0.99 or more (ceiling). Fig. 5e averages the eight type A tasks. '
-              'Positive and negative cells are defined by the '
+    ('Tasks', 'Twelve tasks: seven with the data and references of Fig. 2 and Fig. 3 (type A, the four DAM and Glucocorticoid tasks: DAM, '
+              'and Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells; type B, Fig. 5d: two Interferon tasks and G2M); '
+              'the four PS2APP and Forced swim tasks (type A) on the same cells as the DAM and Glucocorticoid tasks, with a second reference '
+              'of each state (PS2APP for the DAM task; Forced swim for the three Glucocorticoid tasks); and the Maturity task, left out of the '
+              'main figure because the median AUC of the methods was 0.99 or more (ceiling). Fig. 5c draws the DAM task and the '
+              'Glucocorticoid task in the astrocytes, and Supplementary Fig. S4b the other six type A tasks; Figs. 5e and 5f average the '
+              'eight type A tasks. Positive and negative cells are defined by the '
               'experimental condition or the cluster of the original study, not by any score of this study.'),
     ('Methods', 'Main figure: RFind-sc, AddModuleScore, AUCell, UCell (signed signature), singscore, ssGSEA, VISION, Beyondcell, ULM of decoupleR '
                 'and scFOCAL-type (implemented in this study from the published formula; type A only). This table only: UCell with the up genes only, '
@@ -377,24 +397,28 @@ readme = [
                 "Column \"form of the reference given\": A, ranked lists or weights; A', names of up- and "
                 "down-regulated genes; A'', names of up-regulated genes."),
     ('References given', 'Gene sets as they are (weight 1 for decoupleR). Type A references: the top L genes per direction (L = 500 in Fig. 5b-d; '
-                         '100, 250, 500, 1,000, 2,000 and all genes in Fig. 5e), the same genes for every method.'),
+                         '100, 250, 500, 1,000, 2,000 and all genes in Fig. 5f), the same genes for every method.'),
     ('AUC and result', 'Mann-Whitney AUC of the score between the positive and negative cells, over all task cells; 95% CIs of the AUC and of the '
-                       'difference from RFind-sc by a bootstrap over cells (1,000 resamples, the same resamples for every method). Result against '
+                       'difference from RFind-sc by a bootstrap over mice (all cells of each drawn mouse; mice drawn within the positive and the negative '
+                       'group, or from all mice in the tasks defined by a cluster; 1,000 resamples, the same resamples for every method). Result against '
                        'RFind-sc, task by task: RFind-sc higher or lower when the CI of the difference excludes 0 and the difference exceeds 0.01; '
                        'otherwise not distinguished (the difference is 0.01 or less or cannot be told apart; this does not show that the two are at the same level). The '
                        'ceiling task is not judged.'),
-    ('Sheets', 'Tasks; AUC, L = 500 (Fig. 5b-d and Supplementary Fig. S4); AUC, other lengths (Fig. 5e; type A tasks); Reference length '
-               '(mean AUC over the eight type A tasks, Fig. 5e, and over the four type A tasks of Fig. 5c); Comparisons (numbers of '
+    ('Sheets', 'Tasks; AUC, L = 500 (Fig. 5b-d and Supplementary Fig. S4b); Mean over tasks (Fig. 5e); AUC, other lengths (Fig. 5f; type A tasks); '
+               'Reference length (mean AUC over the eight type A tasks, Fig. 5f, and over the four DAM and Glucocorticoid tasks); Comparisons (numbers of '
                'comparisons in which RFind-sc was higher, not distinguished or lower, by task set); Beyondcell missing '
                '(the number and fraction of cells to which Beyondcell gives no score, and the AUC with these cells set to 0, as in the main '
                'analysis).'),
+    ('Sheet: Mean over tasks', 'Mean over tasks (Fig. 5e: the mean AUC of each method over the eight type A tasks, 500 genes per '
+                               'direction, and over the three type B tasks, and RFind-sc minus each method, with 95% CIs and the result).'),
     ('Sheet: Best length', 'Best length (each method, RFind-sc included, at its own best reference length in the eight type A tasks: per task '
-                           'and leave one task out over the other seven tasks; below, leave one task out within the four tasks of Fig. 5c; the '
+                           'and leave one task out over the other seven tasks; below, leave one task out within the four DAM and '
+                           'Glucocorticoid tasks; the '
                            'length is chosen on the same cells, so the AUCs are upper '
                            'bounds alike for every method; with the CI and result when the length is chosen again in each resample; comparable = '
                            'the whole CI of the difference within -0.01 to +0.01).'),
-    ('Sheet: Mean AUC differences', 'Mean AUC differences (mean AUC over the eight type A tasks, and below over the four type A tasks of '
-                                    'Fig. 5c, RFind-sc minus each method, with 95% CIs, at '
+    ('Sheet: Mean AUC differences', 'Mean AUC differences (mean AUC over the eight type A tasks, and below over the four DAM and '
+                                    'Glucocorticoid tasks, RFind-sc minus each method, with 95% CIs, at '
                                     'each fixed length, at the best length per task and leave one task out; comparable as above).'),
     ('Sheet: Balanced accuracy', 'Balanced accuracy (how well the sign of each score separates the two groups: the balanced accuracy at a '
                                  'threshold of 0 in the eight type A tasks, 500 genes per direction, and the three type B tasks, with 95% CIs '
@@ -418,11 +442,12 @@ if os.path.exists(RT):
                    '75,572 cells, and of the knock-out x knock-out matching of Supplementary Fig. S3, with the computer and the versions used.'))
 sheets = {'README': pd.DataFrame(readme, columns=['item', 'description']), 'Tasks': tasks, 'AUC, L = 500': a500, 'AUC, other lengths': along,
           'Comparisons': cnt, 'Beyondcell missing': bc}
-added = {'Reference length': [(length_notes[0], length8), (length_notes[1], length4)],
+added = {'Mean over tasks': [(tmA_note, tmA), (tmB_note, tmB)],
+         'Reference length': [(length_notes[0], length8), (length_notes[1], length4)],
          'Best length': [(best_note, best), (best4_note, best4)],
          'Mean AUC differences': [(meandiff_note, meandiff), (meandiff4_note, meandiff4)],
          'Balanced accuracy': [(ba_note, bao), (basum_note, basum)]}
-ORDER = ['README', 'Tasks', 'AUC, L = 500', 'AUC, other lengths', 'Reference length', 'Comparisons',
+ORDER = ['README', 'Tasks', 'AUC, L = 500', 'Mean over tasks', 'AUC, other lengths', 'Reference length', 'Comparisons',
          'Beyondcell missing', 'Best length', 'Mean AUC differences', 'Balanced accuracy']
 if rt_blocks:
     added['Run time and memory'] = rt_blocks

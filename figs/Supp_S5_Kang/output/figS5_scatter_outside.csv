@@ -1,0 +1,19 @@
+pair,ct,n_cells,n_outside,pct_outside
+IFNb-index x PGE2-index,cM,5385,3112,57.8
+IFNb-index x PGE2-index,ncM,1599,899,56.2
+IFNb-index x PGE2-index,DC,432,289,66.9
+IFNb-index x PGE2-index,Mkc,260,43,16.5
+IFNb-index x PGE2-index,T[H],10389,1430,13.8
+IFNb-index x PGE2-index,B,2573,733,28.5
+IFNb-index x PGE2-index,Tc,2042,280,13.7
+IFNb-index x PGE2-index,NK,1993,351,17.6
+IFNb-index x PGE2-index,all,24673,7137,28.9
+Interferon-index x Chemokine-index,cM,5385,2770,51.4
+Interferon-index x Chemokine-index,ncM,1599,901,56.3
+Interferon-index x Chemokine-index,DC,432,235,54.4
+Interferon-index x Chemokine-index,Mkc,260,44,16.9
+Interferon-index x Chemokine-index,T[H],10389,1092,10.5
+Interferon-index x Chemokine-index,B,2573,636,24.7
+Interferon-index x Chemokine-index,Tc,2042,176,8.6
+Interferon-index x Chemokine-index,NK,1993,226,11.3
+Interferon-index x Chemokine-index,all,24673,6080,24.6

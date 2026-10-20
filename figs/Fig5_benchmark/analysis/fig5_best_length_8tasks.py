@@ -1,12 +1,11 @@
-"""Fig. 5e / Supplementary Table 3 — the comparisons of fig5_best_length.py over the eight type A tasks: the four
-tasks of Fig. 5c (H1, D1, D2, D3) and the four added tasks of Supplementary Fig. S4 (DA1 = the cells of H1 with the PS2APP
+"""Fig. 5f / Supplementary Table 3 — the comparisons of fig5_best_length.py over the eight type A tasks: the four
+DAM and Glucocorticoid tasks (H1, D1, D2, D3) and the four PS2APP and Forced swim tasks (DA1 = the cells of H1 with the PS2APP
 reference; AS1, AS2, AS3 = the cells of D1, D2, D3 with the Forced swim reference; fig5_extra_score.R).
 The computation is that of fig5_best_length.py (replicated here, not imported, so that its four-task outputs are never rewritten):
   - per-cell scores of the benchmark; Beyondcell without a score = 0; AUC = Mann-Whitney with ties averaged
-  - bootstrap over the cells of each task: default_rng(1), one generator, 1,000 resamples per task drawn task by task, the same
-    resamples for every method and length; the four tasks of Fig. 5c are drawn first in the order of fig5_best_length.py (H1, D1,
-    D2, D3: the same draws), then the added tasks in the order DA1, AS1, AS2, AS3. The draws are made per task, also for two tasks
-    on the same cells.
+  - bootstrap over mice (fig5_mice.py: all cells of a drawn mouse): default_rng(1), one generator, 1,000 resamples, the same
+    resamples for every method and length; the tasks ask for their draws in the order of fig5_best_length.py (H1, D1, D2, D3: the
+    same draws), then DA1, AS1, AS2, AS3; the tasks with the same mice share the draws (Hammond: H1, DA1; De Donno: D1-D3, AS1-AS3).
   - mean over tasks: point = mean of the point AUCs; resample b = mean of the tasks' resampled AUCs; CI = 2.5% and 97.5% quantiles of
     RFind-sc minus the method; RFind-sc higher / lower when the CI excludes 0 and |difference| > 0.01, otherwise not distinguished;
     'comparable' when the whole CI lies within -0.01..+0.01
@@ -14,15 +13,15 @@ The computation is that of fig5_best_length.py (replicated here, not imported, s
     with its highest AUC in that task); leave one task out (for task t, the length with the highest mean AUC over the other seven
     tasks); per task, also with the length re-selected in every resample
   - methods: the 10 main-figure methods and the table-only methods UCell (up genes), WMEAN (log2FC) and ORA
-Check first: the four tasks of Fig. 5c must reproduce results/fig5_mean_auc_diff.csv and results/fig5_best_length.csv (every row and column, to
+Check first: the four DAM and Glucocorticoid tasks must reproduce results/fig5_mean_auc_diff.csv and results/fig5_best_length.csv (every row and column, to
 1e-9; the script stops otherwise, before the eight tasks). These two files are read, never written, here.
 Inputs: figs/Fig5_benchmark/output/results/fig5_redo_percell_L<L>.csv.gz and results/fig5_redo_auc_L<L>.csv (H1, D1-D3),
         extra_refs/fig5_extra_percell_L<L>.csv.gz and extra_refs/fig5_extra_auc_L<L>.csv (DA1, AS1-AS3),
         results/fig5_mean_auc_diff.csv and results/fig5_best_length.csv (the check)
 Outputs (figs/Fig5_benchmark/output/):
   results/fig5_best_length_8tasks.csv    the eight tasks, each method at its best length vs RFind-sc at its best, per task and leave one task
-                                 out (the other seven tasks); columns of results/fig5_best_length.csv ('task set': main = Fig. 5c, added =
-                                 Supplementary Fig. S4)
+                                 out (the other seven tasks); columns of results/fig5_best_length.csv ('task set': main = the DAM and Glucocorticoid
+                                 tasks, added = the PS2APP and Forced swim tasks)
   results/fig5_mean_auc_diff_8tasks.csv  mean AUC over the eight tasks, RFind-sc minus each method with 95% CI (columns of results/fig5_mean_auc_diff.csv)
 Run from the project root (about 5 min, 0.3 GB of memory): python figs/Fig5_benchmark/analysis/fig5_best_length_8tasks.py
 """
@@ -33,6 +32,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from fig5_mice import MouseDraws, mouse_of  # noqa: E402
+
 O = 'figs/Fig5_benchmark/output/'
 os.makedirs(O + 'results', exist_ok=True)                        # the tables in output/results/
 X = O + 'extra_refs/'
@@ -41,8 +43,8 @@ METH = ['RFind-sc', 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 
 TONLY = ['UCell (up genes)', 'WMEAN (log2FC)', 'ORA']
 ALLM = METH + TONLY
 B, SEED = 1000, 1
-TA4 = ['H1', 'D1', 'D2', 'D3']                                     # Fig. 5c (drawn first, in the order of fig5_best_length.py)
-ADD = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}         # Supplementary Fig. S4: added task -> task on the same cells
+TA4 = ['H1', 'D1', 'D2', 'D3']                                     # DAM and Glucocorticoid (drawn first, in the order of fig5_best_length.py)
+ADD = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}         # PS2APP and Forced swim: added task -> task on the same cells
 TA8 = TA4 + list(ADD)                                              # drawing order of the added tasks: DA1, AS1, AS2, AS3
 TSET = {**{t: 'main' for t in TA4}, **{t: 'added' for t in ADD}}
 
@@ -75,13 +77,13 @@ for L in LS:
     ref[L] = pd.concat([pd.read_csv(f'{O}results/fig5_redo_auc_L{L}.csv'), pd.read_csv(f'{X}fig5_extra_auc_L{L}.csv')],
                        ignore_index=True).set_index(['id', 'method']).AUC
 
-## the added tasks score the same cells as the tasks of Fig. 5c, in the same order
+## the added tasks score the same cells as the DAM and Glucocorticoid tasks, in the same order
 for t, p in ADD.items():
     a, b = pc['500'][pc['500'].id == t], pc['500'][pc['500'].id == p]
     assert a.cell_id.tolist() == b.cell_id.tolist() and (a.positive.to_numpy() == b.positive.to_numpy()).all(), (t, p)
 
 ## ---- point AUCs and bootstrap AUCs (B x columns) per task; columns = (method, length) ----
-rng = np.random.default_rng(SEED)
+DRAWS = MouseDraws(np.random.default_rng(SEED), B)
 point, boot, col = {}, {}, {}
 maxdiff = 0.0
 
@@ -101,9 +103,8 @@ def prepare_and_draw(t):                                           # scores (cel
         assert abs(v - ref[L][(t, m)]) < 1e-5, (t, m, L, v, ref[L][(t, m)])   # the stored point AUCs are reproduced (the per-cell
         maxdiff = max(maxdiff, abs(v - ref[L][(t, m)]))                         # files keep ~15 digits, so near-ties can move ~1e-7)
     col[t] = {nm: k for k, nm in enumerate(names)}
-    n = len(pos); bt = np.empty((B, S.shape[1]))
-    for b in range(B):
-        i = rng.integers(0, n, n)
+    bt = np.empty((B, S.shape[1]))
+    for b, i in enumerate(DRAWS.cells(mouse_of(base.cell_id), pos)):
         bt[b] = aucs(S[i], pos[i])
     boot[t] = bt
 
@@ -169,7 +170,7 @@ def analyse(tasks):                                                # fig5_best_l
     return out, pd.DataFrame(mrows), best_task
 
 
-## ---- 1. the four tasks of Fig. 5c with the draws of fig5_best_length.py; check against its outputs, stop if not reproduced ----
+## ---- 1. the four DAM and Glucocorticoid tasks with the draws of fig5_best_length.py; check against its outputs, stop if not reproduced ----
 for t in TA4:
     prepare_and_draw(t)
 out4, md4, best4 = analyse(TA4)
@@ -189,7 +190,7 @@ print(f'point AUCs vs the stored AUC tables (4 tasks): max |diff| {maxdiff:.1e}'
 print(f'check, 4 tasks vs results/fig5_mean_auc_diff.csv: max |diff| {d_md:.1e}, differing text columns {t_md or "none"}')
 print(f'check, 4 tasks vs results/fig5_best_length.csv:   max |diff| {d_bl:.1e}, differing text columns {t_bl or "none"}')
 if d_md > 1e-9 or d_bl > 1e-9 or t_md or t_bl:
-    sys.exit('the four tasks of Fig. 5c are NOT reproduced: stopped before the eight tasks')
+    sys.exit('the four DAM and Glucocorticoid tasks are NOT reproduced: stopped before the eight tasks')
 print('  reproduced exactly (to 1e-9): continuing with the eight tasks')
 
 ## ---- 2. the added tasks (continuing the generator), then the eight tasks ----
@@ -213,7 +214,7 @@ def f3(x):
 
 
 main9 = METH[1:]
-for lab, md in [('4 tasks of Fig. 5c', md4), ('8 type A tasks', md8)]:
+for lab, md in [('4 DAM and Glucocorticoid tasks', md4), ('8 type A tasks', md8)]:
     print(f'\n== mean AUC over the {lab} (RFind-sc minus ULM (log2FC), 95% CI; vs the 9 main methods higher/not distinguished/lower)')
     for cname in md.comparison.unique():
         g = md[(md.comparison == cname) & md.method.isin(main9)]
@@ -222,7 +223,7 @@ for lab, md in [('4 tasks of Fig. 5c', md4), ('8 type A tasks', md8)]:
         print(f'  {cname:22s} RFind-sc {u["mean AUC RFind-sc"]:.4f} | ULM {u["mean AUC method"]:.4f} diff {u.difference:+.4f} '
               f'[{u["CI low"]:+.4f}, {u["CI high"]:+.4f}] {u.result}{" (comparable)" if u.comparable else ""} | highest other '
               f'{top.method} {f3(top["mean AUC method"])} | 9 methods {counts(g)}')
-for lab, out, tasks, best in [('4 tasks of Fig. 5c', out4, TA4, best4), ('8 type A tasks', out8, TA8, best8)]:
+for lab, out, tasks, best in [('4 DAM and Glucocorticoid tasks', out4, TA4, best4), ('8 type A tasks', out8, TA8, best8)]:
     g = out[(out.version == 'per task') & out.method.isin(main9)]
     print(f'\n== best length per task, {lab}: RFind-sc vs the 8 methods other than ULM {counts(g[g.method != "ULM (log2FC)"])} '
           f'(re-selected {counts(g[g.method != "ULM (log2FC)"], "reselected result")}); vs ULM {counts(g[g.method == "ULM (log2FC)"])} '

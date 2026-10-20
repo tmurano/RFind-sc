@@ -1,0 +1,17 @@
+pair,ct,xlo,xhi,ylo,yhi
+IFNb-index x PGE2-index,cM,-36.12,34.61,-7.7,0.97
+IFNb-index x PGE2-index,ncM,-38.04,22.12,-4.36,2.14
+IFNb-index x PGE2-index,DC,-30.35,19.58,-4.68,1.82
+IFNb-index x PGE2-index,Mkc,-22.38,11.16,-3.55,2.94
+IFNb-index x PGE2-index,T[H],-21.89,10.46,-4.09,2.4
+IFNb-index x PGE2-index,B,-25.34,7.84,-3.4,3.1
+IFNb-index x PGE2-index,Tc,-22.1,10.26,-4.18,2.32
+IFNb-index x PGE2-index,NK,-22.47,9.89,-3.35,3.15
+Interferon-index x Chemokine-index,cM,-32.05,13.45,-6.43,0.31
+Interferon-index x Chemokine-index,ncM,-25.78,13.29,-6.08,-1.38
+Interferon-index x Chemokine-index,DC,-26.21,12.65,-4.08,0.62
+Interferon-index x Chemokine-index,Mkc,-30.01,6.4,-4.29,0.41
+Interferon-index x Chemokine-index,T[H],-28.18,6.13,-2.61,2.1
+Interferon-index x Chemokine-index,B,-29.44,6.38,-3.25,1.45
+Interferon-index x Chemokine-index,Tc,-25.61,8.7,-2.56,2.14
+Interferon-index x Chemokine-index,NK,-24.39,9.92,-2.95,1.75

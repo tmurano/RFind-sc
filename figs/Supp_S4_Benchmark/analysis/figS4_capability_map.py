@@ -1,23 +1,25 @@
-"""Supplementary Fig. S4 — the tasks of the Fig. 5 benchmark and the four added type A tasks.
+"""Supplementary Fig. S4 — the tasks of the Fig. 5 benchmark and the type A tasks not drawn in Fig. 5c.
 Added tasks (fig5_extra_score.R): DA1 = the cells of the DAM task (H1; LPC- vs saline-injected white matter, microglia) with the
 PS2APP reference; AS1, AS2, AS3 = the cells of the three Glucocorticoid tasks (D1-D3; stress vs no stress in Oligodendrocytes,
-Astro and Endothelial) with the Forced swim reference. Fig. 5c shows the four tasks of the paper; Fig. 5e averages all eight.
-Panels a (table of the tasks) and b (added tasks), drawn without panel letters (the slide adds them), no figure title, no
+Astro and Endothelial) with the Forced swim reference. Fig. 5c shows DAM and Glucocorticoid in Astro; b shows the other six type A
+tasks (Glucocorticoid in Oligodendrocytes and Endothelial, and the four added tasks); Figs. 5e and 5f average all eight.
+Panels a (table of the tasks) and b (type A tasks), drawn without panel letters (the slide adds them), no figure title, no
 notes in the image (the notes are in the legend; the numbers they need are printed):
   part 0  every task of the benchmark (a), in the style of the table of Fig. 5a (cell numbers from the sheet Tasks of
           Supplementary Table 3)
-  part 1  the four added tasks: AUC with 95% CI of every method of Fig. 5c at 500 genes per direction, drawn with the functions and
+  part 1  the six type A tasks not in Fig. 5c: AUC with 95% CI of every method of Fig. 5c at 500 genes per direction, drawn with the functions and
           the method colours of fig5_rebuild_figure_draft.py (no key; the colours are those of Fig. 5). A panel's lower edge goes
           below the AUC range of 0.2 only to show a whole CI; points below the edge are triangles, as in Fig. 5.
 The name of the script refers to the capability map of the benchmark (type A with each method at its best reference length, and
 type B); these comparisons are in Supplementary Table 3 (sheets Best length, Comparisons and Mean AUC differences), not in this figure.
 All text >= 5 pt (the subscript 2 of G2M too: drawn at 5 pt by SubText), width 180 mm, 600 dpi.
-Inputs: figs/Fig5_benchmark/output/extra_refs/fig5_extra_auc_L500.csv, SuppTable3.xlsx (sheet Tasks); the module
+Inputs: figs/Fig5_benchmark/output/extra_refs/fig5_extra_auc_L500.csv, results/fig5_redo_auc_L500.csv (via the module: D1, D3),
+        SuppTable3.xlsx (sheet Tasks); the module
         fig5_rebuild_figure_draft.py (imported: data and drawing functions of Fig. 5; on import it also reads
         Fig5c_embedding.png and Fig5d_auc.png, the outputs of fig5_redo_figure.py, which therefore runs first)
 Outputs (figs/Supp_S4_Benchmark/output/; the folder of Supplementary Fig. S4): FigS4.png (the whole figure, a and b, without panel
         letters; Word and the check of the slide) and the panels for the slide, directly in output/: FigS4a_tasks.png and
-        FigS4b_added_tasks.png, each alone and without its letter, cut to its drawn content with a 0.5 mm margin
+        FigS4b_typeA_tasks.png, each alone and without its letter, cut to its drawn content with a 0.5 mm margin
 Run from the project root: python figs/Supp_S4_Benchmark/analysis/figS4_capability_map.py
 """
 import os
@@ -39,10 +41,12 @@ import fig5_rebuild_figure_draft as F                              # noqa: E402 
 
 O = F.O                                                            # figs/Fig5_benchmark/output/
 RF, CM = F.RF, F.CMETH
-PAPER = list(F.TA)                                                 # H1, D1, D2, D3 (Fig. 5c)
+PAPER = list(F.TA)                                                 # H1, D1, D2, D3 (DAM and Glucocorticoid)
 ADDED = list(F.EXTRA)                                              # DA1, AS1, AS2, AS3
 TYPEA = PAPER + ADDED
 assert F.TA_EVAL == TYPEA
+MOVED = [t for t in PAPER if t not in F.TA_C]                      # D1, D3: the Glucocorticoid tasks not drawn in Fig. 5c
+PART1 = MOVED + ADDED                                              # b: the six type A tasks not in Fig. 5c
 ## names of the added tasks as in the paper (PS2APP, Forced swim); the other task names are those of Fig. 5
 TNAME = {**F.TNAME, 'DA1': ('PS2APP', F.TNAME['DA1'][1]), **{t: ('Forced swim', F.TNAME[t][1]) for t in ('AS1', 'AS2', 'AS3')}}
 
@@ -51,7 +55,9 @@ X5 = pd.read_csv(f'{O}extra_refs/fig5_extra_auc_L500.csv')
 for t in ADDED:
     n = X5[(X5.id == t) & X5.method.isin(CM)].method.value_counts()
     assert len(n) == len(CM) and n.max() == 1, t
-XA = X5[X5.method.isin(CM)][F.A.columns]
+XA = pd.concat([F.A[F.A.id.isin(MOVED) & F.A.method.isin(CM)], X5[X5.method.isin(CM)][F.A.columns]], ignore_index=True)
+for t in PART1:
+    assert XA[XA.id == t].method.value_counts().reindex(CM).eq(1).all(), t
 
 ## ---- part 1: the added tasks, drawn as the panels of Fig. 5c ----
 SPAN0 = F.SPAN                                                     # 0.2: the AUC range of the small panels
@@ -74,11 +80,12 @@ def small_c(ax, v, t):                                             # F.small; th
 
 
 P1_H = 34.0                                                        # height of part 1 (mm): task labels 8, panels 24, 2 below
+S4_PW = (118.0 - 9.3 - 3 * 5.8) / 4                                # width of a small panel of b (mm; six in a row fit the 180 mm)
 
 
-def draw_part1(fig, H, y0, X1=9.3, GAP=5.8, letter=True):          # the geometry of Fig. 5c (4 small panels of the same width)
-    PW, PH = F.PW_S, 24.0                                           # the small panels of Fig. 5c (b about 118 mm wide)
-    for k, t in enumerate(ADDED):
+def draw_part1(fig, H, y0, X1=9.3, GAP=5.8, letter=True):          # the small panels of Fig. 5c, six in a row (b about 175 mm wide)
+    PW, PH = S4_PW, 24.0
+    for k, t in enumerate(PART1):
         xa = X1 + k * (PW + GAP)
         ax = F.axmm(fig, H, xa, y0 + 8, PW, PH)
         if k == 0 and letter:
@@ -183,11 +190,11 @@ TROWS = [  # task, cells, positive (n), negative (n), reference, source, shown i
     ('PS2APP', 'Microglia, Fig. 2', f"LPC-injected ({ncell('PS2APP:', 'pos')})", f"Saline-injected ({ncell('PS2APP:', 'neg')})",
      'PS2APP vs non-transgenic microglia', 'Srinivasan et al., 2016', 'S4b'),
     ('Glucocorticoid', 'Oligodendrocytes, Fig. 3', f"Stress ({ncell('Glucocorticoid: stress vs no stress, oligodendrocytes', 'pos')})",
-     f"No stress ({ncell('Glucocorticoid: stress vs no stress, oligodendrocytes', 'neg')})", 'Corticosterone 3 h, ventral hippocampus', 'Viho et al., 2022', 'Fig. 5c'),
+     f"No stress ({ncell('Glucocorticoid: stress vs no stress, oligodendrocytes', 'neg')})", 'Corticosterone 3 h, ventral hippocampus', 'Viho et al., 2022', 'S4b'),
     ('Glucocorticoid', 'Astro, Fig. 3', f"Stress ({ncell('Glucocorticoid: stress vs no stress, astrocytes', 'pos')})",
      f"No stress ({ncell('Glucocorticoid: stress vs no stress, astrocytes', 'neg')})", 'Corticosterone 3 h, ventral hippocampus', 'Viho et al., 2022', 'Fig. 5c'),
     ('Glucocorticoid', 'Endothelial, Fig. 3', f"Stress ({ncell('Glucocorticoid: stress vs no stress, endothelial', 'pos')})",
-     f"No stress ({ncell('Glucocorticoid: stress vs no stress, endothelial', 'neg')})", 'Corticosterone 3 h, ventral hippocampus', 'Viho et al., 2022', 'Fig. 5c'),
+     f"No stress ({ncell('Glucocorticoid: stress vs no stress, endothelial', 'neg')})", 'Corticosterone 3 h, ventral hippocampus', 'Viho et al., 2022', 'S4b'),
     ('Forced swim', 'Oligodendrocytes, Fig. 3', f"Stress ({ncell('Forced swim: stress vs no stress, oligodendrocytes', 'pos')})",
      f"No stress ({ncell('Forced swim: stress vs no stress, oligodendrocytes', 'neg')})", 'Forced swim 3 h, ventral hippocampus', 'von Ziegler et al., 2022', 'S4b'),
     ('Forced swim', 'Astro, Fig. 3', f"Stress ({ncell('Forced swim: stress vs no stress, astrocytes', 'pos')})",
@@ -241,14 +248,15 @@ fig.savefig(OUTS[0], dpi=F.DPI, facecolor='white'); plt.close(fig)
 ## the panels for the slide, each alone and without its letter
 OUTS.append(O4 + 'FigS4a_tasks.png')
 fig = plt.figure(figsize=(F.FW / 25.4, (P0_T + 1.0) / 25.4)); draw_part0(fig, P0_T + 1.0, 0.0, letter=False); F.save_trimmed(fig, OUTS[-1])
-OUTS.append(O4 + 'FigS4b_added_tasks.png')
+OUTS.append(O4 + 'FigS4b_typeA_tasks.png')
 fig = plt.figure(figsize=(F.FW / 25.4, Hp / 25.4)); draw_part1(fig, Hp, 1.0, letter=False); F.save_trimmed(fig, OUTS[-1])
 
 ## ---- report: the numbers that the legend needs ----
 for t, (lo, hi) in FLOOR.items():
     print(f'part 1, {t}: lower edge {lo:.3f} instead of {hi - SPAN0:.3f} (range {hi - lo:.3f}), so that no 95% CI is cut')
-for t in ADDED:
-    v = X5[(X5.id == t) & X5.method.isin(CM)].set_index('method'); top = v.drop(index=RF).AUC.idxmax()
+XF = pd.concat([pd.read_csv(f'{O}results/fig5_redo_auc_L500.csv').query('id in @MOVED'), X5], ignore_index=True)   # with the cell numbers
+for t in PART1:
+    v = XF[(XF.id == t) & XF.method.isin(CM)].set_index('method'); top = v.drop(index=RF).AUC.idxmax()
     print(f'part 1, {t}: RFind-sc AUC {v.loc[RF, "AUC"]:.3f}; highest other {top} {v.loc[top, "AUC"]:.3f}; cells '
           f'{int(v.loc[RF, "n_pos"]):,} positive / {int(v.loc[RF, "n_neg"]):,} negative')
 for p in OUTS:  # the whole figure, then the panels a and b
