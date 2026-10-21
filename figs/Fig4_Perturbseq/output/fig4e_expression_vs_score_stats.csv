@@ -1,0 +1,3 @@
+gene,x,y,statistic,value,n_cell_types
+Nr3c1,Nr3c1 CPM in the No Stress cells of De Donno et al.,RFind score of the Nr3c1 knock-out,Spearman rho,-1.0,4
+Ncoa1,Ncoa1 CPM in the No Stress cells of De Donno et al.,RFind score of the Ncoa1 knock-out,Spearman rho,-0.8,4

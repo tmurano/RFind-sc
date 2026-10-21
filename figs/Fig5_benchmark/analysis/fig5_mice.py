@@ -1,5 +1,5 @@
-"""Mouse-level bootstrap for the Fig. 5 scripts in Python (fig5_best_length.py, fig5_best_length_8tasks.py,
-fig5_balanced_accuracy.py), with the rule of boot_task in fig5_bench_redo.R.
+"""Mouse-level bootstrap for the Fig. 5 scripts in Python (fig5_best_length.py, fig5_best_length_8tasks.py),
+with the rule of boot_task in fig5_bench_redo.R.
 Mouse = the sample of a Hammond cell (the cell name before its barcode, e.g. P100_M_SALINE_A3) or the donor of a De Donno cell
 (donor_id of data/DeDonno2026/output/cell_meta_qc.csv; De Donno cell names have no '_').
 A resample draws mice with replacement and takes all cells of every drawn mouse: within the positive and the negative group when every

@@ -134,7 +134,7 @@ Scripts are in `figs/<item>/analysis/`; `figs/run_all_figs.sh` runs them in the 
 | Fig. 1 | `fig1ab_simulated.R`, `fig1b_3d.py` (a, b), `fig1c_formula.py` (c), `fig1d_matching.R` (d) |
 | Fig. 2 | `fig2_tsne_original.R` (a), `fig2_cluster_table.R` (b), `fig2_violins.R` (c, d), `fig2_scatter_pairs.R` (e, f) |
 | Fig. 3 | `fig3_umap.R` (a), `fig3_celltype_table.R` (b), `fig3_violins.R` (c, d), `fig3_scatter.R` (e, f) |
-| Fig. 4 | `fig4a_schematic.py` (a), `fig4b_schematic.py` (b), `fig4c_rank_tables.py` (c), `fig4d_go_set.R`, `fig4d_heatmap.R` (d, e), `fig4f_gr_expression.py` (f) |
+| Fig. 4 | `fig4a_schematic.py` (a), `fig4b_schematic.py` (b), `fig4c_rank_tables.py` (c), `fig4d_go_set.R` (d), `fig4e_expression_vs_score.py` (e) |
 | Fig. 5, Supplementary Fig. S4 | `run_fig5_redo.sh` (the benchmark), `fig5_extra_refs.R`, `fig5_extra_score.R` and the later steps of `figs/run_all_figs.sh` |
 | Supplementary Figs. S1–S3, S5 | `figS1_running_fisher.py`; `figS2_*`; `figS3_*`; `figS5_*` (`figS5_compose.py` assembles S5) |
 | Supplementary Tables 1–4 | `supp_table_ko_rankings.py` (1), `supp_table_random_sets.py` (2), `fig5_redo_tables.py` (3), `supp_table_references.R` and `.py` (4) |

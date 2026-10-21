@@ -158,28 +158,29 @@ def fig4():
     de = pd.DataFrame({'Cell type': pos.cell_type, 'Knock-out': pos.KO, 'RFind score': pos.rfind,
                        'z among knock-outs': pos.z_vs_KO, 'Rank from the opposed end (1 = most opposed)': pos.rank_from_opposed_end,
                        'Knock-outs ranked (n)': pos.n_ko,
-                       'Position from the opposed end (%; rank / knock-outs ranked x 100; Fig. 4e)': 100 * pos.rank_from_opposed_end / pos.n_ko, 'Nuclei of the knock-out (n)': pos.nuclei})
+                       'Nuclei of the knock-out (n)': pos.nuclei})
     rn = pd.read_csv(F4 / 'geneset_random_null.csv')
     scan = pd.DataFrame({'Cell type': rn.cell_type, 'Knock-outs ranked (n)': rn.n_knockouts,
                          'AUC of the five knock-outs (< 0.5 = towards the opposed end)': rn.auc_fig4d,
                          'Random sets: mean AUC': rn.null_any_mean, 'Random sets: SD of AUC': rn.null_any_sd, 'P, random sets': rn.p_any,
                          'Matched sets: mean AUC': rn.null_matched_mean, 'Matched sets: SD of AUC': rn.null_matched_sd,
                          'P, matched sets': rn.p_matched})
-    gr = pd.read_csv(F4 / 'fig4f_GR_expression_vs_score.csv')
-    f = pd.DataFrame({'Cell type': gr.cell_type, 'Nr3c1 expression in the non-targeting controls (CPM)': gr.nr3c1_cpm_non_targeting,
-                      'RFind score of the Nr3c1 knock-out': gr.rfind_score, 'Nuclei of the knock-out (n)': gr.ko_nuclei})
-    grs = pd.read_csv(F4 / 'fig4f_GR_expression_vs_score_stats.csv')
-    fs = pd.DataFrame({'x': grs.x, 'y': grs.y, 'Statistic': grs.statistic + ' (descriptive; no test)', 'Value': grs.value,
+    gr = pd.read_csv(F4 / 'fig4e_expression_vs_score.csv')
+    NM = {'DG': 'DG Glut', 'CA1': 'CA1 Glut', 'CA3': 'CA3 Glut', 'GABA': 'GABA'}
+    f = pd.DataFrame({'Gene': gr.gene, 'Cell type': gr.cell_type.map(NM), 'Expression in the No Stress cells of De Donno et al. (CPM)': gr.cpm_no_stress,
+                      'RFind score of the knock-out': gr.rfind_score, 'Nuclei of the knock-out (n)': gr.ko_nuclei})
+    grs = pd.read_csv(F4 / 'fig4e_expression_vs_score_stats.csv')
+    fs = pd.DataFrame({'Gene': grs.gene, 'x': grs.x, 'y': grs.y, 'Statistic': grs.statistic + ' (descriptive; no test)', 'Value': grs.value,
                        'Cell types (n)': grs.n_cell_types})      # no P: no test with four cell types (Methods)
     write(OUT / 'Source_Data_Fig4.xlsx', [
         'Source Data for Fig. 4 (stress response of De Donno et al. matched with the knock-outs of the in vivo Perturb-seq of Shi et al., 2026).',
         'RFind score = the signed Running Fisher score between the stress response (Delta computed from the summed counts of Stress cells with those of No Stress cells as the baseline, per cell type) and the knock-out effect; not a test.',
         'Fig4c_CA1: the 40 knock-outs listed in Fig. 4c (CA1 Glut); all knock-outs = Supplementary Table 1.',
-        'Fig4d-e_positions: the five genes of Figs. 4d and 4e in the four cell types.',
-        'Fig4d-e_random_sets: the five genes as a set compared with 100,000 random (and 100,000 matched) sets of five knock-outs from the library (Supplementary Table 2).',
-        'Fig4f_GR_expression: the four cell types of Fig. 4f (Nr3c1 CPM in the non-targeting control nuclei; RFind score of the Nr3c1 knock-out); in the table to the right, the Spearman rho of the two over the four cell types (descriptive; no test, as there are only four cell types).',
-        'Source tables: figs/Fig4_Perturbseq/output/SuppTable_KO_rankings.xlsx (sheet CA1 Glut), fig4d_GR-complex_positions.csv, geneset_random_null.csv, fig4f_GR_expression_vs_score.csv, fig4f_GR_expression_vs_score_stats.csv.'],
-        {'Fig4c_CA1': c, 'Fig4d-e_positions': de, 'Fig4d-e_random_sets': scan, 'Fig4f_GR_expression': [f, fs]})
+        'Fig4d_positions: the five genes of Fig. 4d in the four cell types.',
+        'Fig4d_random_sets: the five genes as a set compared with 100,000 random (and 100,000 matched) sets of five knock-outs from the library (Supplementary Table 2).',
+        'Fig4e_expression: Nr3c1 and Ncoa1 in the four cell types of Fig. 4e (CPM in the summed counts of the No Stress cells of De Donno et al.; RFind score of the knock-out of the same gene); in the table to the right, the Spearman rho of the two over the four cell types for each gene (descriptive; no test, as there are only four cell types).',
+        'Source tables: figs/Fig4_Perturbseq/output/SuppTable_KO_rankings.xlsx (sheet CA1 Glut), fig4d_GR-complex_positions.csv, geneset_random_null.csv, fig4e_expression_vs_score.csv, fig4e_expression_vs_score_stats.csv.'],
+        {'Fig4c_CA1': c, 'Fig4d_positions': de, 'Fig4d_random_sets': scan, 'Fig4e_expression': [f, fs]})
 
 
 ## ---- Fig. 5 and Supplementary Fig. S4 (the capability benchmark) ----

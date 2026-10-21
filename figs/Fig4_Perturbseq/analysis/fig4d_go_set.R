@@ -36,7 +36,7 @@ CT_LAB <- c(DG = "DG Glut", CA1 = "CA1 Glut", CA3 = "CA3 Glut", GABA = "GABA")
 
 ## The set is either a public GO term (GO:xxxxxxx, membership from org.Mm.eg.db) or one of the named sets below.
 PRESET <- list(
-  ## the set of the paper (Fig. 4d, e; Methods): the two corticosteroid receptors (Nr3c1, glucocorticoid receptor; Nr3c2,
+  ## the set of the paper (Fig. 4d; Methods): the two corticosteroid receptors (Nr3c1, glucocorticoid receptor; Nr3c2,
   ## mineralocorticoid receptor) and the proteins that act on the glucocorticoid receptor directly, its chaperone and its
   ## coactivators; every library member of this definition (5 genes)
   "GR-complex" = list(name = "Knock-outs of corticosteroid receptors and their complexes",   # key: what the black dots are

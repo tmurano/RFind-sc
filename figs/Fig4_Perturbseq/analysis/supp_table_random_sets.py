@@ -23,7 +23,7 @@ t = pd.DataFrame({"Cell type": d.cell_type, "Knock-outs (n)": d.n_knockouts, "AU
                   "Matched sets: mean AUC": d.null_matched_mean, "Matched sets: SD of AUC": d.null_matched_sd,
                   "P, matched sets": d.p_matched})
 ## sheet "Other matching methods": the same comparison with the knock-outs ranked by ULM and the scFOCAL-type score
-## (fig4_other_methods.py; its ULM_all is not in the table); positions = % from the opposed end, as in Fig. 4e
+## (fig4_other_methods.py; its ULM_all is not in the table); positions = % from the opposed end
 GENES = ["Nr3c1", "Nr3c2", "Hsp90ab1", "Ncoa1", "Ncoa3"]
 METH = {"RFind": "RFind-sc", "ULM": "ULM", "scFOCAL": "scFOCAL-type"}
 o = pd.read_csv(os.path.join(OUT, "fig4_other_methods_summary.csv"))
@@ -60,7 +60,7 @@ readme = [
     ("Columns", FB),
     ("Knock-outs (n) — knock-outs ranked in the cell type.", F),
     ("Matching method — the score by which the knock-outs were ranked (sheet \"Other matching methods\").", F),
-    ("<gene>: % from the opposed end — position of the knock-out counted from the knock-out most opposed to the stress response (1), as a percentage of the knock-outs ranked (as in Fig. 4e; below 50, the opposed side).", F),
+    ("<gene>: % from the opposed end — position of the knock-out counted from the knock-out most opposed to the stress response (1), as a percentage of the knock-outs ranked (below 50, the opposed side).", F),
     ("AUC of the five genes — probability that one of the five knock-outs has a higher RFind score (in sheet \"Other matching methods\", the score of the matching method) than a remaining knock-out (0.5, no bias; near 0, the opposed end; near 1, the same-direction end).", F),
     ("Random sets / Matched sets: mean and SD of AUC — the AUCs of the 100,000 random or matched sets of five knock-outs.", F),
     ("P — fraction of the random (or matched) sets at least as far towards the opposed end as the five genes: (1 + number of sets with AUC <= that of the five genes) / (1 + 100,000).", F),

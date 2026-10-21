@@ -54,8 +54,7 @@ run fig4a_schematic       $PY figs/Fig4_Perturbseq/analysis/fig4a_schematic.py  
 run fig4b_schematic       $PY figs/Fig4_Perturbseq/analysis/fig4b_schematic.py      # b (whole panel; needs the De Donno QC metadata)
 run fig4c_CA1              $PY figs/Fig4_Perturbseq/analysis/fig4c_rank_tables.py CA1 CA1
 run fig4d_GR-complex       $R figs/Fig4_Perturbseq/analysis/fig4d_go_set.R --args GR-complex   # 4d: all knock-outs ranked by RFind score, the five GR-complex knock-outs marked
-run fig4d_heatmap          $R figs/Fig4_Perturbseq/analysis/fig4d_heatmap.R --args GR-complex  # 4e: their ranks as a heatmap
-run fig4f_GR_expression    $PY figs/Fig4_Perturbseq/analysis/fig4f_gr_expression.py   # 4f: Nr3c1 expression vs the RFind score of the Nr3c1 knock-out
+run fig4e_expression       $PY figs/Fig4_Perturbseq/analysis/fig4e_expression_vs_score.py   # 4e: Nr3c1 and Ncoa1 expression (De Donno No Stress) vs the RFind score of their knock-outs
 run supp_table_ko_rankings $PY figs/Fig4_Perturbseq/analysis/supp_table_ko_rankings.py   # needs openpyxl
 run fig4_ranking_checks     $PY figs/Fig4_Perturbseq/analysis/fig4_ranking_checks.py   # the check of Methods (lower limit of 5 nuclei)
 run fig4_random_sets      $PY figs/Fig4_Perturbseq/analysis/fig4_random_set_null.py     # Supplementary Table 2: random sets of knock-outs
@@ -85,17 +84,14 @@ run fig5_best_length         $PY figs/Fig5_benchmark/analysis/fig5_best_length.p
 ##  3b the same over the eight type A tasks (results/fig5_best_length_8tasks.csv and results/fig5_mean_auc_diff_8tasks.csv; reads the per-cell files of
 ##     steps 1 and 1c and checks the outputs of step 3 first; about 3 min)
 run fig5_best_length_8tasks  $PY figs/Fig5_benchmark/analysis/fig5_best_length_8tasks.py
-##  3c the balanced accuracy at a threshold of 0, how well the sign of each score separates the two groups (results/fig5_balanced_accuracy_L500.csv;
-##     sheet Balanced accuracy of Supplementary Table 3; reads the per-cell files of steps 1 and 1c at L = 500; about 10 s)
-run fig5_balanced_accuracy   $PY figs/Fig5_benchmark/analysis/fig5_balanced_accuracy.py
-##  3d the mean over the tasks of each type (results/fig5_task_means.csv; Fig. 5e and the sheet Mean over tasks of Supplementary Table 3;
+##  3c the mean over the tasks of each type (results/fig5_task_means.csv; Fig. 5e and the sheet Mean over tasks of Supplementary Table 3;
 ##     reads the per-cell files of steps 1 and 1c at L = 500 and checks the type A differences against step 3b; about 3 min)
 run fig5_task_means          $PY figs/Fig5_benchmark/analysis/fig5_task_means.py
 ##  4  output/data/Fig5c_embedding.png and Fig5d_auc.png (the t-SNE and the DAM-index distributions that panel b of Fig. 5 is cut
 ##     from; reads step 1 only). Run here, before
 ##     steps 5, 6 and 7: fig5_rebuild_figure_draft.py (step 7, imported by step 6) reads these two images when it is loaded.
 run fig5_redo_figure         $PY figs/Fig5_benchmark/analysis/fig5_redo_figure.py
-##  5  Supplementary Table 3 (SuppTable3.xlsx; reads steps 1, 1c, 3, 3b and 3c)
+##  5  Supplementary Table 3 (SuppTable3.xlsx; reads steps 1, 1c, 3 and 3b)
 run fig5_supp_table3         $PY figs/Fig5_benchmark/analysis/fig5_redo_tables.py
 ##  6  Supplementary Fig. S4: all tasks and the type A tasks not in Fig. 5c (output/FigS4.png and the panels FigS4a_tasks.png and
 ##     FigS4b_typeA_tasks.png, directly in output/); reads steps 1c, 5 [SuppTable3.xlsx, sheet Tasks] and 4

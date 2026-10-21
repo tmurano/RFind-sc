@@ -18,17 +18,14 @@ Sheets Best length (block 1: fig5_best_length_8tasks.py, every method at its bes
   task out within the four DAM and Glucocorticoid tasks) and Mean AUC differences (block 1: the mean over the eight type A tasks;
   block 2: the mean over the four DAM and Glucocorticoid tasks; RFind-sc minus each method); "comparable" = the whole 95% CI of the difference lies within
   -0.01..+0.01.
-Sheet Balanced accuracy (fig5_balanced_accuracy.py): how well the sign of each score separates the two groups, the
-  balanced accuracy at a threshold of 0 in the eight type A tasks (L = 500) and the three type B tasks, with 95% CIs and the result
-  against RFind-sc by the rule of the AUC comparisons (block 1); the mean over the tasks and the numbers of results by method (block 2).
 Sheet Run time and memory (fig5_runtime.sh; written only when its output exists): the run time and peak memory of scoring the cells of
   the data of Hammond et al. against the DAM reference and of the knock-out x knock-out matching of Supplementary Fig. S3, with the
   computer and the versions of the run.
 The task ids (H1, D1-D3, DA1, AS1-AS3, H2, H3, H5, H4) are the keys of the input files and are not written to the sheets.
 Input : figs/Fig5_benchmark/output/results/fig5_redo_auc_L<L>.csv, extra_refs/fig5_extra_auc_L<L>.csv, extra_refs/fig5_extra_percell_L500.csv.gz,
         results/fig5_redo_beyondcell_L500.csv,
-        results/fig5_best_length.csv, results/fig5_mean_auc_diff.csv, results/fig5_best_length_8tasks.csv, results/fig5_mean_auc_diff_8tasks.csv,
-        results/fig5_balanced_accuracy_L500.csv; if present, results/fig5_runtime.csv and results/fig5_runtime_env.tsv
+        results/fig5_best_length.csv, results/fig5_mean_auc_diff.csv, results/fig5_best_length_8tasks.csv, results/fig5_mean_auc_diff_8tasks.csv;
+        if present, results/fig5_runtime.csv and results/fig5_runtime_env.tsv
 Output: figs/Fig5_benchmark/output/SuppTable3.xlsx
 Run   : <python with pandas and openpyxl> figs/Fig5_benchmark/analysis/fig5_redo_tables.py   (from the project root)
 """
@@ -312,55 +309,6 @@ tmA_note = ['Mean AUC over the eight type A tasks with references of 500 genes p
 tmB_note = ['Mean AUC over the three type B tasks (Fig. 5e, right: the Hallmark gene sets of Fig. 5d), and RFind-sc minus each method; '
             'the same bootstrap (H2 and H5, defined by clusters, draw from all mice).']
 
-## Balanced accuracy at a threshold of 0 (results/fig5_balanced_accuracy_L500.csv of fig5_balanced_accuracy.py): the tasks and the
-## methods of the AUC table at L = 500 (the ceiling task left out), on the same cells
-ba = pd.read_csv(O + 'results/fig5_balanced_accuracy_L500.csv')
-ba['result'] = ba.result.fillna('')               # '' for RFind-sc itself
-aref = a500[a500['task id'] != 'H4']
-assert (sorted((t, DISPLAY.get(m, m)) for t, m in zip(ba.id, ba.method)) == sorted(zip(aref['task id'], aref.method))), \
-    'tasks / methods differ from the AUC table'
-nc = aref.groupby('task id')[['positive cells', 'negative cells']].first()
-assert (ba.groupby('id')[['n_pos', 'n_neg']].first().reindex(nc.index).to_numpy() == nc.to_numpy()).all(), 'cell numbers differ'
-bao = []
-for t in TYPE_A + TYPE_B:                                          # the task order and method order of the AUC sheet
-    main, extra = methods_of(t)
-    x = ba[ba.id == t].set_index('method')
-    for m in main + extra:
-        r = x.loc[m]
-        bao.append({'task id': t, 'task': TASKNAME[t], 'type': 'B (gene set)' if t in TYPE_B else 'A (list with direction and size)',
-                    'in the main figure': in_main(t),
-                    'method': DISPLAY.get(m, m), 'method in the main figure': 'yes' if m in main else 'no (this table only)',
-                    'reference length per direction': 'gene set' if t in TYPE_B else '500',
-                    'positive cells': r.n_pos, 'negative cells': r.n_neg,
-                    'fraction of positive cells with a score above 0': r.pos_above0,
-                    'fraction of negative cells with a score above 0': r.neg_above0,
-                    'balanced accuracy': r.balanced_accuracy, 'balanced accuracy 95% CI low': r.lo, 'balanced accuracy 95% CI high': r.hi,
-                    'RFind-sc minus method': r.diff_vs_RFind, 'difference 95% CI low': r.d_lo, 'difference 95% CI high': r.d_hi,
-                    'result against RFind-sc': r.result})
-bao = pd.DataFrame(bao)
-basum = []
-for typ, tsname, ts in [('A', 'all eight type A tasks', TYPE_A), ('B', 'the three type B tasks (Fig. 5d)', TYPE_B)]:
-    y = bao[bao['task id'].isin(ts)]
-    for m, g in y.groupby('method', sort=False):
-        assert len(g) == len(ts), (typ, m)
-        basum.append({'type': typ, 'tasks': tsname, 'method': m, 'method in the main figure': g['method in the main figure'].iloc[0],
-                      'mean balanced accuracy': g['balanced accuracy'].mean(),
-                      'RFind-sc higher': (g['result against RFind-sc'] == 'RFind-sc higher').sum() if m != 'RFind-sc' else np.nan,
-                      'not distinguished': (g['result against RFind-sc'] == 'not distinguished').sum() if m != 'RFind-sc' else np.nan,
-                      'RFind-sc lower': (g['result against RFind-sc'] == 'RFind-sc lower').sum() if m != 'RFind-sc' else np.nan})
-basum = pd.DataFrame(basum)
-ba_note = [
-    'Balanced accuracy at a threshold of 0 (fig5_balanced_accuracy.py): how well the sign of each score separates the positive and '
-    'negative cells of each task. A cell is called positive when its score is above 0 and negative otherwise; the balanced accuracy is '
-    'the mean of the fraction of positive cells with a score above 0 and the fraction of negative cells with a score of 0 or below '
-    '(0.5 = chance, also for a score that is above 0 in every cell). The same cells and scores as the AUC (type A references of 500 '
-    'genes per direction; Beyondcell cells without a score set to 0); the Maturity task (ceiling) is not included.',
-    '95% CIs: bootstrap over mice (all cells of each drawn mouse), 1,000 resamples, the same resamples for every method. Result against '
-    'RFind-sc: RFind-sc higher or '
-    'lower when the 95% CI of the difference excludes 0 and the difference exceeds 0.01; otherwise not distinguished.']
-basum_note = ['Mean balanced accuracy over the tasks, and the numbers of tasks in which RFind-sc was higher, not distinguished or lower '
-              'than each method.']
-
 
 def write_blocks(w, name, blocks):
     """blocks: list of (lines of text above the table, table); one blank row between blocks; widths from the tables only"""
@@ -420,10 +368,6 @@ readme = [
     ('Sheet: Mean AUC differences', 'Mean AUC differences (mean AUC over the eight type A tasks, and below over the four DAM and '
                                     'Glucocorticoid tasks, RFind-sc minus each method, with 95% CIs, at '
                                     'each fixed length, at the best length per task and leave one task out; comparable as above).'),
-    ('Sheet: Balanced accuracy', 'Balanced accuracy (how well the sign of each score separates the two groups: the balanced accuracy at a '
-                                 'threshold of 0 in the eight type A tasks, 500 genes per direction, and the three type B tasks, with 95% CIs '
-                                 'and the result against RFind-sc as for the AUC; below, the mean over the tasks and the numbers of results by '
-                                 'method).'),
 ]
 ## ============ sheet Run time and memory (fig5_runtime.sh; only when its output exists) ============
 RT, RTENV = f'{O}results/fig5_runtime.csv', f'{O}results/fig5_runtime_env.tsv'
@@ -445,10 +389,9 @@ sheets = {'README': pd.DataFrame(readme, columns=['item', 'description']), 'Task
 added = {'Mean over tasks': [(tmA_note, tmA), (tmB_note, tmB)],
          'Reference length': [(length_notes[0], length8), (length_notes[1], length4)],
          'Best length': [(best_note, best), (best4_note, best4)],
-         'Mean AUC differences': [(meandiff_note, meandiff), (meandiff4_note, meandiff4)],
-         'Balanced accuracy': [(ba_note, bao), (basum_note, basum)]}
+         'Mean AUC differences': [(meandiff_note, meandiff), (meandiff4_note, meandiff4)]}
 ORDER = ['README', 'Tasks', 'AUC, L = 500', 'Mean over tasks', 'AUC, other lengths', 'Reference length', 'Comparisons',
-         'Beyondcell missing', 'Best length', 'Mean AUC differences', 'Balanced accuracy']
+         'Beyondcell missing', 'Best length', 'Mean AUC differences']
 if rt_blocks:
     added['Run time and memory'] = rt_blocks
     ORDER.append('Run time and memory')

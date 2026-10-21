@@ -4,7 +4,7 @@ stress response of one cell type (De Donno, Stress vs No Stress; CA1 Glut in Fig
 vectors of the same cell type.
 
   <python> figs/Fig4_Perturbseq/analysis/fig4c_rank_tables.py [axis] [context]     (default: CA1 CA1 = the example of Fig. 4c,
-  the neuronal type with the highest GR expression [Fig. 4f])
+  the neuronal type with the highest GR expression [Fig. 4e])
 
 Input : analysis/perturbseq/results/axis_<axis>_vs_<context>.csv   (analysis/perturbseq/03_axis_vs_ko.py)
 Output: figs/Fig4_Perturbseq/output/Fig4c_<axis>_<context>_{aligned,opposed}.png

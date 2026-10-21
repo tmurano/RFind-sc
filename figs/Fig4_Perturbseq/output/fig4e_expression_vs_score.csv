@@ -1,0 +1,9 @@
+gene,cell_type,cpm_no_stress,rfind_score,ko_nuclei
+Nr3c1,DG,58.332,-11.794,10
+Ncoa1,DG,98.416,-19.916,19
+Nr3c1,CA1,122.588,-24.77,15
+Ncoa1,CA1,126.956,-30.027,20
+Nr3c1,CA3,33.444,1.991,30
+Ncoa1,CA3,84.67,-1.419,34
+Nr3c1,GABA,35.254,-4.015,179
+Ncoa1,GABA,103.907,-6.584,203

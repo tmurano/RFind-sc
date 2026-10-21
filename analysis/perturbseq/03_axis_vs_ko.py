@@ -13,7 +13,7 @@ Settings:
   RFind     4-term Running Fisher on the top/bottom 500 genes: each pair of lists scored by the smallest p over every
             top-G x top-K cut-off pair; clip 3000; kernel = running_fisher of analysis/running_fisher.py, a copy of the
             kernel of rfindsc-py 0.3.5, unchanged in 0.3.6 (same computation as analysis/running_fisher.R)
-Runs (axis x context), RUNS below (Fig. 4c = CA1; Fig. 4d-f and Supplementary Tables 1 and 2 = all four):
+Runs (axis x context), RUNS below (Fig. 4c = CA1; Fig. 4d, e and Supplementary Tables 1 and 2 = all four):
   DG stress  x g017_DG  (DG granule cells only)
   CA3 stress x g017_CA3 (CA3 only)
   CA1 stress x CA1 (016 CA1-ProS Glut); GABA stress x GABA3 (Pvalb + Sst + Lamp5 nuclei, summed)
