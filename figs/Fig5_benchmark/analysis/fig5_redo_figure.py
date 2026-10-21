@@ -92,12 +92,15 @@ def dot(ax, x, y, m, off=False, zb=3):                            # one method: 
 
 
 ## ---- c: the DAM task on the Hammond t-SNE (the same as Fig. 2; said in the legend) ----
+TSTEP = 31.0                                                       # step between the two t-SNEs (mm; axes 34 mm, the clouds about 29 mm wide)
+
+
 def draw_c(fig, H, x0, y0):
     xy = pd.read_csv('data/Hammond2019/raw/cell_meta_hammond.csv', usecols=['cell_id', 'tsne_x', 'tsne_y']).rename(columns={'tsne_x': 'x', 'tsne_y': 'y'})
     e = pc[pc.id == EX][['cell_id', 'positive', 'RFind-sc']].merge(xy, on='cell_id', how='left')
     assert e[['x', 'y']].notna().all().all(), EX
     v = e['RFind-sc'].to_numpy(dtype=float); pos = e['positive'].to_numpy(dtype=bool)
-    axs = [axmm(fig, H, x0 + 1 + k * 35, y0 + 6, 34, 34) for k in range(2)]
+    axs = [axmm(fig, H, x0 + 1 + k * TSTEP, y0 + 6, 34, 34) for k in range(2)]
     for ax in axs:
         ax.scatter(xy.x, xy.y, s=0.03, c='#E3E3E3', linewidths=0, rasterized=True, zorder=1)
         ax.set_xticks([]); ax.set_yticks([]); ax.set_aspect('equal', adjustable='datalim')
@@ -110,28 +113,34 @@ def draw_c(fig, H, x0, y0):
     DIV = LinearSegmentedColormap.from_list('div', [BLUE, '#F2F2F2', RED])   # the score itself, 0 = white (the values are shown as they are)
     vl = np.percentile(np.abs(v), 99); nrm = Normalize(vmin=-vl, vmax=vl); o2 = np.argsort(np.abs(v), kind='mergesort')   # symmetric about 0
     im = axs[1].scatter(e.x.values[o2], e.y.values[o2], s=0.3, c=np.clip(v[o2], -vl, vl), cmap=DIV, norm=nrm, linewidths=0, rasterized=True, zorder=2)
-    cb = fig.colorbar(im, cax=axmm(fig, H, x0 + 72, y0 + 11, 1.6, 24), extend='both'); cb.outline.set_visible(False)
-    cb.ax.tick_params(labelsize=T6, width=0.5, length=1.5, pad=1); cb.set_label('DAM-index (RFind-sc)', fontsize=T6, labelpad=2)
+    axs[1].text(0.12, 1.12, 'Scored by RFind-sc\n(DAM-index)', transform=axs[1].transAxes, ha='left', va='top', fontsize=T7, linespacing=1.25)   # what the colours of the right t-SNE are
+    cb = fig.colorbar(im, cax=axmm(fig, H, x0 + 1 + TSTEP + 33, y0 + 11, 1.6, 24), extend='both'); cb.outline.set_visible(False)
+    cb.ax.tick_params(labelsize=T6, width=0.5, length=1.5, pad=1)
 
 
 ## ---- d: score distributions with the ROC curve as an inset; the AUC of each method (95% CI) ----
+HW_D = 40.0                                                        # width of the distribution plot (mm)
+
+
 def draw_d(fig, H, x0, y0):
     d = pc[pc.id == EX]; v = d['RFind-sc'].to_numpy(dtype=float); pos = d['positive'].to_numpy(dtype=bool)
     r = auc[auc.id == EX].set_index('method')
-    h1 = axmm(fig, H, x0 + 6, y0 + 6, 44, 30)
+    h1 = axmm(fig, H, x0 + 6, y0 + 6, HW_D, 30)
     lo, hi = np.nanpercentile(v, [0.5, 99.5]); bins = np.linspace(lo, hi, 40)
     n1, _, _ = h1.hist(np.clip(v[~pos], lo, hi), bins=bins, color=BLUE, alpha=0.55, density=True, label='saline (negative)')
     n2, _, _ = h1.hist(np.clip(v[pos], lo, hi), bins=bins, color=RED, alpha=0.55, density=True, label='LPC (positive)')
     h1.set_ylim(0, 1.4 * max(n1.max(), n2.max()))                  # room above the peaks for the key and the ROC curve
     h1.axvline(0, ymax=0.7, color='k', lw=0.5, ls=':'); h1.set_yticks([]); h1.set_xlabel('DAM-index (RFind-sc)'); h1.set_ylabel('Density')
-    h1.legend(loc='upper left', frameon=False, fontsize=T7, handlelength=0.9, handletextpad=0.4, borderaxespad=0.1, labelspacing=0.3)
+    hh, ll = h1.get_legend_handles_labels()
+    h1.legend(hh[::-1], ll[::-1], loc='upper left', frameon=False, fontsize=T7, handlelength=0.9, handletextpad=0.4, borderaxespad=0.1, labelspacing=0.3)   # LPC first, as in the t-SNE key
     o = np.argsort(-v, kind='mergesort'); pp = pos[o]
     tpr = np.concatenate([[0], np.cumsum(pp) / pp.sum()]); fpr = np.concatenate([[0], np.cumsum(~pp) / (~pp).sum()])
     ins = inset_axes(h1, width='30%', height='44%', loc='upper right', borderpad=0.15)
     ins.plot(fpr, tpr, color=RED, lw=0.8); ins.fill_between(fpr, tpr, color=RED, alpha=0.15, lw=0); ins.plot([0, 1], [0, 1], color='k', lw=0.4, ls=':')
     ins.set_xlim(0, 1); ins.set_ylim(0, 1); ins.set_xticks([0, 1]); ins.set_yticks([0, 1]); ins.tick_params(labelsize=5.5, length=1.5, pad=0.8)
     ins.set_xlabel('FPR', fontsize=5.5, labelpad=-3); ins.set_ylabel('TPR', fontsize=5.5, labelpad=-3)
-    ins.text(0.96, 0.08, f'AUC {r.loc["RFind-sc", "AUC"]:.3f}', ha='right', fontsize=5.5, color=RED); ins.set_title('ROC', fontsize=T6, pad=1.5)
+    ins.text(0.96, 0.05, f'AUC\n{r.loc["RFind-sc", "AUC"]:.3f}', ha='right', va='bottom', fontsize=5.5, color=RED, linespacing=1.0)   # two lines: clear of the diagonal
+    ins.set_title('ROC', fontsize=T6, pad=1.5)
     h2 = axmm(fig, H, x0 + 62, y0 + 6, 31, 30)
     ms = [m for m in ORDER if m in r.index]
     h2.axhline(r.loc['RFind-sc', 'AUC'], color=RED, lw=0.6, ls=(0, (3, 2)), zorder=1)
@@ -213,7 +222,7 @@ XD, YC = 86.0, 0.5                                                 # left of d; 
 H = YC + 53.0 + 0.5
 fig = plt.figure(figsize=(FW / 25.4, H / 25.4))
 draw_c(fig, H, 0, YC); draw_d(fig, H, XD, YC)
-for name, (x, y, w, h) in {'Fig5c_embedding': (0, YC, XD, 53), 'Fig5d_auc': (XD, YC, 52, 53)}.items():   # d: without its AUC strip
+for name, (x, y, w, h) in {'Fig5c_embedding': (0, YC, XD, 53), 'Fig5d_auc': (XD, YC, HW_D + 8, 53)}.items():   # d: without its AUC strip
     fig.savefig(f'{DATA}{name}.png', dpi=DPI, facecolor='white', bbox_inches=Bbox.from_bounds(x / 25.4, (H - y - h) / 25.4, w / 25.4, h / 25.4))
 plt.close(fig)
 print('Fig5c_embedding.png and Fig5d_auc.png in', DATA)

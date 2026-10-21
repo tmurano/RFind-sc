@@ -9,7 +9,7 @@ Glucocorticoid task in the astrocytes; d, type B; e, the mean over the tasks of 
 length over the eight type A tasks) and Supplementary Fig. S4 (figS4_capability_map.py; a, table of all tasks; b, the six type A tasks
 not drawn in Fig. 5c) follow those scripts: their lists of methods and tasks are
 copied below and must be changed with them. Only the tasks and methods drawn in these two figures are written; the other results
-of the benchmark that the paper reports (the Maturity task, the methods not drawn in these figures) are in Supplementary Table 3
+of the benchmark that the paper reports (the Maturity task, the methods not drawn in these figures) are in Supplementary Table 2
 (figs/Fig5_benchmark/analysis/fig5_redo_tables.py).
 
 Run from the project root:  python figs/make_source_data.py      (needs pandas, numpy, openpyxl)
@@ -62,8 +62,7 @@ def fig2():
         'Index': st.axis.map(IDX2), 'Cluster': st.cluster,
         'Cells (n)': st.n, 'Mice with >= 20 cells (n)': st.n_animals,
         'Median index': st['median'], 'Mean index': st['mean'], 'SD of index': st['sd'],
-        'd0 (mean/SD; number above the violin)': st.d0,
-        "Cohen's d, cluster vs all other clusters": st.d_vs_rest, 'AUC, cluster vs all other clusters': st.auc_vs_rest})
+        'd0 (mean/SD; number above the violin)': st.d0})
     vio['Index'] = pd.Categorical(vio.Index, list(IDX2.values()))
     vio = vio.sort_values(['Panel', 'Index', 'Cluster'], key=lambda c: c.map(CLUSTERS.index) if c.name == 'Cluster' else c)
 
@@ -126,22 +125,24 @@ def fig3():
                         'Cell type': pm.cell_type, 'Condition': pm.condition, 'Mouse': pm.donor_id, 'Cells (n)': pm['size'],
                         'Mean index of the mouse (point)': pm['mean'].round(4)})
 
-    cr = pd.read_csv(F3 / 'fig3_axis_correlations.csv')
-    cor = pd.DataFrame({'Panel': np.where(cr.pair.str.startswith('Glucocorticoid'), '3e', '3f'), 'Pair': cr.pair.str.replace('_vs_', ' vs '),
-                        'Cell type': cr.cell_type, 'Cells (n)': cr.n, 'Pearson r, No Stress cells': cr.r_NoStress,
-                        'Pearson r, Stress cells': cr.r_Stress, 'Pearson r, all cells': cr.r_pooled,
-                        'Spearman rho, all cells': cr.spearman_pooled})
+    rg = pd.read_csv(F3 / 'fig3_scatter_axis_ranges.csv'); ou = pd.read_csv(F3 / 'fig3_scatter_outside.csv')
+    w = ou.merge(rg, on=['pair', 'ct'], how='left')
+    win = pd.DataFrame({'Panel': np.where(w.pair.str.startswith('Glucocorticoid'), '3e', '3f'), 'Pair (x x y)': w.pair,
+                        'Cell type': w.ct, 'x from': w.xlo, 'x to': w.xhi, 'y from': w.ylo, 'y to': w.yhi, 'Cells (n)': w.n_cells,
+                        'Cells outside the window (n; not drawn)': w.n_outside, 'Cells outside the window (%)': w.pct_outside})
 
     write(OUT / 'Source_Data_Fig3.xlsx', [
         'Source Data for Fig. 3 (hippocampus of De Donno et al., 2026; control line, No Stress vs Stress; 8 representative cell types).',
         "Fig3c-d_stats: Cohen's d (pooled SD) of Stress minus No Stress over per-mouse means (mice with >= 10 cells), as written above the "
         'violins; the summary panels of Figs. 3e and 3f plot the same d. P = nominal two-sided Wilcoxon rank-sum on the per-mouse means '
         '(for reference; smallest possible value for 6 vs 6 mice = 0.0022).',
-        'Fig3c-d_points: per-mouse means drawn as points.',
-        'Fig3e-f_correlations: correlation of the two indices over the cells of each cell type (not written in the figure).',
-        'Source tables: figs/Fig3_DeDonno/output/fig3_violin_stats.csv, Fig3_celltype_ncells.csv, fig3_axis_correlations.csv; '
+        'Fig3c-d_points: per-mouse means drawn as points; the small panels of e and f plot, for each mouse, the means of the two indices of the pair.',
+        'Fig3e-f_windows: the window of each small panel of e and f (all panels of a pair have the same width) and the cells outside it '
+        '(not drawn; the shares in the legend). Row "all": all cells.',
+        'Source tables: figs/Fig3_DeDonno/output/fig3_violin_stats.csv, Fig3_celltype_ncells.csv, fig3_scatter_axis_ranges.csv, '
+        'fig3_scatter_outside.csv; '
         'per-cell scores: data/DeDonno2026/output/scores_dedonno.csv.'],
-        {'Fig3c-d_stats': vio, 'Fig3c-d_points': pts, 'Fig3e-f_correlations': cor})
+        {'Fig3c-d_stats': vio, 'Fig3c-d_points': pts, 'Fig3e-f_windows': win})
 
 
 def fig4():
@@ -177,7 +178,7 @@ def fig4():
         'RFind score = the signed Running Fisher score between the stress response (Delta computed from the summed counts of Stress cells with those of No Stress cells as the baseline, per cell type) and the knock-out effect; not a test.',
         'Fig4c_CA1: the 40 knock-outs listed in Fig. 4c (CA1 Glut); all knock-outs = Supplementary Table 1.',
         'Fig4d_positions: the five genes of Fig. 4d in the four cell types.',
-        'Fig4d_random_sets: the five genes as a set compared with 100,000 random (and 100,000 matched) sets of five knock-outs from the library (Supplementary Table 2).',
+        'Fig4d_random_sets: the five genes as a set compared with 100,000 random (and 100,000 matched) sets of five knock-outs from the library (Methods).',
         'Fig4e_expression: Nr3c1 and Ncoa1 in the four cell types of Fig. 4e (CPM in the summed counts of the No Stress cells of De Donno et al.; RFind score of the knock-out of the same gene); in the table to the right, the Spearman rho of the two over the four cell types for each gene (descriptive; no test, as there are only four cell types).',
         'Source tables: figs/Fig4_Perturbseq/output/SuppTable_KO_rankings.xlsx (sheet CA1 Glut), fig4d_GR-complex_positions.csv, geneset_random_null.csv, fig4e_expression_vs_score.csv, fig4e_expression_vs_score_stats.csv.'],
         {'Fig4c_CA1': c, 'Fig4d_positions': de, 'Fig4d_random_sets': scan, 'Fig4e_expression': [f, fs]})
@@ -202,22 +203,6 @@ LAB5 = {'UCell': 'UCell (signed)', 'ULM (log2FC)': 'ULM (decoupleR), log2FC weig
 FORM5 = {RF: 'Ranked lists', 'AddModuleScore': 'Up names only', 'AUCell': 'Up names only', 'UCell': 'Up/down names only', 'singscore': 'Up/down names only',
          'ssGSEA': 'Up/down names only', 'VISION': 'Up/down names only', 'Beyondcell': 'Up/down names only', 'ULM (log2FC)': 'log2FC weights',
          'scFOCAL-type': 'Ranked lists'}                                                   # the column 'Type A tasks' of the table a
-## the table a as drawn (rows of one text = the group lines of the table)
-HEAD5A = ['Method', 'As designed: built for', 'As designed: direction', 'As designed: magnitude', 'As designed: gene sets', 'Given in this study: type A tasks', 'Given in this study: type B tasks', 'What is measured']
-ROWS5A = [
-    ('RFind-sc', 'External ranked DE lists; gene sets', '✓', 'Rank', '✓', 'Ranked lists', 'Gene set', 'Best overlap of cell and reference lists'),
-    ('Names only (membership)',),
-    ('AddModuleScore', 'Gene sets', '–', '–', '✓', 'Up names only', 'Gene set', 'Set expression above control genes'),
-    ('AUCell', 'Gene sets', '–', '–', '✓', 'Up names only', 'Gene set', "Set genes among the cell's top 5%"),
-    ('Names and direction (up and down sets)',),
-    ('UCell', 'Gene sets (up/down allowed)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Set-gene ranks; up − down'),
-    ('singscore', 'Up/down gene sets', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Mean up / down set ranks'),
-    ('ssGSEA', 'Gene sets', '△', '–', '✓', 'Up/down names only', 'Gene set', 'Rank enrichment (up − down)'),
-    ('VISION', 'Signatures (±1)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Signed mean, standardized'),
-    ('Beyondcell', 'Drug signatures (up/down)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Up − down expression, scaled'),
-    ('Names, direction and magnitude (ranks or weights)',),
-    ('ULM (decoupleR)', 'Weighted networks', '✓', 'Weight', '✓', 'log2FC weights', 'Gene set', 't value of a linear model'),
-    ('scFOCAL-type', 'Drug signatures (log2FC)', '✓', 'Rank', '–', 'Ranked lists', 'Not run', 'Rank correlation with log2FC')]
 RES ={'higher': 'RFind-sc higher', 'nd': 'not distinguished', 'lower': 'RFind-sc lower'}
 
 
@@ -286,8 +271,6 @@ def fig5():
     A = pd.read_csv(F5 / 'results/fig5_redo_auc_L500.csv')
     assert {'ULM (log2FC)'} <= set(A.method)                       # otherwise the figure draws ULM with weights of 1 in its place
 
-    a = pd.DataFrame([r if len(r) > 1 else (r[0],) + ('',) * 7 for r in ROWS5A], columns=HEAD5A)
-
     ## b: the DAM task (H1): the cells on the t-SNE of Fig. 2, their DAM-index, the ROC curve; the AUC strip = the H1 rows of c
     pc = pd.read_csv(F5 / 'results/fig5_redo_percell_L500.csv.gz', usecols=['id', 'cell_id', 'positive', 'group', RF])
     pc = pc[pc.id == 'H1'].reset_index(drop=True)
@@ -302,11 +285,9 @@ def fig5():
                           'DAM-index (RFind-sc)': e[RF], 'Rank by DAM-index (1 = highest)': np.arange(1, len(e) + 1),
                           'ROC false positive rate (cells down to this one)': np.cumsum(~pp) / (~pp).sum(),
                           'ROC true positive rate (cells down to this one)': np.cumsum(pp) / pp.sum()})
-    b_auc = auc5(A, ['H1'], M5C)
     vl = np.percentile(np.abs(v), 99); lo, hi = np.nanpercentile(v, [0.5, 99.5])
     c = auc5(A, TC5, M5C)
     d = auc5(A, TB5, M5D)
-    assert np.allclose(b_auc.AUC.values, c[c['Task id'] == 'H1'].AUC.values)
 
     ALL = pd.concat([pd.read_csv(F5 / f'results/fig5_redo_auc_L{L}.csv').assign(L=L) for L in LS5]
                     + [pd.read_csv(F5 / 'extra_refs' / f'fig5_extra_auc_L{L}.csv').assign(L=L) for L in LS5], ignore_index=True)
@@ -331,20 +312,17 @@ def fig5():
         'AUC = probability that a positive cell has a higher score than a negative cell. 95% CI of the AUC and of the difference in AUC: '
         'bootstrap over the mice of the task (all cells of each drawn mouse; 1,000 resamples, the same draws for every method).',
         'Result: RFind-sc higher / lower when the 95% CI of (AUC of RFind-sc minus AUC of the method) excludes 0 and the difference exceeds '
-        '0.01, otherwise not distinguished (not marked in Fig. 5; given in Supplementary Table 3).',
-        'Fig5a: the table as drawn (✓ uses as it is; △ only partly, ssGSEA up − down by convention; – cannot; scFOCAL-type, implemented '
-        'from the published formula of scFOCAL). '
-        'As designed: what each method uses (✓ as it is; △ only partly; – cannot). Given in this study: the form of the reference in the type A tasks (up/down '
-        'names only and up names only: what was left of the lists for methods that cannot use the rank or the direction) and in the type B tasks (Not run: no gene sets accepted).',
-        'Fig5b (left table): the 4,891 microglia of the DAM task (LPC-injected = positive, saline-injected = negative white matter, P100) with '
+        '0.01, otherwise not distinguished (not marked in Fig. 5; given in Supplementary Table 2).',
+        'Panel a is a table of the methods (no sheet).',
+        'Fig5b: the 4,891 microglia of the DAM task (LPC-injected = positive, saline-injected = negative white matter, P100) with '
         'their t-SNE coordinates (those of Fig. 2, from the metadata of Hammond et al.; the other cells of the atlas are drawn in grey) and '
         'DAM-index (RFind-sc, top 500 genes per direction), sorted from the highest DAM-index; the ROC curve joins (0, 0) and the two '
         'rates of each row in this order.',
         f'Fig5b, drawing: colour scale of the DAM-index on the t-SNE ±{vl:.4f} (99th percentile of |DAM-index|, values beyond in the end '
         f'colours); histograms: 39 equal bins from {lo:.4f} to {hi:.4f} (0.5th and 99.5th percentiles, values beyond in the end bins), '
         'density per group.',
-        'Fig5b (right table): the AUC of each method in the DAM task (the same rows as the DAM task of Fig5c).',
-        "Reference given (Figs. 5b-d): the form of reference given to the method (as in the table a; gene set = the Hallmark set).",
+        'The AUC table on the right of Fig. 5b: the rows of the DAM task (H1) in Fig5c.',
+        "Reference given (Fig5c, Fig5d): the form of reference given to the method (as in the table a; gene set = the Hallmark set).",
         f'Fig5c: the type A tasks drawn (DAM; Glucocorticoid in the astrocytes), top 500 genes per direction (nominal; '
         f'{int(A[A.id == "D2"].ref_up.iloc[0])} up and {int(A[A.id == "D2"].ref_down.iloc[0])} down Glucocorticoid genes remained among '
         f'the genes analysed). The other six type A tasks are in Supplementary Fig. S4b. Comparisons: {counts5(c)}.',
@@ -360,12 +338,12 @@ def fig5():
         'Source tables: figs/Fig5_benchmark/output/results/fig5_redo_auc_L<L>.csv and extra_refs/fig5_extra_auc_L<L>.csv (L = 100, 250, 500, '
         '1000, 2000, all), results/fig5_task_means.csv, results/fig5_ucell_zero.csv, '
         'results/fig5_redo_beyondcell_L500.csv; per-cell scores: results/fig5_redo_percell_L500.csv.gz; t-SNE: data/Hammond2019/raw/cell_meta_hammond.csv.'],
-        {'Fig5a': a, 'Fig5b': [cells, b_auc], 'Fig5c': c, 'Fig5d': d, 'Fig5e': me, 'Fig5f': el})
+        {'Fig5b': cells, 'Fig5c': c, 'Fig5d': d, 'Fig5e': me, 'Fig5f': el})
 
 
 def figS4():
     """Supplementary Fig. S4 as drawn by figS4_capability_map.py: a, the table of all tasks; b, the AUC strips of the six type A tasks
-    not drawn in Fig. 5c. (The comparisons of type A at each method's best length and of type B are in Supplementary Table 3.)"""
+    not drawn in Fig. 5c. (The comparisons of type A at each method's best length and of type B are in Supplementary Table 2.)"""
     A = pd.read_csv(F5 / 'results/fig5_redo_auc_L500.csv')
     X5 = pd.read_csv(F5 / 'extra_refs' / 'fig5_extra_auc_L500.csv')
 
@@ -373,16 +351,11 @@ def figS4():
     GB = [t for t in S4B if t in TA5]                               # D1, D3: the Glucocorticoid tasks not drawn in Fig. 5c
     top = auc5(pd.concat([A[A.id.isin(GB)], X5], ignore_index=True), S4B, M5C, lowered=True)
 
-    ## a: every task of the comparison (Supplementary Table 3, sheet Tasks; Maturity, the ceiling task, is only in the table)
-    tasks = pd.read_excel(F5 / 'SuppTable3.xlsx', sheet_name='Tasks')
-    tasks = tasks[~tasks.task.str.startswith('Maturity')][['task', 'reference', 'type', 'how the positive cells were defined',
-                                                            'positive cells', 'negative cells', 'in the main figure']].reset_index(drop=True)
     write(OUT / 'Source_Data_Supplementary_FigS4.xlsx', [
         'Source Data for Supplementary Fig. S4 (Fig. 5): a, the table of all tasks; b, the type A tasks not drawn in Fig. 5c. The comparisons of each '
         'method with RFind-sc in the eight type A tasks (at 500 genes per direction and at each method\'s best reference length) and in the '
-        'type B tasks are in Supplementary Table 3 (sheets AUC, L = 500, Comparisons and Best length).',
-        'FigS4a_tasks: every task of the comparison (from the sheet Tasks of Supplementary Table 3; Maturity, the ceiling task, is only '
-        'in that table).',
+        'type B tasks are in Supplementary Table 2 (sheets AUC, L = 500, Comparisons and Best length).',
+        'Panel a is a table of the tasks (the sheet Tasks of Supplementary Table 2); it has no sheet.',
         'FigS4b_typeA_tasks: the AUC of every method of Fig. 5c in the six type A tasks not drawn in Fig. 5c, top 500 genes per '
         'direction (Glucocorticoid in the oligodendrocytes and the endothelial cells: '
         f'{int(A[A.id == "D1"].ref_up.iloc[0])} up and {int(A[A.id == "D1"].ref_down.iloc[0])} down genes remained among the analysed genes; '
@@ -391,9 +364,9 @@ def figS4():
         'remained among the analysed genes); symbols and colours as in Fig. 5 (all filled; no comparison marked). '
         f'Comparisons: {counts5(top)}. The lower edge of a panel goes below the AUC range of 0.2 only so that no 95% CI is cut.',
         gc_zero5(GB),
-        'Source tables: figs/Fig5_benchmark/output/SuppTable3.xlsx (Tasks), results/fig5_redo_auc_L500.csv, '
+        'Source tables: figs/Fig5_benchmark/output/results/fig5_redo_auc_L500.csv, '
         'extra_refs/fig5_extra_auc_L500.csv, results/fig5_ucell_zero.csv and results/fig5_redo_beyondcell_L500.csv.'],
-        {'FigS4a_tasks': tasks, 'FigS4b_typeA_tasks': top})
+        {'FigS4b_typeA_tasks': top})
 
 
 if __name__ == '__main__':

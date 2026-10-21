@@ -10,13 +10,14 @@
 ##   Discussion cites the within-condition r.
 ##   Axes: on each axis every small panel has the same width (the median over the cell types of the width of their cells'
 ##   5th-95th percentile range), centred on the cell type's own median and widened where needed so that all per-mouse
-##   means are inside. Cells outside the range are not drawn. Ranges written to fig3_scatter_axis_ranges.csv.
+##   means are inside. Cells outside the range are not drawn. Ranges written to fig3_scatter_axis_ranges.csv, the cells
+##   outside them to fig3_scatter_outside.csv (their share is given in the legend).
 ##   Summary panel: each cell type at its Cohen's d (Stress vs No Stress, per-mouse means) on the two indices.
 ##   r (within each condition, and pooled) is also written to fig3_axis_correlations.csv.
 ##   No titles or explanatory text on the figure; mark meanings go in manuscript/Legends.md.
 ##
 ## Input : data/DeDonno2026/output/scores_dedonno.csv
-## Output: figs/Fig3_DeDonno/output/fig3_axis_correlations.csv + fig3_scatter_axis_ranges.csv
+## Output: figs/Fig3_DeDonno/output/fig3_axis_correlations.csv + fig3_scatter_axis_ranges.csv + fig3_scatter_outside.csv
 ##         + {Fig3e_scatter_Glucocorticoid_vs_Seizure, Fig3f_scatter_NFkB_vs_UPR}.png (drawn at the pasted size)
 ## Run   : Rscript "figs/Fig3_DeDonno/analysis/fig3_scatter.R"   (from project root)
 
@@ -110,6 +111,12 @@ mk_facet <- function(xa, ya, show_r = FALSE){
               xa, ya, 100*nrow(pts)/nrow(dfc), wx$w, wy$w))
   ranges[[paste(xa, ya)]] <<- q[, .(pair=paste(DISP[xa],"x",DISP[ya]), ct, xlo=round(xlo,2), xhi=round(xhi,2),
                                     ylo=round(ylo,2), yhi=round(yhi,2))]
+  ## cells outside the window of their panel (not drawn; their share is given in the legend)
+  no <- merge(dfc[, .(n_cells = .N), by = ct], pts[, .(n_drawn = .N), by = ct], by = "ct", all.x = TRUE)[is.na(n_drawn), n_drawn := 0L]
+  no <- rbind(no[order(ct), .(ct = as.character(ct), n_cells, n_outside = n_cells - n_drawn)],
+              data.table(ct = "all", n_cells = sum(no$n_cells), n_outside = sum(no$n_cells - no$n_drawn)))
+  outside[[paste(xa, ya)]] <<- no[, .(pair = paste(DISP[xa], "x", DISP[ya]), ct, n_cells, n_outside,
+                                      pct_outside = round(100 * n_outside / n_cells, 1))]
   ## per-cell-type panels + a summary panel. The per-cell-type panels show the cells;
   ## the summary puts every cell type on ONE pair of axes so that they can be compared with each other.
   one <- function(k, i) {   # i = slot 1-8 (A-H of the design below)
@@ -204,7 +211,7 @@ mk_facet <- function(xa, ya, show_r = FALSE){
 
 OUT_PPTX <- OUT   # pasted-size panels go to output/
 px <- function(mm) round(mm / 25.4 * 600)                            # ragg truncates mm sizes, so give whole pixels
-corr_rows <- list(); plots <- list(); ranges <- list()
+corr_rows <- list(); plots <- list(); ranges <- list(); outside <- list()
 for (pr in PAIRS) {
   xa <- pr[1]; ya <- pr[2]; key <- paste(xa, ya, sep = "_")
   p <- mk_facet(xa, ya, show_r = SHOW_R[[key]]); plots[[key]] <- p
@@ -220,4 +227,6 @@ for (pr in PAIRS) {
 }
 fwrite(rbindlist(corr_rows), file.path(OUT, "fig3_axis_correlations.csv"))
 fwrite(rbindlist(ranges), file.path(OUT, "fig3_scatter_axis_ranges.csv"))
+fwrite(rbindlist(outside), file.path(OUT, "fig3_scatter_outside.csv"))
+print(rbindlist(outside))
 cat("\nwithin-cell-type correlations (not drawn; reference only):\n"); print(rbindlist(corr_rows))

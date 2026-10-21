@@ -1,4 +1,4 @@
-"""Fig. 5f / Supplementary Table 3 — the comparisons of fig5_best_length.py over the eight type A tasks: the four
+"""Fig. 5f / Supplementary Table 2 — the comparisons of fig5_best_length.py over the eight type A tasks: the four
 DAM and Glucocorticoid tasks (H1, D1, D2, D3) and the four PS2APP and Forced swim tasks (DA1 = the cells of H1 with the PS2APP
 reference; AS1, AS2, AS3 = the cells of D1, D2, D3 with the Forced swim reference; fig5_extra_score.R).
 The computation is that of fig5_best_length.py (replicated here, not imported, so that its four-task outputs are never rewritten):
@@ -203,7 +203,7 @@ md8.to_csv(O + 'results/fig5_mean_auc_diff_8tasks.csv', index=False)
 print('written', O + 'results/fig5_best_length_8tasks.csv', out8.shape, '|', O + 'results/fig5_mean_auc_diff_8tasks.csv', md8.shape)
 
 
-## ---- 3. summary (the numbers of Results 5, Supplementary Note 4 and Supplementary Table 3) ----
+## ---- 3. summary (the numbers of Results 5 and Supplementary Table 2) ----
 def counts(g, rc='result'):
     c = g[rc].value_counts()
     return f'{c.get("RFind-sc higher", 0)}/{c.get("not distinguished", 0)}/{c.get("RFind-sc lower", 0)}'

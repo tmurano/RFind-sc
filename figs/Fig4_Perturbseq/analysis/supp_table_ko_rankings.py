@@ -7,7 +7,7 @@ table, not as figure panels; DG is included so that the table is complete).
 
 Input : analysis/perturbseq/results/axis_{DG_vs_g017_DG, CA1_vs_CA1, CA3_vs_g017_CA3, GABA_vs_GABA3}.csv  (analysis/perturbseq/03_axis_vs_ko.py)
 Output: figs/Fig4_Perturbseq/output/SuppTable_KO_rankings.xlsx (README + "All" + one sheet per cell type; no CSV copies:
-        fig4_random_set_null.py, fig4_other_methods.py and the Source Data of Fig. 4c read the sheets of the workbook)
+        fig4_random_set_null.py and the Source Data of Fig. 4c read the sheets of the workbook)
 "All" = every list in one table: one row per knock-out, rank and score in each cell type side by side.
 Only neuronal cell types exist: the Perturb-seq nuclei are all neuronal, so astrocytes, microglia, oligodendrocytes and
 endothelial cells (Fig. 3) have no knock-out references.

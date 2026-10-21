@@ -1,4 +1,4 @@
-"""Supplementary Table 2 (redo) — is the placement of the Fig. 4d gene group special among knock-outs of the same library?
+"""Fig. 4d (the P of Results and Methods; Source Data of Fig. 4) — is the placement of the Fig. 4d gene group special among knock-outs of the same library?
 
 The Perturb-seq library (Shi et al.) is not a random sample of genes: it favours genes expressed widely in the brain and
 strongly linked to disease (transcription factors and receptors first). Public gene sets compared within this library

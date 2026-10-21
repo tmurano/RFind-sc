@@ -1,5 +1,5 @@
 #!/bin/bash
-## Run time and peak memory (Supplementary Table 3, sheet "Run time and memory"): scoring the cells of the data of
+## Run time and peak memory (Supplementary Table 2, sheet "Run time and memory"): scoring the cells of the data of
 ## Hammond et al. against the DAM reference with RFind-sc (R package RFindsc and Python package rfindsc), ULM of decoupleR and UCell
 ## (fig5_runtime_score.R / .py), for 1,000 to 75,572 cells, references of 500 genes per direction or the whole list, and 1 or 6 cores;
 ## and the knock-out x knock-out matching of Supplementary Fig. S3 (figS3_rfind_allpairs.py, 2,048 profiles of TH Prkcd Grin2c Glut,

@@ -1,4 +1,4 @@
-"""Run time of scoring cells against one reference with the Python package rfindsc (Supplementary Table 3, sheet
+"""Run time of scoring cells against one reference with the Python package rfindsc (Supplementary Table 2, sheet
 "Run time and memory"; the Python counterpart of fig5_runtime_score.R).
 
 Data: the counts written by fig5_runtime_export.R into $RFIND_RUNTIME_EXPORT (the 75,572 cells of the data of Hammond et al. after

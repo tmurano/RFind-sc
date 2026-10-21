@@ -1,4 +1,4 @@
-## Fig. 5 / Supplementary Table 3 — the benchmark (adapted from fig5_bench_v2.R; run with figs/Fig5_benchmark/analysis/run_fig5_redo.sh).
+## Fig. 5 / Supplementary Table 2 — the benchmark (adapted from fig5_bench_v2.R; run with figs/Fig5_benchmark/analysis/run_fig5_redo.sh).
 ## fig5_bench_v2.R, fig5_final.R, fig5_reflength_sweep.R, fig5_scfocal_type.R and fig5_ucell_up.R, named below, are the scripts of an
 ## earlier stored run of the benchmark; they are not in the repository. Of their outputs, results/fig5_final_auc.csv and
 ## results/fig5_reflength_sweep_auc.csv are kept in figs/Fig5_benchmark/output/ and read for the checks below (the tasks in CHANGED,

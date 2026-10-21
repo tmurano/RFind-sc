@@ -1,4 +1,4 @@
-"""Supplementary Table 3 — the capability benchmark of Fig. 5 and Supplementary Fig. S4 (the eight type A tasks and the three type B
+"""Supplementary Table 2 — the capability benchmark of Fig. 5 and Supplementary Fig. S4 (the eight type A tasks and the three type B
 tasks of these figures, the Maturity task at the ceiling, the ten methods of the figure, the methods reported only here).
 Tasks (12): type A (differential expression lists with direction and size) = the DAM and Glucocorticoid tasks, H1 DAM and D1-D3
   Glucocorticoid (oligodendrocytes, astrocytes, endothelial cells), and the PS2APP and Forced swim tasks (fig5_extra_score.R), DA1, the
@@ -26,7 +26,7 @@ Input : figs/Fig5_benchmark/output/results/fig5_redo_auc_L<L>.csv, extra_refs/fi
         results/fig5_redo_beyondcell_L500.csv,
         results/fig5_best_length.csv, results/fig5_mean_auc_diff.csv, results/fig5_best_length_8tasks.csv, results/fig5_mean_auc_diff_8tasks.csv;
         if present, results/fig5_runtime.csv and results/fig5_runtime_env.tsv
-Output: figs/Fig5_benchmark/output/SuppTable3.xlsx
+Output: figs/Fig5_benchmark/output/SuppTable2.xlsx
 Run   : <python with pandas and openpyxl> figs/Fig5_benchmark/analysis/fig5_redo_tables.py   (from the project root)
 """
 import os
@@ -330,7 +330,7 @@ def write_blocks(w, name, blocks):
 
 
 readme = [
-    ('Supplementary Table 3', 'Capability benchmark against existing scoring methods (Fig. 5 and Supplementary Fig. S4).'),
+    ('Supplementary Table 2', 'Capability benchmark against existing scoring methods (Fig. 5 and Supplementary Fig. S4).'),
     ('Tasks', 'Twelve tasks: seven with the data and references of Fig. 2 and Fig. 3 (type A, the four DAM and Glucocorticoid tasks: DAM, '
               'and Glucocorticoid in the oligodendrocytes, astrocytes and endothelial cells; type B, Fig. 5d: two Interferon tasks and G2M); '
               'the four PS2APP and Forced swim tasks (type A) on the same cells as the DAM and Glucocorticoid tasks, with a second reference '
@@ -402,7 +402,7 @@ if len(bc):                                                              # the A
 NOKEY = lambda df: df.drop(columns=['task id'], errors='ignore')        # task ids are internal keys
 sheets = {k: NOKEY(v) for k, v in sheets.items()}
 added = {k: [(lines, NOKEY(df)) for lines, df in b] for k, b in added.items()}
-out = f'{O}SuppTable3.xlsx'
+out = f'{O}SuppTable2.xlsx'
 with pd.ExcelWriter(out, engine='openpyxl') as w:
     for name in ORDER:
         if name in added:

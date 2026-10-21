@@ -1,4 +1,4 @@
-"""Fig. 5e / Supplementary Table 3 — the mean AUC over the tasks of each type, RFind-sc minus each method, with 95% CIs:
+"""Fig. 5e / Supplementary Table 2 — the mean AUC over the tasks of each type, RFind-sc minus each method, with 95% CIs:
 the eight type A tasks with references of 500 genes per direction (the DAM and Glucocorticoid tasks H1, D1, D2, D3 and the PS2APP and Forced
 swim tasks DA1, AS1, AS2, AS3) and the three type B tasks (H2, H3, H5 of Fig. 5d).
   - per-cell scores of the benchmark; Beyondcell without a score = 0; AUC = Mann-Whitney with ties averaged

@@ -1,4 +1,4 @@
-## Supplementary Table 4, step 1 — the number of genes of each reference, before and after the restriction to the genes analysed.
+## Supplementary Table 3, step 1 — the number of genes of each reference, before and after the restriction to the genes analysed.
 ## The lists are restricted exactly as in the scoring scripts (analysis/hammond/07_score_axes.R, analysis/dedonno/04_score.R,
 ## figs/Fig5_benchmark/analysis/fig5_extra_score.R, analysis/kang/04_score.R): pair universe = genes analysed of the dataset ∩ genes the reference could contain
 ## (analysis/running_fisher.R: pair_universe; all genes analysed for gene sets), and the up / down lists of the reference are cut to
@@ -11,12 +11,12 @@
 ##         Seizure, UPR, NF-kB), figs/Fig5_benchmark/output/extra_refs/fig5_extra_refs.rds (Forced swim, PS2APP),
 ##         data/Kang2018/output/percell_signature_celltype.rds (the genes analysed), references_kang.rds (IFNb, PGE2, Interferon
 ##         with human genes, Chemokine)
-## Output: figs/Supp_Table4_References/output/SuppTable4_reference_sizes.csv (read by supp_table_references.py)
-## Run from the project root (about 10 s):  R --no-save --no-restore -f figs/Supp_Table4_References/analysis/supp_table_references.R
+## Output: figs/Supp_Table3_References/output/SuppTable3_reference_sizes.csv (read by supp_table_references.py)
+## Run from the project root (about 10 s):  R --no-save --no-restore -f figs/Supp_Table3_References/analysis/supp_table_references.R
 pdf(NULL)
 suppressPackageStartupMessages(library(data.table))
 source("analysis/running_fisher.R")                                       # pair_universe
-OUTD <- "figs/Supp_Table4_References/output"; dir.create(OUTD, showWarnings = FALSE, recursive = TRUE)
+OUTD <- "figs/Supp_Table3_References/output"; dir.create(OUTD, showWarnings = FALSE, recursive = TRUE)
 
 ## genes analysed of each dataset (the genes of the per-cell rankings used for scoring)
 gH <- readRDS("data/Hammond2019/output/genes_universe.rds")
@@ -49,5 +49,5 @@ rows <- lapply(names(REFS), function(nm) {
 })
 d <- rbindlist(rows)
 print(d)
-fwrite(d, file.path(OUTD, "SuppTable4_reference_sizes.csv"))
-cat("wrote", file.path(OUTD, "SuppTable4_reference_sizes.csv"), "\n")
+fwrite(d, file.path(OUTD, "SuppTable3_reference_sizes.csv"))
+cat("wrote", file.path(OUTD, "SuppTable3_reference_sizes.csv"), "\n")

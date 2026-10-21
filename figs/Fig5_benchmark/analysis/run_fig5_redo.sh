@@ -10,7 +10,7 @@
 ##           -> stops here on any error (packages, the ORA check against decoupleR::run_ora, ...)
 ##   L500    fig5_bench_redo.R L=500 (the main results; checks against the stored results) -> stops on any error
 ##   L1000, L2000, Lall, L250, L100   the other reference lengths -> an error is logged and the other steps go on
-## Supplementary Table 3 (fig5_redo_tables.py) and the figure panels are NOT made here: they also need the added type A tasks
+## Supplementary Table 2 (fig5_redo_tables.py) and the figure panels are NOT made here: they also need the added type A tasks
 ## (fig5_extra_refs.R, fig5_extra_score.R), fig5_ucell_zero.R, fig5_best_length.py and
 ## fig5_best_length_8tasks.py, which figs/run_all_figs.sh runs after this script.
 ## Time (the run of 2026-10-07 on an Apple M3 with 16 GB, R 4.5.2): test 2 min, L500 39 min, L1000 22 min, L2000 25 min,

@@ -1,4 +1,4 @@
-## Run time of scoring cells against one reference (Supplementary Table 3, sheet "Run time and memory").
+## Run time of scoring cells against one reference (Supplementary Table 2, sheet "Run time and memory").
 ## One run = one method, one number of cells, one reference length and one number of cores; fig5_runtime.sh runs the grid under
 ## /usr/bin/time -l (peak memory of the process) on an otherwise idle computer and collects the results.
 ## Data: the 75,572 cells of the data of Hammond et al. after quality control (counts_qc.rds; raw UMI counts of all genes); the first

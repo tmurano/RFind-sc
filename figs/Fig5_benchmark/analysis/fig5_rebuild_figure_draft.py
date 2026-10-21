@@ -3,8 +3,8 @@
 Style of fig5_redo_figure.py: 180 mm wide, Arial 6-7 pt, one colour per method, marker = the form of reference the method is built for,
 RFind-sc = the large red point and the red dashed line, small panels with an AUC range of 0.2, a triangle at the bottom edge for a value
 below the range, 95% interval as a bar.
-  a  what each method can use from a reference (table, with the form of the reference each method is given in the type A and the
-     type B tasks; the key to the symbols is in the legend, not under the table)
+  a  what each method can use from a reference (direction, magnitude, gene sets) and the form of the reference each method is given
+     in the type A and the type B tasks (table; the key to the symbols is in the legend, not under the table)
   b  the DAM example (t-SNE, the DAM-index distributions and the ROC curve of RFind-sc, and the AUC of every method in this task)
   c  type A (2 tasks: DAM and Glucocorticoid in Astro; the Glucocorticoid tasks in Oligodendrocytes and Endothelial are in
      Supplementary Fig. S4b): every method once, in the most complete form it can take, side by side; the method key right of them
@@ -14,7 +14,7 @@ below the range, 95% interval as a bar.
   f  reference length (type A): mean AUC over the eight type A tasks (the four DAM and Glucocorticoid tasks and the four PS2APP and
      Forced swim tasks: DA1, the cells of the DAM task with the PS2APP reference; AS1-AS3, the cells of the three Glucocorticoid tasks
      with the Forced swim reference; fig5_extra_score.R) by the number of reference genes per direction
-All symbols are filled: the figure shows no comparison with RFind-sc (the comparisons are in Supplementary Table 3). The panels have
+All symbols are filled: the figure shows no comparison with RFind-sc (the comparisons are in Supplementary Table 2). The panels have
 no header line (the legend names the type of reference of c and d). Layout: c (with the key) above d on the left, three small panels
 wide; e above f on the right; the whole figure fits the 180 mm height of the slide.
 Intervals: bootstrap over the mice of the task (all cells of each drawn mouse; 1,000 resamples, the same draws for every method), as in
@@ -61,11 +61,11 @@ MARK = {RF: 'D', 'AddModuleScore': 'o', 'UCell (up genes)': 'o', 'AUCell': 'o', 
 LABEL = {'UCell (up genes)': 'UCell (up genes)', 'UCell': 'UCell', 'ULM': 'ULM (decoupleR)', 'ULM (log2FC)': 'ULM (decoupleR)'}
 ## c: every method once, in the most complete form it can take (RFind-sc, scFOCAL-type and decoupleR with log2FC weights: the ranked
 ## signed list; the up/down-set methods, UCell included (its signed signature, up and down genes): up and down names; the membership
-## methods: up names only). UCell with the up genes only is reported in Supplementary Table 3.
+## methods: up names only). UCell with the up genes only is reported in Supplementary Table 2.
 ## The forms are given in the table (a) and the text; c shows the methods side by side in the order of the table, as d does.
-## Reported in Supplementary Table 3 only: decoupleR's WMEAN and ORA (decoupleR is represented by one method, ULM). Beyondcell is shown
+## Reported in Supplementary Table 2 only: decoupleR's WMEAN and ORA (decoupleR is represented by one method, ULM). Beyondcell is shown
 ## although it gives no score to the cells expressing fewer than 10% of the reference genes (counted as 0, as in the benchmark; the
-## numbers of these cells are in Supplementary Table 3, sheet Beyondcell missing).
+## numbers of these cells are in Supplementary Table 2, sheet Beyondcell missing).
 CMETH = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM (log2FC)', 'scFOCAL-type']
 SETM = [RF, 'AddModuleScore', 'AUCell', 'UCell', 'singscore', 'ssGSEA', 'VISION', 'Beyondcell', 'ULM']
 TA = ['H1', 'D1', 'D2', 'D3']                                      # the DAM and Glucocorticoid tasks (averaged in e and f with EXTRA)
@@ -74,7 +74,7 @@ EXTRA = ['DA1', 'AS1', 'AS2', 'AS3']                               # the added t
 PAIR = {'DA1': 'H1', 'AS1': 'D1', 'AS2': 'D2', 'AS3': 'D3'}        # added task -> the DAM or Glucocorticoid task on the same cells
 TA_EVAL = TA + EXTRA                                               # type A tasks averaged in e (the eight)
 TB = ['H2', 'H3', 'H5']                                            # Maturity (H4) is left out of the main figure: at the ceiling
-                                                                      # (median AUC of the methods >= 0.99 at L = 500); shown only in Supplementary Table 3
+                                                                      # (median AUC of the methods >= 0.99 at L = 500); shown only in Supplementary Table 2
 TNAME = {'H2': ('Interferon', 'cluster 9'), 'H3': ('Interferon', 'P540 vs P100'), 'H5': ('G2M', 'cluster 2b'), 'H1': ('DAM', 'LPC vs saline'),
          'H4': ('Maturity', 'P100 vs E14–P5'), 'D1': ('Glucocorticoid', 'Oligodendrocytes'), 'D2': ('Glucocorticoid', 'Astro'),
          'D3': ('Glucocorticoid', 'Endothelial'), 'DA1': ('PS2APP', 'LPC vs saline'), 'AS1': ('Forced swim', 'Oligodendrocytes'),
@@ -185,29 +185,30 @@ def small(ax, v, ms, xs, rfline=True):                             # one small p
 
 
 ## ---- a: what each method can use from a reference ----
-ROWS = [  # method; as designed: built for, direction, magnitude, gene sets; given in this study: type A tasks, type B tasks; measured
-    ('RFind-sc', 'External ranked DE lists; gene sets', '✓', 'Rank', '✓', 'Ranked lists', 'Gene set', 'Best overlap of cell and reference lists'),
+ROWS = [  # method; what it can use: direction, magnitude, gene sets; given in this study: type A tasks, type B tasks
+    ('RFind-sc', '✓', 'Rank', '✓', 'Ranked lists', 'Gene set'),
     ('Names only (membership)', None),
-    ('AddModuleScore', 'Gene sets', '–', '–', '✓', 'Up names only', 'Gene set', 'Set expression above control genes'),
-    ('AUCell', 'Gene sets', '–', '–', '✓', 'Up names only', 'Gene set', "Set genes among the cell's top 5%"),
+    ('AddModuleScore', '–', '–', '✓', 'Up names only', 'Gene set'),
+    ('AUCell', '–', '–', '✓', 'Up names only', 'Gene set'),
     ('Names and direction (up and down sets)', None),
-    ('UCell', 'Gene sets (up/down allowed)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Set-gene ranks; up − down'),
-    ('singscore', 'Up/down gene sets', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Mean up / down set ranks'),
-    ('ssGSEA', 'Gene sets', '△', '–', '✓', 'Up/down names only', 'Gene set', 'Rank enrichment (up − down)'),
-    ('VISION', 'Signatures (±1)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Signed mean, standardized'),
-    ('Beyondcell', 'Drug signatures (up/down)', '✓', '–', '✓', 'Up/down names only', 'Gene set', 'Up − down expression, scaled'),
+    ('UCell', '✓', '–', '✓', 'Up/down names only', 'Gene set'),
+    ('singscore', '✓', '–', '✓', 'Up/down names only', 'Gene set'),
+    ('ssGSEA', '△', '–', '✓', 'Up/down names only', 'Gene set'),
+    ('VISION', '✓', '–', '✓', 'Up/down names only', 'Gene set'),
+    ('Beyondcell', '✓', '–', '✓', 'Up/down names only', 'Gene set'),
     ('Names, direction and magnitude (ranks or weights)', None),
-    ('ULM (decoupleR)', 'Weighted networks', '✓', 'Weight', '✓', 'log2FC weights', 'Gene set', 't value of a linear model'),
-    ('scFOCAL-type', 'Drug signatures (log2FC)', '✓', 'Rank', '–', 'Ranked lists', 'Not run', 'Rank correlation with log2FC')]
-## The header, in two rows, separates what each method uses as designed (built for, direction, magnitude, gene sets) from the
+    ('ULM (decoupleR)', '✓', 'Weight', '✓', 'log2FC weights', 'Gene set'),
+    ('scFOCAL-type', '✓', 'Rank', '–', 'Ranked lists', 'Not run')]
+## The header, in two rows, separates what each method can use from a reference (direction, magnitude, gene sets) from the
 ## reference given in this study (the form in the type A tasks, in words; the gene set or 'Not run' in the type B tasks); rank and
-## numerical weight in one column, Magnitude; the key to the symbols is in the legend, not under the table
-CW = [26.5, 34, 12.5, 12.5, 11, 21, 15.5, 40]                  # column widths (mm), sum 173
+## numerical weight in one column, Magnitude; the key to the symbols is in the legend, not under the table. What each method was
+## built for and what it measures are not shown (too detailed for the figure; Methods).
+CW = [32, 15, 16, 13, 27, 19]                                     # column widths (mm), sum 122
 A_HH, A_RH = 8.6, 2.95                                             # heights (mm) of the two header rows together and of a row
-HEAD = ['Method', 'Built for', 'Direction', 'Magnitude', 'Gene\nsets', 'Type A\ntasks', 'Type B\ntasks', 'What is measured']
-CENT = [False, False, True, True, True, True, True, False]
-GROUPS = [(1, 4, 'What the method uses, as designed'), (5, 6, 'Reference given in this study')]   # first and last column, label
-TOP = {0, 7}                                                       # columns whose header spans both header rows
+HEAD = ['Method', 'Direction', 'Magnitude', 'Gene\nsets', 'Type A\ntasks', 'Type B\ntasks']
+CENT = [False, True, True, True, True, True]
+GROUPS = [(1, 3, 'What the method can use'), (4, 5, 'Reference given in this study')]   # first and last column, label
+TOP = {0}                                                          # columns whose header spans both header rows
 
 
 def draw_a(fig, H, y0):
@@ -371,19 +372,23 @@ r0, r1 = max(rows.min() - int(MM), 0), rows.max() + int(MM) + 1     # 1 mm kept 
 XAX = int(np.argmax((IDD[..., :3].max(axis=2) < 0.2).sum(axis=1))) # the x axis of the distribution plot (its longest dark row)
 cols = [np.flatnonzero(ink(im).any(axis=0)) for im in (IE, IDD)]
 IE, IDD = [im[r0:r1, max(c.min() - int(MM / 2), 0):c.max() + int(MM / 2) + 1] for im, c in zip((IE, IDD), cols)]   # 0.5 mm kept left and right
-EX_AX = ((XAX - r0) / MM - 30.0, (XAX - r0) / MM)                  # top and bottom of the strip (mm below the top of b): bottom on that x axis
+EX_AX = (1.5, (XAX - r0) / MM)                                     # top and bottom of the strip (mm below the top of b): from the top of b to the x axis of the distributions
 EX_H = max(IE.shape[0] / MM, EX_AX[1] + 13.0)                       # room for the slanted method names
+
+
+GAP_B, AUC_W = 5.0, 32.0                                           # gap between the blocks of b; width of the AUC plot (mm)
 
 
 def draw_example(fig, H, y0):
     x = 2.5
-    for im in (IE, IDD):
+    for im, gap in ((IE, GAP_B), (IDD, GAP_B)):                    # three blocks (t-SNEs, distributions, AUC) with a gap between them
         w, h = im.shape[1] / MM, im.shape[0] / MM; a_ = axmm(fig, H, x, y0, w, h); a_.imshow(im, interpolation='antialiased'); a_.axis('off')
-        x += w + 1.0
-    xs = x + 8.0; ax = axmm(fig, H, xs, y0 + EX_AX[0], FW - 0.8 - xs, EX_AX[1] - EX_AX[0])
+        x += w + gap
+    xs = x + 7.0; ax = axmm(fig, H, xs, y0 + EX_AX[0], min(FW - 0.8 - xs, AUC_W), EX_AX[1] - EX_AX[0])   # 7 mm for the axis title; at most AUC_W wide
+    print(f'b: AUC plot {xs:.1f}-{xs + min(FW - 0.8 - xs, AUC_W):.1f} mm')
     small(ax, A[A.id == 'H1'].set_index('method'), CMETH, list(range(len(CMETH))))
     ax.set_xlim(-0.7, len(CMETH) - 0.3)
-    ax.set_xticks(range(len(CMETH))); ax.set_xticklabels([RF if m == RF else lab(m) for m in CMETH], rotation=45, ha='right', rotation_mode='anchor')
+    ax.set_xticks(range(len(CMETH))); ax.set_xticklabels([RF if m == RF else lab(m) for m in CMETH], rotation=45, ha='right', rotation_mode='anchor')   # 45 degrees: at 55 the long names run below the panel
     ax.get_xticklabels()[0].set_color(RED); ax.get_xticklabels()[0].set_fontweight('bold')
     ax.set_ylabel('AUC (95% CI)')
 

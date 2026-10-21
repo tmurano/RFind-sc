@@ -3,4 +3,4 @@ KOxKO   mean +0.664  median +0.593  sd 16.899  positive 0.522  n 1,894,431
 safexsafe mean +1.119  median +0.737  sd 16.071  positive 0.520  n 4,950
 KOxsafe mean +0.699  median +0.604  sd 16.486  positive 0.522  n 194,700
 top KO pairs: Psmc1xPsmb4 +637.8, Psmc5xPsmb4 +598.1, Psmc5xPsmc1 +518.5, PompxPsmb4 +441.6, Psmc1xPomp +373.6, Psmc5xPomp +363.5, Atp6v0cxAtp6v1b2 +216.8, Atp6v0cxPsmb4 +200.8, Atp6v0cxCaml +200.6, U2af2xPsmc1 +179.2, Mef2cxUbe3a +178.4, Fbn1xCox6b1 +177.4, Atp6v1axAtp6v1b2 +174.5, U2af2xPsmb4 +174.2, Fbn1xCamta1 +173.9
-time 892 s
+time 897 s

@@ -3,10 +3,10 @@
 
   a  from UMI counts to a per-cell ranked list, in the design of Fig. 1c, with no formula of any candidate (drawn
      in the slide, not here)
-  b  the six candidates: a table of definitions, advantages and problems, every cell on one line, 162 mm wide, 6 pt
+  b  the six candidates: a table of definitions, advantages and drawbacks, every cell on one line, 162 mm wide, 6 pt
      (FigS2b_statistics_table.png). P2 is not marked: which candidate is adopted follows from the comparison in d, e.
   c  each candidate over the genes of one example cell, labelled "One example cell" (FigS2c_one_cell.png, 151.5 x 39.3 mm):
-     the genes split first by UMI = 0 or >= 1 (two rows), then by above or below the mean; one key block on the left
+     the genes split first by UMI = 0 or >= 1 (two rows), then by above or below the expected count; one key block on the left
      (heading 7 pt bold, the number of genes in grey, the two groups as 7-pt bold sub-headings, each entry on one line at
      6 pt); the six plots with the same width and the same gaps, one y axis title ("Number of genes", on one line) for both rows and tick labels on the
      first plot of each row only; simpleFC on a log axis (0, 1, 100, with unlabelled ticks at 0.1 and 10) with its zeros as a
@@ -115,7 +115,7 @@ rows = [
     ("P3 (NB)", r"$(x_{ij} - e_{ij})\,/\,\sqrt{e_{ij} + e_{ij}^2/\theta_i}$", "As P1; noise of highly expressed genes is damped",
      "One molecule at a small $e$ gives a huge value; θ for each gene"),
 ]
-cols = ["Statistic", "Definition", "Advantages", "Problems"]
+cols = ["Statistic", "Definition", "Advantages", "Drawbacks"]
 TFS, PAD, VPAD = FN, 1.0, 0.15                                          # 6 pt; padding left/right of a cell, above/below its text (mm)
 HROW, MINROW = 3.3, 3.8                                                 # header height, least row height (mm)
 wb = lambda k: "bold" if k == 0 else "normal"
@@ -151,7 +151,7 @@ save(fig, "FigS2b_statistics_table")
 ## its zeros as a separate bar at the left (a ratio of zero has no logarithm). P1-P3 share the axis PLO..PHI (so that extreme
 ## outliers do not stretch it); the genes outside it are drawn as the bars at the two ends, so no gene is dropped.
 KCOL = {"UP": RED, "DOWN-1": "#9ECAE1", "DOWN-2": "#BDBDBD", "DOWN-3": BLUE}
-GROUPS = [("UMI ≥ 1", ["DOWN-1", "UP"], {"UP": "above the average", "DOWN-1": "below the average"}),
+GROUPS = [("UMI ≥ 1", ["DOWN-1", "UP"], {"UP": "above expected", "DOWN-1": "below expected"}),
           ("UMI = 0", ["DOWN-3", "DOWN-2"], {"DOWN-2": "expected count < ln 2", "DOWN-3": "expected count ≥ ln 2"})]
 TORDER = ["simpleFC", "log2diff", "zscore", "P1", "P2", "P3_NB"]       # the order of the table
 PLO, PHI, PBW, POUT = -4.0, 8.0, 0.1, 1.1
@@ -292,8 +292,6 @@ yk = 8.2
 badge(ax, 1.4, yk, 3); ax.text(XL, yk, "Check", ha="left", va="center", fontsize=FL, fontweight="bold")
 ax.text((X0 + XU) / 2 - 1.2, yk, "share of UP\nin markers", ha="center", va="center", fontsize=FN, color=RED, linespacing=1.05)
 ax.text(X1, yk, "share of DOWN in\nnegative markers", ha="right", va="center", fontsize=FN, color=BLUE, linespacing=1.05)
-ax.plot([X0 + 1.0, X0 + 1.0], [yk - 5.6, yk - 5.6 + BH * 0.6], color="#333333", lw=0.6)
-ax.text(X0 + 1.8, yk - 5.6 + BH * 0.3, "a gene in both lists", ha="left", va="center", fontsize=FN, color="#555555")
 save(fig, "FigS2d_check_schematic")
 
 # ------------------------------------------------------------------ e: the shares, mean of the 13 clusters (4) and each cluster (5)

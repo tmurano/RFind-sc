@@ -1,18 +1,18 @@
-"""Source Data for Supplementary Figs. S1-S3 and S5: one Excel file per figure, one sheet (or a few) per panel, with the numbers
-drawn in each panel and the statistics quoted in the legend or in Supplementary Notes 1-3 and 5. Same style as make_source_data.py
+"""Source Data for Supplementary Figs. S2, S3 and S5: one Excel file per figure, one sheet (or a few) per panel, with the numbers
+drawn in each panel and the statistics quoted in the legend or in the Supplementary Notes. Same style as make_source_data.py
 (README sheet first, then the panels; one header row per sheet; notes, when needed, as rows under the table).
 
 Reads only the figure scripts' inputs and outputs (figs/Supp_S*/ and, for S5, the per-cell scores of analysis/kang); the constants
-of the figures (toy lists of S1, complexes of S3d) are read from the figure scripts themselves (ast; the scripts are not run), so
+of the figures (complexes of S3d) are read from the figure scripts themselves (ast; the scripts are not run), so
 the workbooks follow any change made there.
-Computes nothing new except what the figure scripts compute on the fly from these inputs (the Running Fisher grid of S1, the
+Computes nothing new except what the figure scripts compute on the fly from these inputs (the
 summaries of the pair distributions of S3c, the ranks of S3e, the per-donor means of S5), with the same code.
-Not included: schematics without data (S2a, S2d, S3a), the text table of S2b (definitions; no numbers) and S5a, b (the authors'
+Not included: Supplementary Fig. S1 (a made-up example of the Running Fisher test, like the simulated cells of Fig. 1), schematics
+without data (S2a, S2d, S3a), the text table of S2b (definitions; no numbers) and S5a, b (the authors'
 t-SNE and the table of cell types and markers; as Fig. 3a, b).
 
 Run from the project root:  python figs/make_source_data_supp.py      (needs pandas, numpy, scipy, openpyxl)
-Output: submission/Source_Data_Supplementary_FigS1.xlsx, Source_Data_Supplementary_FigS2.xlsx,
-        Source_Data_Supplementary_FigS3.xlsx, Source_Data_Supplementary_FigS5.xlsx (the names used for the upload; submission/
+Output: submission/Source_Data_Supplementary_FigS2.xlsx, Source_Data_Supplementary_FigS3.xlsx, Source_Data_Supplementary_FigS5.xlsx (the names used for the upload; submission/
         is not tracked)
 """
 import ast
@@ -24,10 +24,9 @@ import numpy as np
 import pandas as pd
 from scipy.cluster import hierarchy
 from scipy.spatial.distance import squareform
-from scipy.stats import hypergeom
 
 OUT = Path('submission')                                     # the files uploaded to the journal (not tracked)
-S1, S2, S3 = Path('figs/Supp_S1_RunningFisher'), Path('figs/Supp_S2_Delta'), Path('figs/Supp_S3_Perturbseq')
+S2, S3 = Path('figs/Supp_S2_Delta'), Path('figs/Supp_S3_Perturbseq')
 sys.path.insert(0, str(S3 / 'analysis'))
 from figS3_shi_pairs import SHI                      # pairs named as similar by Shi et al. (the list used by the figure)
 
@@ -66,84 +65,9 @@ def write(path, readme, sheets):
     print('wrote', path)
 
 
-# ------------------------------------------------------------------ Supplementary Fig. S1 (toy example of the Running Fisher test)
-def figS1():
-    c = constants(S1 / 'analysis/figS1_running_fisher.py', ['LISTS', 'EX_G', 'EX_K', 'P_UNIVERSE', 'TABLE'])
-    L, U, EG, EK = c['LISTS'], c['P_UNIVERSE'], c['EX_G'], c['EX_K']
-
-    def fisher(l1, l2, G, K):                         # as fisher_p() of the figure script
-        M = len(set(l1[:G]) & set(l2[:K]))
-        return M, hypergeom.sf(M - 1, U, K, G)
-
-    def grid(l1, l2):
-        return np.array([[-np.log10(fisher(l1, l2, g, k)[1]) for k in range(1, len(l2) + 1)] for g in range(1, len(l1) + 1)])
-
-    # a: the four lists (each ranks all 26 genes: 13 up, 13 down) and the illustrative spreadsheet rows drawn in a
-    a = pd.DataFrame({'Rank (1 = strongest change)': range(1, 14), **{k: L[k] for k in ['b1_up', 'b1_down', 'b2_up', 'b2_down']}})
-    drawn = []
-    for lst, rows in c['TABLE'].items():
-        for i, r in enumerate(rows):
-            if r is not None:
-                drawn.append(f'{lst}: {r[0]} {r[1].replace(chr(8722), "-")}')
-    a_notes = [f'Toy example; background (U) = the {U} genes GeneA-GeneZ. b1_up / b2_up start from the most increased gene, '
-               'b1_down / b2_down from the most decreased gene.',
-               'The log2FC values drawn in the tables of panel a are illustrative (not used in b-d): ' + '; '.join(drawn) + '.']
-
-    # b: one pair (b1_up x b2_up) at one pair of cut-offs
-    M, P = fisher(L['b1_up'], L['b2_up'], EG, EK)
-    shared = [g for g in L['b1_up'][:EG] if g in L['b2_up'][:EK]]
-    b = pd.DataFrame([
-        ('Pair', 'b1_up × b2_up'), ('G (top genes of b1_up)', EG), ('K (top genes of b2_up)', EK),
-        ('Genes in the top G of b1_up', ', '.join(L['b1_up'][:EG])), ('Genes in the top K of b2_up', ', '.join(L['b2_up'][:EK])),
-        ('Shared genes', ', '.join(shared)), ('U (all genes)', U),
-        ('2 × 2 table: in top K and in top G (M)', M), ('2 × 2 table: in top K, not in top G (K − M)', EK - M),
-        ('2 × 2 table: not in top K, in top G (G − M)', EG - M), ('2 × 2 table: in neither (U − G − K + M)', U - EG - EK + M),
-        ("P, one-sided Fisher's exact test (hypergeometric upper tail)", P), ('−log10 P', -np.log10(P))],
-        columns=['Quantity', 'Value'])
-
-    # c: the 13 x 13 grid for up x up
-    H = grid(L['b1_up'], L['b2_up'])
-    bg, bk = [int(i) + 1 for i in np.unravel_index(np.argmax(H), H.shape)]
-    cg = pd.DataFrame(np.round(H, 4), columns=[f'K = {k}' for k in range(1, 14)])
-    cg.insert(0, 'G (top genes of b1_up)', range(1, 14))
-    ties = int(np.isclose(H, H.max()).sum())
-    c_notes = ['Cell = −log10 P of the one-sided Fisher test of the top G genes of b1_up against the top K genes of b2_up (U = 26); '
-               'colour of panel c.',
-               f'Dashed square = the test of panel b (G = {EG}, K = {EK}): −log10 P = {H[EG - 1, EK - 1]:.4f}.',
-               f'Red square = the smallest P (G = {bg}, K = {bk}): P = {10 ** -H.max():.4g}, −log10 P = {H.max():.4f} '
-               f'(= Score of up × up in d; {ties} cell(s) reach this value, the first in row order is framed).']
-
-    # d: the four pairs and S_total
-    pairs = [('b1_up', 'b2_up', 'up × up', 'same', +1), ('b1_down', 'b2_down', 'down × down', 'same', +1),
-             ('b1_up', 'b2_down', 'up × down', 'opposite', -1), ('b1_down', 'b2_up', 'down × up', 'opposite', -1)]
-    rows = []
-    for l1, l2, lab, dr, sg in pairs:
-        h = grid(L[l1], L[l2]); g, k = [int(i) + 1 for i in np.unravel_index(np.argmax(h), h.shape)]
-        rows.append({'Pair': lab, 'Lists': f'{l1} × {l2}', 'Direction': dr, 'Sign in S_total': '+' if sg > 0 else '−',
-                     'G at the smallest P': g, 'K at the smallest P': k, 'M at the smallest P': fisher(L[l1], L[l2], g, k)[0],
-                     'Smallest P': 10 ** -h.max(), 'Score = −log10 (smallest P) (bar)': round(h.max(), 4), '_s': sg * h.max()})
-    d = pd.DataFrame(rows)
-    st = d.pop('_s').sum()
-    d = pd.concat([d, pd.DataFrame([{'Pair': 'S_total', 'Lists': 'up×up + down×down − up×down − down×up',
-                                     'Score = −log10 (smallest P) (bar)': round(st, 4)}])], ignore_index=True)
-    d_notes = [f'S_total of the example = {st:.4f} (positive: the two lists change in the same direction; ▼ in panel d). '
-               'The bars of d have no y scale in the figure; the values are those above.']
-
-    write(OUT / 'Source_Data_Supplementary_FigS1.xlsx', [
-        'Source Data for Supplementary Fig. S1 (the Running Fisher test; a toy example).',
-        'Toy gene lists: background U = 26 genes (GeneA-GeneZ); each list ranks all 26 genes, 13 increased (up) and 13 decreased (down).',
-        'Every number is computed from the toy lists with the one-sided Fisher exact test (hypergeometric upper tail, U = 26), '
-        'exactly as in the figure script.',
-        'FigS1a_lists: the four ranked lists. FigS1b_one_cutoff: the 2 × 2 table of panel b. FigS1c_grid: −log10 P at every (G, K) for '
-        'up × up. FigS1d_scores: the four scores and S_total.',
-        'Source: the lists and cut-offs are read from figs/Supp_S1_RunningFisher/analysis/figS1_running_fisher.py.'],
-        {'FigS1a_lists': (a, a_notes), 'FigS1b_one_cutoff': b, 'FigS1c_grid': (cg, c_notes), 'FigS1d_scores': (d, d_notes)})
-    return {'b_P': P, 'b_M': M, 'best': (bg, bk, H.max()), 'scores': d['Score = −log10 (smallest P) (bar)'].tolist()}
-
-
 # ------------------------------------------------------------------ Supplementary Fig. S2 (choice of the per-cell value)
 LAB2 = {'simpleFC': 'simpleFC', 'log2diff': 'log2diff', 'zscore': 'z-score', 'P1': 'P1', 'P2': 'P2', 'P3_NB': 'P3 (NB)'}
-KIND = {'UP': 'UMI ≥ 1, above the average (red)', 'DOWN-1': 'UMI ≥ 1, below the average (light blue)',
+KIND = {'UP': 'UMI ≥ 1, above the expected count (red)', 'DOWN-1': 'UMI ≥ 1, below the expected count (light blue)',
         'DOWN-2': 'UMI = 0, expected count < ln 2 (grey)', 'DOWN-3': 'UMI = 0, expected count ≥ ln 2 (blue)'}
 
 
@@ -166,9 +90,6 @@ def figS2():
     summ = pd.DataFrame(rows)
     tot = summ.drop(columns='Group (colour)').sum().to_dict(); tot['Group (colour)'] = 'All genes'
     summ = pd.concat([summ, pd.DataFrame([tot])], ignore_index=True)
-    stat = pd.DataFrame([{'Candidate': LAB2[m], 'Min': one[m].min(), 'Median': one[m].median(), 'Max': one[m].max(),
-                          'Median, UMI = 0 genes': one.loc[one.x == 0, m].median(),
-                          'Median, UMI = 1 genes': one.loc[one.x == 1, m].median()} for m in c['TORDER']]).round(4)
 
     bench = pd.read_csv(D / 'figS2_delta_bench.csv')
     perc = pd.read_csv(D / 'figS2_delta_bench_percluster.csv', dtype={'cluster': str})
@@ -201,15 +122,14 @@ def figS2():
         'FigS2c_genes: every gene analysed (8,960) in the example cell (the first cell, column 1, of '
         'data/Hammond2019/output/counts_filtered.rds; its barcode can be read only with R): UMI count, expected count and the six '
         'candidate values; group = colour of panel c (upper row UMI ≥ 1, lower row UMI = 0). The histograms of c are binned from these values.',
-        'FigS2c_summary: genes per group and the genes drawn as the separate bars (zeros of simpleFC; z-score and P1-P3 outside −4 to 8). '
-        'FigS2c_candidates: range and medians of each candidate in this cell.',
+        'FigS2c_summary: genes per group and the genes drawn as the separate bars (zeros of simpleFC; z-score and P1-P3 outside −4 to 8).',
         'FigS2e_mean: left plot (mean over the 13 clusters, monocytes/macrophages excluded; up to 1,000 cells per cluster). '
         'FigS2e_clusters: right plot (one point per cluster and candidate). FigS2e_summary: median (bar) and interquartile range (shade) '
         'of the right plot, and the number of clusters in which each candidate ranks first.',
         'Lists of 500 genes per direction (cell UP/DOWN, markers and negative markers of the cluster).',
         'Source tables: figs/Supp_S2_Delta/output/data/figS2b_one_cell.csv, figS2_delta_bench.csv and '
         'figS2_delta_bench_percluster.csv (figS2_delta_benchmark.R).'],
-        {'FigS2c_genes': genes, 'FigS2c_summary': summ, 'FigS2c_candidates': stat, 'FigS2e_mean': e1, 'FigS2e_clusters': e2,
+        {'FigS2c_genes': genes, 'FigS2c_summary': summ, 'FigS2e_mean': e1, 'FigS2e_clusters': e2,
          'FigS2e_summary': e3})
     return {'n_genes': len(one), 'summ': summ, 'e1': e1, 'e3': e3}
 
@@ -273,7 +193,7 @@ def figS3():
                f'Colour scale ±{pan["VLB"]:g}: values beyond are drawn in the end colours (the values here are not clipped).',
                'Complexes labelled in b (rows counted from 1 at the top): ' + mods + '.']
 
-    # c: summaries by type of pair, the line plots (binned densities) and the safe x safe ticks
+    # c: summaries by type of pair
     imax = np.argmax(ss); sfi = np.flatnonzero(sf); iu = np.triu_indices(len(sfi), 1)
     top_ss = (tgt[sfi[iu[0][imax]]], tgt[sfi[iu[1][imax]]])
     c1 = pd.DataFrame([{'Type of pair': k_, 'Pairs (n)': len(v), 'Mean': round(v.mean(), 3), 'Median': round(np.median(v), 3),
@@ -286,25 +206,7 @@ def figS3():
                f'ratio {n_above / n_exp:.1f}.',
                f'Knock-outs {int(ko.sum()):,}, safe-targeting groups {int(sf.sum())}; median nuclei per knock-out {int(np.median(nuc[ko]))}, '
                f'per safe-targeting group {int(np.median(nuc[sf]))}.',
-               'The full data (about 2.1 million pairs) are not listed; the plotted densities are in FigS3c_density_main and '
-               'FigS3c_density_right_end.']
-
-    def dens(v, edges):
-        h, _ = np.histogram(v, bins=edges); return h, h / (len(v) * np.diff(edges))
-    blocks = {}
-    for nm, edges, types in [('main', np.arange(-40, 47, 1.0), list(cls)),
-                             ('right', np.arange(30, 152.5, 2.5), ['Knock-out × knock-out', 'Knock-out × safe-targeting'])]:
-        df = pd.DataFrame({'Bin start': edges[:-1], 'Bin end': edges[1:], 'Bin centre (x of the line)': (edges[:-1] + edges[1:]) / 2})
-        for k_ in types:
-            h, dn = dens(cls[k_], edges)
-            df[f'{k_}: pairs (n)'] = h; df[f'{k_}: density (y)'] = dn.round(8)
-        out = {k_: (int((cls[k_] < edges[0]).sum()), int((cls[k_] >= edges[-1]).sum())) for k_ in types}
-        blocks[nm] = (df, [f'Bins [start, end) as numpy.histogram (last bin closed); density = pairs in the bin / (all pairs of the type × bin width). '
-                           'Pairs outside the bins (not drawn): ' + '; '.join(f'{k_}: {a:,} below, {b:,} above' for k_, (a, b) in out.items()) + '.'])
-    vv = ss[ss >= 30]; o = np.argsort(-vv)
-    ticks = pd.DataFrame({'Safe-targeting group 1': [tgt[sfi[iu[0][i]]] for i in np.flatnonzero(ss >= 30)[o]],
-                          'Safe-targeting group 2': [tgt[sfi[iu[1][i]]] for i in np.flatnonzero(ss >= 30)[o]],
-                          'RFind score (orange tick)': np.round(vv[o], 4)})
+               'The single pairs (about 2.1 million) are not listed.']
 
     # d: the 20 most similar knock-out pairs
     iuk = np.triu_indices(int(ko.sum()), 1); Sk = S[np.ix_(ko, ko)][iuk]; tk = tgt[ko]
@@ -340,15 +242,13 @@ def figS3():
         'Panel a is a schematic (no sheet). b-d: thalamic glutamatergic neurons (TH Prkcd Grin2c Glut; 1,947 knock-outs, '
         '100 safe-targeting groups, 12,286 genes); e: the thalamus and the cell types of Fig. 4.',
         'FigS3b_matrix: RFind scores among the 464 knock-outs of the heat map, in its order. FigS3c_summary: the three types of pair '
-        '(with the dashed line, the counts above it and the number expected). FigS3c_density_main / _right_end: the plotted densities '
-        '(binned; the 2.1 million single pairs are not listed). FigS3c_safe_ticks: the safe × safe pairs above +30 (orange ticks).',
+        '(with the dashed line, the counts above it and the number expected).',
         'FigS3d_top20: the 20 most similar knock-out pairs. FigS3e_celltypes: the bars. FigS3e_pairs: every pair of Shi et al. with its '
         'score and rank in each cell type.',
         'Source: figs/Supp_S3_Perturbseq/output/data/rfind_allpairs_{g151,HIP,GABA}.npz (figS3_rfind_allpairs.py); '
         'pairs of Shi et al. from figS3_shi_pairs.py; complexes of b and d read from figS3_rfind_panels.py. '
         'Summaries recomputed with the code of figS3_rfind_panels.py and figS3e_celltypes.py.'],
-        {'FigS3b_matrix': (bmat, b_notes), 'FigS3c_summary': (c1, c_notes), 'FigS3c_density_main': blocks['main'],
-         'FigS3c_density_right_end': blocks['right'], 'FigS3c_safe_ticks': ticks, 'FigS3d_top20': (d, d_notes),
+        {'FigS3b_matrix': (bmat, b_notes), 'FigS3c_summary': (c1, c_notes), 'FigS3d_top20': (d, d_notes),
          'FigS3e_celltypes': e, 'FigS3e_pairs': ep})
     return {'smax': smax, 'n_above': n_above, 'n_exp': n_exp, 'n_strong': len(strong), 'd': d, 'e': e, 'c1': c1}
 
@@ -407,7 +307,6 @@ def figS5():
 
 if __name__ == '__main__':
     OUT.mkdir(exist_ok=True)
-    r1 = figS1(); print('S1:', r1)
     r2 = figS2(); print('S2:', r2['e1'].to_string(), r2['e3'].to_string(), sep='\n')
     r3 = figS3(); print('S3:', {k: r3[k] for k in ('smax', 'n_above', 'n_exp', 'n_strong')}); print(r3['e'].to_string()); print(r3['c1'].to_string())
     r5 = figS5(); print('S5:', r5['n_points'], 'donor points'); print(r5['vio'].to_string()); print(r5['win'].to_string())

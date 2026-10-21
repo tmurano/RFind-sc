@@ -5,7 +5,7 @@
 ##   The set is either a public GO term or one of the named sets in PRESET below; every member of the set present in the
 ##   knock-out library is drawn whatever its position. The paper uses the preset GR-complex: the five corticosteroid-receptor
 ##   and GR-complex genes in the library (Nr3c1, Nr3c2, Hsp90ab1, Ncoa1, Ncoa3; Methods), a set defined in this study rather
-##   than a public one. Supplementary Table 2 (fig4_random_set_null.py) compares its placement with random sets of five
+##   than a public one. fig4_random_set_null.py (Methods) compares its placement with random sets of five
 ##   knock-outs drawn from the same library.
 ##   One panel per cell type: all knock-outs ranked by RFind score (x = rank counted from the opposed end, 1 = most opposed,
 ##   as in c and the heatmap of e; below 0 = opposed), with the set's knock-outs marked and named. No significance calls.

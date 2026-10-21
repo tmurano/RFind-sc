@@ -35,9 +35,10 @@ GENES = ['Nr3c1', 'Ncoa1']
 ## cell type of Fig. 4 -> Perturb-seq context of the axis file (as in fig4d_go_set.R)
 CTX = {'DG': 'g017_DG', 'CA1': 'CA1', 'CA3': 'g017_CA3', 'GABA': 'GABA3'}
 NAME = {'DG': 'DG Glut', 'CA1': 'CA1 Glut', 'CA3': 'CA3 Glut', 'GABA': 'GABA'}   # labels = the names of De Donno et al.
-COL = {'DG': '#1F6FB4', 'CA1': '#3F9FD6', 'CA3': '#6FC1E6', 'GABA': '#7E57C2'}    # the cell-type colours of Fig. 3 (fig3_celltypes.R)
+COL = {'DG': '#0072B2', 'CA1': '#E69F00', 'CA3': '#009E73', 'GABA': '#CC79A7'}    # Okabe-Ito colours, distinct for colour-blind readers
 FIG_W_MM, FIG_H_MM = 82.0, 40.0   # size in the final figure
 MM = 1 / 25.4
+RIGHT = {('Ncoa1', 'GABA'): True}   # label to the right of the point, away from the CA3 Glut label
 
 rows = []
 for ct, ctx in CTX.items():
@@ -77,6 +78,7 @@ for k, g in enumerate(GENES):
         ax.scatter(r['cpm_no_stress'], r['rfind_score'], s=12, color=COL[r['cell_type']], lw=0, zorder=3)
         right = r['cpm_no_stress'] < np.mean([q['cpm_no_stress'] for q in rows if q['gene'] == g])
         near0 = -3 < r['rfind_score'] < 0                       # a label just below the dashed line of 0 is moved down
+        right = RIGHT.get((g, r['cell_type']), right)
         ax.annotate(NAME[r['cell_type']], (r['cpm_no_stress'], r['rfind_score']), xytext=(4 if right else -4, -1 if near0 else 0),
                     textcoords='offset points', ha='left' if right else 'right', va='top' if near0 else 'center', fontsize=7)
     L = LIM[g]

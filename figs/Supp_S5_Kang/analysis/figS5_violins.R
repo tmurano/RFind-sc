@@ -45,8 +45,8 @@ d[, fillcol := ifelse(condition == "Control", UNSTIM_GREY, CT_PAL[as.character(c
 
 AX <- c("IFNb", "PGE2", "Interferon", "Chemokine")
 META <- list(
-  IFNb = list(nm="IFNb-index", sub="Reference: GSE191317 (IFN-β vs mock, PBMC, 18 h)"),
-  PGE2 = list(nm="PGE2-index", sub="Reference: GSE272019 (PGE2 vs unstimulated, CD14+ monocytes, 3 h)"),
+  IFNb = list(nm="IFNb-index", sub="Reference: Galbraith et al., PNAS 2022 (IFN-β vs mock, PBMC, 18 h)"),
+  PGE2 = list(nm="PGE2-index", sub="Reference: Sokhi et al., eLife 2025 (PGE2 vs unstimulated, CD14+ monocytes, 3 h)"),
   Interferon = list(nm="Interferon-index", sub="Reference: MSigDB Hallmark INTERFERON_ALPHA_RESPONSE"),
   Chemokine  = list(nm="Chemokine-index", sub="Reference: KEGG CHEMOKINE_SIGNALING_PATHWAY"))
 cohend <- function(a,b){ n1<-length(a); n2<-length(b); (mean(b)-mean(a))/sqrt(((n1-1)*var(a)+(n2-1)*var(b))/(n1+n2-2)) }

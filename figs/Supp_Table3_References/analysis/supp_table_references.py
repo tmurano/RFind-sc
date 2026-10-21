@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Supplementary Table 4 — the differential expression lists and gene sets used as references (Methods, "Differential expression
+"""Supplementary Table 3 — the differential expression lists and gene sets used as references (Methods, "Differential expression
 lists and gene sets used as references").
 
-  <python> figs/Supp_Table4_References/analysis/supp_table_references.py        (from the project root; pandas, openpyxl)
+  <python> figs/Supp_Table3_References/analysis/supp_table_references.py        (from the project root; pandas, openpyxl)
 
-Input : figs/Supp_Table4_References/output/SuppTable4_reference_sizes.csv (supp_table_references.R: the number of genes of each
+Input : figs/Supp_Table3_References/output/SuppTable3_reference_sizes.csv (supp_table_references.R: the number of genes of each
         reference before and after the restriction to the genes analysed, computed from the reference files used for scoring)
-Output: figs/Supp_Table4_References/output/SuppTable4_references.xlsx (README + sheet "References")
+Output: figs/Supp_Table3_References/output/SuppTable3_references.xlsx (README + sheet "References")
 The descriptions below follow the scripts that build the references: analysis/hammond/06_build_references.R (DAM, Maturity,
 Interferon, G2M), analysis/dedonno/03_references.R (Glucocorticoid, Seizure, NF-kB, UPR),
 figs/Fig5_benchmark/analysis/fig5_extra_refs.R (PS2APP, Forced swim) and analysis/kang/03_references.R (IFNb, PGE2, Interferon
@@ -18,11 +18,11 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-OUT = "figs/Supp_Table4_References/output"
+OUT = "figs/Supp_Table3_References/output"
 F, FB = Font(name="Arial", size=10), Font(name="Arial", size=10, bold=True)
 HEAD = PatternFill("solid", fgColor="DDE3EA")
 
-n = pd.read_csv(os.path.join(OUT, "SuppTable4_reference_sizes.csv")).set_index("reference")
+n = pd.read_csv(os.path.join(OUT, "SuppTable3_reference_sizes.csv")).set_index("reference")
 
 DATASET = {"Hammond": "Hammond et al. (Fig. 2)", "DeDonno": "De Donno et al., wild-type mice (Fig. 3)",
            "Kang": "Kang et al., human PBMC (Supplementary Fig. S5)"}
@@ -39,7 +39,7 @@ ROWS = [
      "Keren-Shaul et al., 2017; Table S3 of the original article",
      "Disease-associated microglia (DAM) vs homeostatic microglia (single-cell RNA-seq of 5XFAD mice)", "Published fold changes",
      "Published fold change (genes with a finite, non-zero fold change); top 500 per direction, then restricted to the genes analysed", EXCL_A),
-    ("Maturity", "Fig. 2c, e; Supplementary Table 3",
+    ("Maturity", "Fig. 2c, e; Supplementary Table 2",
      "Matcovitch-Natan et al., 2016; GEO GSE79812 (supplementary table GSE79812_Timeline.xlsx)",
      "Adult microglia (cortex and hippocampus) vs embryonic microglia (E13.5, E14.5 and E16.5)", "4 vs 4 samples",
      "Normalized values of the GEO table summed per group and scaled to one million over the nuclear genes; genes ranked by the "
@@ -97,7 +97,7 @@ t = pd.DataFrame(recs)
 
 wb = Workbook(); ws = wb.active; ws.title = "README"
 readme = [
-    ("Supplementary Table 4 | Differential expression lists and gene sets used as references.", FB),
+    ("Supplementary Table 3 | Differential expression lists and gene sets used as references.", FB),
     ("", F),
     ("One row per reference (Methods). Type A references are differential expression lists, ranked by the change of each gene between "
      "two groups and divided into up-regulated (higher in the first group of the comparison) and down-regulated genes; type B "
@@ -120,9 +120,9 @@ readme = [
     ("Genes used, after restriction to the genes analysed: up / down — number of genes of the reference used for matching. "
      "Empty cells, no down-regulated list (Seizure and the gene sets; the Seizure-index is Score(UP, UP) − Score(DOWN, UP)).", F),
     ("", F),
-    (f"Source: figs/Supp_Table4_References/output/SuppTable4_reference_sizes.csv (figs/Supp_Table4_References/analysis/"
+    (f"Source: figs/Supp_Table3_References/output/SuppTable3_reference_sizes.csv (figs/Supp_Table3_References/analysis/"
      f"supp_table_references.R, which restricts the reference files used for scoring as the scoring scripts do); table made by "
-     f"figs/Supp_Table4_References/analysis/supp_table_references.py on {datetime.date.today().isoformat()}.", F),
+     f"figs/Supp_Table3_References/analysis/supp_table_references.py on {datetime.date.today().isoformat()}.", F),
 ]
 for i, (text, font) in enumerate(readme, start=1):
     c = ws.cell(row=i, column=1, value=text); c.font = font; c.alignment = Alignment(wrap_text=True, vertical="top")
@@ -142,7 +142,7 @@ for i, row in enumerate(t.itertuples(index=False), start=2):
 for j, w in enumerate([14, 18, 18, 20, 34, 38, 12, 44, 30, 11, 11, 12, 14, 14], start=1):
     s.column_dimensions[get_column_letter(j)].width = w
 s.row_dimensions[1].height = 60; s.freeze_panes = "B2"
-path = os.path.join(OUT, "SuppTable4_references.xlsx"); wb.save(path)
+path = os.path.join(OUT, "SuppTable3_references.xlsx"); wb.save(path)
 print("wrote", path)
 print(t[["Reference", "Type", "Genes in the reference: up", "Genes in the reference: down", "Genes analysed in the dataset",
          "Genes used, after restriction to the genes analysed: up",

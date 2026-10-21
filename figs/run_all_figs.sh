@@ -1,5 +1,5 @@
 #!/bin/bash
-## Every figure, Supplementary Tables 1-4 and the Source Data workbooks from the pipeline outputs, in dependency order.
+## Every figure, Supplementary Tables 1-3 and the Source Data workbooks from the pipeline outputs, in dependency order.
 ## Needs the pipelines to have been run (analysis/hammond, analysis/dedonno, analysis/kang, analysis/perturbseq).
 ## Run from the project root:  bash figs/run_all_figs.sh        (logs -> logs/runs/<step>.log, summary -> logs/runs/run_all_figs_summary.tsv)
 ## Environment: R_HOME = R 4.5 with the analysis packages; PYTHON = Python with numpy, scipy, pandas, matplotlib, openpyxl
@@ -57,10 +57,8 @@ run fig4d_GR-complex       $R figs/Fig4_Perturbseq/analysis/fig4d_go_set.R --arg
 run fig4e_expression       $PY figs/Fig4_Perturbseq/analysis/fig4e_expression_vs_score.py   # 4e: Nr3c1 and Ncoa1 expression (De Donno No Stress) vs the RFind score of their knock-outs
 run supp_table_ko_rankings $PY figs/Fig4_Perturbseq/analysis/supp_table_ko_rankings.py   # needs openpyxl
 run fig4_ranking_checks     $PY figs/Fig4_Perturbseq/analysis/fig4_ranking_checks.py   # the check of Methods (lower limit of 5 nuclei)
-run fig4_random_sets      $PY figs/Fig4_Perturbseq/analysis/fig4_random_set_null.py     # Supplementary Table 2: random sets of knock-outs
-## (Supplementary Table 2 itself is made after Supplementary Fig. S3, below: its sheet "Other matching methods" comes from
-##  fig4_other_methods.py, which also checks the S3 outputs)
-## Fig. 5, Supplementary Fig. S4 and Supplementary Table 3 (capability benchmark), in the order of their inputs:
+run fig4_random_sets      $PY figs/Fig4_Perturbseq/analysis/fig4_random_set_null.py     # Fig. 4d: the five knock-outs against random sets of the library (P in Results; Source Data)
+## Fig. 5, Supplementary Fig. S4 and Supplementary Table 2 (capability benchmark), in the order of their inputs:
 ##  1  the benchmark: per-cell scores of every method at every reference length (fig5_redo_{auc,percell}_L<L>.*,
 ##     results/fig5_redo_beyondcell_L500.csv);
 ##     about 2 h and ~10 GB RAM; logs and a run summary in logs/runs/fig5_redo_<yymmdd>/ (<yymmdd> = the day of the start); a finished
@@ -84,17 +82,17 @@ run fig5_best_length         $PY figs/Fig5_benchmark/analysis/fig5_best_length.p
 ##  3b the same over the eight type A tasks (results/fig5_best_length_8tasks.csv and results/fig5_mean_auc_diff_8tasks.csv; reads the per-cell files of
 ##     steps 1 and 1c and checks the outputs of step 3 first; about 3 min)
 run fig5_best_length_8tasks  $PY figs/Fig5_benchmark/analysis/fig5_best_length_8tasks.py
-##  3c the mean over the tasks of each type (results/fig5_task_means.csv; Fig. 5e and the sheet Mean over tasks of Supplementary Table 3;
+##  3c the mean over the tasks of each type (results/fig5_task_means.csv; Fig. 5e and the sheet Mean over tasks of Supplementary Table 2;
 ##     reads the per-cell files of steps 1 and 1c at L = 500 and checks the type A differences against step 3b; about 3 min)
 run fig5_task_means          $PY figs/Fig5_benchmark/analysis/fig5_task_means.py
 ##  4  output/data/Fig5c_embedding.png and Fig5d_auc.png (the t-SNE and the DAM-index distributions that panel b of Fig. 5 is cut
 ##     from; reads step 1 only). Run here, before
 ##     steps 5, 6 and 7: fig5_rebuild_figure_draft.py (step 7, imported by step 6) reads these two images when it is loaded.
 run fig5_redo_figure         $PY figs/Fig5_benchmark/analysis/fig5_redo_figure.py
-##  5  Supplementary Table 3 (SuppTable3.xlsx; reads steps 1, 1c, 3 and 3b)
+##  5  Supplementary Table 2 (SuppTable2.xlsx; reads steps 1, 1c, 3 and 3b)
 run fig5_supp_table3         $PY figs/Fig5_benchmark/analysis/fig5_redo_tables.py
 ##  6  Supplementary Fig. S4: all tasks and the type A tasks not in Fig. 5c (output/FigS4.png and the panels FigS4a_tasks.png and
-##     FigS4b_typeA_tasks.png, directly in output/); reads steps 1c, 5 [SuppTable3.xlsx, sheet Tasks] and 4
+##     FigS4b_typeA_tasks.png, directly in output/); reads steps 1c, 5 [SuppTable2.xlsx, sheet Tasks] and 4
 ##     [Fig5c_embedding.png and Fig5d_auc.png, read when fig5_rebuild_figure_draft.py is imported] and imports the script of step 7
 ##     (which reads step 1)
 run figS4_capability_map     $PY figs/Supp_S4_Benchmark/analysis/figS4_capability_map.py
@@ -113,16 +111,12 @@ run figS3_allpairs_HIP     $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_allp
 run figS3_panels           $PY figs/Supp_S3_Perturbseq/analysis/figS3_rfind_panels.py                 # b, c, d (thalamus)
 run figS3_celltypes        $PY figs/Supp_S3_Perturbseq/analysis/figS3e_celltypes.py                   # e
 run figS3_schematic        $R figs/Supp_S3_Perturbseq/analysis/figS3_schematic.R
-## Supplementary Table 2: Fig. 4 with two other matching methods (decoupleR's ULM and the scFOCAL-type score; reads the Fig. 4
-## tables above; ~2 min), then the workbook
-run fig4_other_methods     $PY figs/Fig4_Perturbseq/analysis/fig4_other_methods.py 6
-run supp_table_random_sets $PY figs/Fig4_Perturbseq/analysis/supp_table_random_sets.py  # needs openpyxl
-## Supplementary Table 4 (the references and their numbers of genes; reads the reference files of the Hammond, De Donno and Kang
+## Supplementary Table 3 (the references and their numbers of genes; reads the reference files of the Hammond, De Donno and Kang
 ## pipelines and of step 1b of Fig. 5): the numbers (R), then the workbook
-run supp_table4_sizes      $R figs/Supp_Table4_References/analysis/supp_table_references.R
-run supp_table4_references $PY figs/Supp_Table4_References/analysis/supp_table_references.py  # needs openpyxl
+run supp_table3_sizes      $R figs/Supp_Table3_References/analysis/supp_table_references.R
+run supp_table3_references $PY figs/Supp_Table3_References/analysis/supp_table_references.py  # needs openpyxl
 ## Source Data (one workbook per figure; read the outputs above, Fig. 5 and S4 also those of step 1c): Figs. 2-5 and
-## Supplementary Fig. S4, then Supplementary Figs. S1-S3 and S5
+## Supplementary Fig. S4, then Supplementary Figs. S2, S3 and S5 (S1 is a made-up example: no Source Data)
 run source_data              $PY figs/make_source_data.py
 run source_data_supp         $PY figs/make_source_data_supp.py
 echo "=== [$(date +%H:%M:%S)] DONE (summary: $SUM)"

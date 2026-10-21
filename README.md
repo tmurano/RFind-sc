@@ -116,7 +116,7 @@ $PYTHON analysis/perturbseq/02_stress_axis.py           # seconds
 $PYTHON analysis/perturbseq/03_axis_vs_ko.py            # under a minute
 
 bash figs/Fig5_benchmark/analysis/fig5_runtime.sh       # ~1 h on an otherwise idle computer: the run times of
-                                                        # Supplementary Table 3 (before run_all_figs.sh, which reads them)
+                                                        # Supplementary Table 2 (before run_all_figs.sh, which reads them)
 bash figs/run_all_figs.sh                               # ~4 h (Fig. 5 benchmark ~2 h, always recomputed;
                                                         # rest of Fig. 5 ~1 h; Supplementary Fig. S3 ~1 h)
 ```
@@ -137,7 +137,7 @@ Scripts are in `figs/<item>/analysis/`; `figs/run_all_figs.sh` runs them in the 
 | Fig. 4 | `fig4a_schematic.py` (a), `fig4b_schematic.py` (b), `fig4c_rank_tables.py` (c), `fig4d_go_set.R` (d), `fig4e_expression_vs_score.py` (e) |
 | Fig. 5, Supplementary Fig. S4 | `run_fig5_redo.sh` (the benchmark), `fig5_extra_refs.R`, `fig5_extra_score.R` and the later steps of `figs/run_all_figs.sh` |
 | Supplementary Figs. S1–S3, S5 | `figS1_running_fisher.py`; `figS2_*`; `figS3_*`; `figS5_*` (`figS5_compose.py` assembles S5) |
-| Supplementary Tables 1–4 | `supp_table_ko_rankings.py` (1), `supp_table_random_sets.py` (2), `fig5_redo_tables.py` (3), `supp_table_references.R` and `.py` (4) |
+| Supplementary Tables 1–3 | `supp_table_ko_rankings.py` (1), `fig5_redo_tables.py` (2), `supp_table_references.R` and `.py` (3) |
 
 ## Environment variables
 
@@ -150,7 +150,7 @@ other variables, used only for checks, are described in the scripts that read th
 ## Reproducibility
 
 The processing (quality control, genes analysed and references) follows the paper's Methods; the numbers of genes of the
-references are in Supplementary Table 4. Some file names and data keys use short names of the references: CORT =
+references are in Supplementary Table 3. Some file names and data keys use short names of the references: CORT =
 Glucocorticoid, KA6h = Seizure, AcuteStress = Forced swim, DAM_PS2APP = PS2APP.
 
 ### Fixed inputs

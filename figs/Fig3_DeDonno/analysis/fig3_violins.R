@@ -58,8 +58,8 @@ AX <- c("CORT","KA6h","NFkB","UPR")
 META <- list(
   ## subtitle = reference only (gene-selection details go to Methods)
   ## display names say what each index measures: CORT -> Glucocorticoid-index, KA6h -> Seizure-index (data keys CORT / KA6h)
-  CORT = list(nm="Glucocorticoid-index", sub="Reference: GSE184924 (corticosterone vs vehicle, 3 h)"),
-  KA6h = list(nm="Seizure-index", sub="Reference: GSE125068 (kainate seizure vs saline, 6 h)"),
+  CORT = list(nm="Glucocorticoid-index", sub="Reference: Viho et al., J Neuroendocrinol 2022 (corticosterone vs vehicle, 3 h)"),
+  KA6h = list(nm="Seizure-index", sub="Reference: Fernandez-Albert et al., Nat Neurosci 2019 (kainate seizure vs saline, 6 h)"),
   ## the Hallmark-based axes start with "Reference:" as the DEG-based ones do (as in Fig. 2)
   NFkB = list(nm="NF-κB-index", sub="Reference: MSigDB Hallmark TNFA_SIGNALING_VIA_NFKB"),
   UPR  = list(nm="UPR-index",   sub="Reference: MSigDB Hallmark UNFOLDED_PROTEIN_RESPONSE"))

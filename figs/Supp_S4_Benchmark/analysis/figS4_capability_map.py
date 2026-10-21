@@ -6,15 +6,15 @@ tasks (Glucocorticoid in Oligodendrocytes and Endothelial, and the four added ta
 Panels a (table of the tasks) and b (type A tasks), drawn without panel letters (the slide adds them), no figure title, no
 notes in the image (the notes are in the legend; the numbers they need are printed):
   part 0  every task of the benchmark (a), in the style of the table of Fig. 5a (cell numbers from the sheet Tasks of
-          Supplementary Table 3)
+          Supplementary Table 2)
   part 1  the six type A tasks not in Fig. 5c: AUC with 95% CI of every method of Fig. 5c at 500 genes per direction, drawn with the functions and
           the method colours of fig5_rebuild_figure_draft.py (no key; the colours are those of Fig. 5). A panel's lower edge goes
           below the AUC range of 0.2 only to show a whole CI; points below the edge are triangles, as in Fig. 5.
 The name of the script refers to the capability map of the benchmark (type A with each method at its best reference length, and
-type B); these comparisons are in Supplementary Table 3 (sheets Best length, Comparisons and Mean AUC differences), not in this figure.
+type B); these comparisons are in Supplementary Table 2 (sheets Best length, Comparisons and Mean AUC differences), not in this figure.
 All text >= 5 pt (the subscript 2 of G2M too: drawn at 5 pt by SubText), width 180 mm, 600 dpi.
 Inputs: figs/Fig5_benchmark/output/extra_refs/fig5_extra_auc_L500.csv, results/fig5_redo_auc_L500.csv (via the module: D1, D3),
-        SuppTable3.xlsx (sheet Tasks); the module
+        SuppTable2.xlsx (sheet Tasks); the module
         fig5_rebuild_figure_draft.py (imported: data and drawing functions of Fig. 5; on import it also reads
         Fig5c_embedding.png and Fig5d_auc.png, the outputs of fig5_redo_figure.py, which therefore runs first)
 Outputs (figs/Supp_S4_Benchmark/output/; the folder of Supplementary Fig. S4): FigS4.png (the whole figure, a and b, without panel
@@ -99,7 +99,7 @@ def draw_part1(fig, H, y0, X1=9.3, GAP=5.8, letter=True):          # the small p
 
 
 ## ---- part 0: every task of the benchmark (a, the summary of all tasks used) ----
-TK = pd.read_excel(f'{O}SuppTable3.xlsx', sheet_name='Tasks')
+TK = pd.read_excel(f'{O}SuppTable2.xlsx', sheet_name='Tasks')
 
 
 def ncell(prefix, which):                                          # the cell numbers of a task of the Tasks sheet
